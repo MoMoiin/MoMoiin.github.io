@@ -22,7 +22,7 @@ h1{font-family: Arial, Helvetica, sans-serif }
 }
 
         @-webkit-keyframes slideIn {
-        from {left: -100px; opacity: 0} 
+        from {left: -300px; opacity: 0} 
         to {left: 0; opacity: 1}
         }
         @keyframes slideIn {
