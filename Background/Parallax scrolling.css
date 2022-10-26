@@ -1,0 +1,74 @@
+
+          body, html {
+            height: 100%;
+            background-color: black;
+          }
+
+          .First_image {
+
+            /* The image used */
+            background-image: url("First image.jpg");
+          
+            /* Set a specific height */
+            min-height: 100%;
+          
+            /* Create the parallax scrolling effect */
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+          }
+
+        .second_image{
+            top: 100px;
+            background-image: url(Second_image.webp);
+            min-height: 1000px;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+          @media only screen and (max-device-width: 1366px) {
+            .parallax {
+              background-attachment: scroll;
+            }
+          }
+
+
+          h1{font-family: Arial, Helvetica, sans-serif }
+            .Heading{
+                background-attachment: fixed;
+                    margin: auto;
+                    width: 600px; 
+                    top: 100px;
+                    left: -5%;
+                    font-size: 60px;
+                    text-align: center;
+                    color: white;
+                    font-family: Arial, sans-serif;
+                    position: fixed;
+                    -webkit-animation-name: slideIn;
+                    -webkit-animation-duration: 1s;
+                    -webkit-animation-timing-function: linear ;
+                    -webkit-backface-visibility: hidden;
+                            animation-name: slideIn;
+                            animation-duration: 1s;
+                            animation-timing-function: linear;
+                            backface-visibility: hidden;
+
+                            
+                            
+                        
+                    }
+
+                    @-webkit-keyframes slideIn {
+                            from {left: -10%; opacity: 0} 
+                            to   {left: -5%; opacity: 1}
+                    }
+                    @keyframes slideIn {
+                            from {left: -10%; opacity: 0} 
+                            to   {left: -5%; opacity: 1}
+                    
+                    }
+                    
