@@ -21,6 +21,7 @@
 
         .second_image{
             top: 100px;
+            max-width: 700px;
             background-image: url(Second_image.webp);
             min-height: 1000px;
             background-attachment: fixed;
