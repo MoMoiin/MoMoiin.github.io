@@ -1,6 +1,6 @@
 .heading {
-    position: static;
-    left: 50%;
+    position: right;
+    
     transform: translateX(-50%);
     width: 90%;
     top: 50%;
