@@ -2,12 +2,18 @@
           body, html {
             height: 100%;
             background-color: black;
+            -ms-overflow-style: none; /* for Internet Explorer, Edge */
+            scrollbar-width: none; /* for Firefox */
+            overflow-y: scroll; 
           }
 
+          body::-webkit-scrollbar {
+            display: none; /* for Chrome, Safari, and Opera */
+          }
           .First_image {
 
             /* The image used */
-            background-image: url("First image.jpg");
+            background-image: url("mathew-macquarrie-u6OnpbMuZAs-unsplash.jpg");
           
             /* Set a specific height */
             min-height: 100%;
@@ -22,7 +28,7 @@
         .second_image{
             top: 100px;
             max-width: 700px;
-            background-image: url(Second_image.webp);
+            background-image: url(tom-podmore--whiIg_2eaU-unsplash.jpg);
             min-height: 1000px;
             background-attachment: fixed;
             background-position: center;
@@ -37,39 +43,5 @@
           }
 
 
-          h1{font-family: Arial, Helvetica, sans-serif }
-            .Heading{
-                background-attachment: fixed;
-                    margin: auto;
-                    width: 600px; 
-                    top: 100px;
-                    left: -5%;
-                    font-size: 60px;
-                    text-align: center;
-                    color: white;
-                    font-family: Arial, sans-serif;
-                    position: fixed;
-                    -webkit-animation-name: slideIn;
-                    -webkit-animation-duration: 1s;
-                    -webkit-animation-timing-function: linear ;
-                    -webkit-backface-visibility: hidden;
-                            animation-name: slideIn;
-                            animation-duration: 1s;
-                            animation-timing-function: linear;
-                            backface-visibility: hidden;
-
-                            
-                            
-                        
-                    }
-
-                    @-webkit-keyframes slideIn {
-                            from {left: -10%; opacity: 0} 
-                            to   {left: -5%; opacity: 1}
-                    }
-                    @keyframes slideIn {
-                            from {left: -10%; opacity: 0} 
-                            to   {left: -5%; opacity: 1}
-                    
-                    }
+         
                     
