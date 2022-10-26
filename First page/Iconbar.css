@@ -1,9 +1,9 @@
 .heading {
-    position: fixed;
-    left: 54%;
+    position: static;
+    left: 50%;
     transform: translateX(-50%);
     width: 90%;
-    top: 0;
+    top: 50%;
     padding: 1.5em 0;
     align-items: center;
     display: flex;
@@ -14,6 +14,8 @@
 
 
 .heading a {
+    
+    
     font-size: 0.889rem;
     text-transform: capitalize;
     text-decoration: none;
