@@ -2,21 +2,9 @@
 
 
 body{
-position: static;
-margin: 30px;
-border: 2px solid #ffffff;
-height: auto;
-bottom: 10px;
-box-sizing: border-box;
-background-color: #000000;
-z-index: 4;
-}
-
-#name{
-  position: static;
-  top: ;
-  color: #ffffff;
-  font-family: 'Lato', sans-serif;
-  
-  font-size: 32px;   
+  background-image: url(/public/bob.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #050505;
+  z-index: 4;
 }
