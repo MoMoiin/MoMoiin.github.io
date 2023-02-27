@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="1920" height="1080" preserveAspectRatio="none" viewBox="0 0 1920 1080"><g mask="url(&quot;#SvgjsMask1426&quot;)" fill="none"><path d="M893.6178157930947 271.3777143140569L688.214778480416 171.19595922625393 793.4360607052917 476.78075162673554z" fill="rgba(101, 101, 101, 0.09)" class="triangle-float3"></path><path d="M1529.4325913298767 1184.6612951931463L1655.3792329597495 901.780506542716 1246.5518026794464 1058.7146535632735z" fill="rgba(101, 101, 101, 0.09)" class="triangle-float2"></path><path d="M730.0538008471617 566.7422542024701L821.6550873138015 731.9953494325861 1023.7340869256554 511.9668721175686z" fill="rgba(101, 101, 101, 0.09)" class="triangle-float1"></path><path d="M1388.5828664480948 620.0724640555425L1273.8917130377295 428.7816221669129 1176.4062763442148 597.6313515181198z" fill="rgba(101, 101, 101, 0.09)" class="triangle-float2"></path></g><defs><mask id="SvgjsMask1426"><rect width="1920" height="1080" fill="#ffffff"></rect></mask><style>
+            @keyframes float1 {
+                0%{transform: translate(0, 0)}
+                50%{transform: translate(-10px, 0)}
+                100%{transform: translate(0, 0)}
+            }
+
+            .triangle-float1 {
+                animation: float1 5s infinite;
+            }
+
+            @keyframes float2 {
+                0%{transform: translate(0, 0)}
+                50%{transform: translate(-5px, -5px)}
+                100%{transform: translate(0, 0)}
+            }
+
+            .triangle-float2 {
+                animation: float2 4s infinite;
+            }
+
+            @keyframes float3 {
+                0%{transform: translate(0, 0)}
+                50%{transform: translate(0, -10px)}
+                100%{transform: translate(0, 0)}
+            }
+
+            .triangle-float3 {
+                animation: float3 6s infinite;
+            }
+        </style></defs></svg>
