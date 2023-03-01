@@ -388,9 +388,9 @@
    height: 72px;
    position: relative;
    top: 300px;
-   left: -100px;
-   margin-left: -30px;
-   bottom: 20px;
+    right: 10vh;
+   
+   
  }
  
  .arrows path {
