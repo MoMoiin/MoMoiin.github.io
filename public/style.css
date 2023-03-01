@@ -9,7 +9,7 @@
  }
  
  .padding_bottom{
-   padding-bottom: 100px;
+   padding-bottom: 0px;
  }
  
  body {
@@ -150,6 +150,7 @@
    left: 0;
    width: 100%;
    transform: translateY(-50%);
+   text-align: center;
    z-index: 3;
    user-select: none;
    animation: fadein 1s;
@@ -167,7 +168,7 @@
  
  .section-title-wrap p {
    letter-spacing: 2px;
-   font-size: 22px;
+   font-size: 2vh;
    font-weight: 700;
    padding: 0;
    color: #6f598f;
@@ -176,16 +177,17 @@
  
  .section-title-wrap p2 {
    letter-spacing: 2px;
-   font-size: 22px;
+   font-size: 2vh;
    font-weight: 700;
    padding: 0;
    color: #ffffff;
  }
  
  .section-title-wrap h1 {
+
    margin: 0;
    padding: 0;
-   font-size: 5vw;
+   font-size: 8vh;
    letter-spacing: 8px;
    font-weight: 900;
    color: #fff;
@@ -312,34 +314,17 @@
  
  .intro-link-wrap p {
    font-size: 2vh;
-   
+   text-align: justify;
    color: #c4c3ca;
    font-weight: 700;
-   width: 37vw;
-   float: left;
+   width: 100%;
+   float: middle;
    pointer-events: none;
    opacity: 0.9;
+   shape-outside: circle();
  }
+
  
- .intro-link-wrap pfp {
-   
-   color: #c4c3ca;
-   font-weight: 700;
-   width: 200px;
-   height: auto;
-   opacity: 0.9;
- }
- 
- 
- .pfp {
-   position: absolute;
-   top: 15vh;
-   left: 62vw;
-   height: 49vh;
-   width: 49vh;
-   
-   border-radius: 50%;
- }
  
  
  /* #Link to page
@@ -481,15 +466,15 @@
  
    display: grid;
    position: static;
-   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-   grid-template-rows: repeat(auto-fit, minmax(100px, 1fr));
+   grid-template-columns: repeat(auto-fit, minmax(150px, 2fr));
+   grid-template-rows: repeat(auto-fit, minmax(50px, 2fr));
    text-align: center;
    font-size: 2vh;
    
  }
  
  .parent p{
-   font-size: 1.5vh;
+   font-size: 1.4vh;
  }
  
  .div2{
