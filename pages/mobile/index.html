@@ -4,99 +4,120 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Mobile Portfolio</title>
+    <title>Jakub Adamczyk - Portfolio</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <!-- Mobile Header -->
-    <header class="mobile-header">
-      <div class="container">
-        <h1 class="logo">My Portfolio</h1>
-        <button class="menu-toggle" aria-label="Menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1 class="app-logo">Jakub</h1>
+        <nav class="header-nav">
+          <a href="#about" class="nav-link">About</a>
+          <a href="#projects" class="nav-link">Projects</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </nav>
       </div>
     </header>
 
-    <!-- Mobile Navigation -->
-    <nav class="mobile-nav">
-      <a href="#home" class="nav-link active">Home</a>
-      <a href="#about" class="nav-link">About</a>
-      <a href="#projects" class="nav-link">Projects</a>
-      <a href="#contact" class="nav-link">Contact</a>
-    </nav>
-
     <!-- Main Content -->
-    <main class="mobile-main">
+    <main class="app-main">
       <!-- Hero Section -->
-      <section id="home" class="hero">
-        <div class="container">
-          <h2 class="hero-title">Welcome</h2>
-          <p class="hero-subtitle">Building modern web experiences</p>
-          <a href="#projects" class="btn-primary">View Projects</a>
+      <section class="hero-section">
+        <div class="hero-content">
+          <h2 class="hero-title">Jakub Adamczyk</h2>
+          <p class="hero-subtitle">Azure DevOps Engineer</p>
+          <p class="hero-description">Passionate about cloud infrastructure, CI/CD pipelines, and building scalable DevOps solutions</p>
+          <a href="#projects" class="btn-primary">View My Work</a>
         </div>
       </section>
 
       <!-- About Section -->
-      <section id="about" class="section">
-        <div class="container">
-          <h2 class="section-title">About</h2>
+      <section id="about" class="content-section">
+        <div class="section-header">
+          <h2 class="section-title">About Me</h2>
+        </div>
+        <div class="section-content">
           <p class="section-text">
-            I'm a passionate web developer focused on creating innovative and user-friendly 
-            digital experiences. With expertise in modern web technologies, I bring ideas to life.
+            I'm a passionate mechatronic engineer with expertise in cloud infrastructure and DevOps. Currently pursuing advanced knowledge in software architecture and cloud-native solutions. Dedicated to designing and implementing robust CI/CD pipelines and infrastructure-as-code solutions.
           </p>
+          <p class="section-text">
+            My focus is on Azure ecosystem, containerization, and automation. I specialize in building scalable systems and helping teams streamline their deployment processes using modern DevOps practices and cloud technologies.
+          </p>
+          <div class="skills-list">
+            <span class="skill-badge">Azure</span>
+            <span class="skill-badge">DevOps</span>
+            <span class="skill-badge">CI/CD</span>
+            <span class="skill-badge">Kubernetes</span>
+            <span class="skill-badge">Infrastructure as Code</span>
+            <span class="skill-badge">Docker</span>
+            <span class="skill-badge">Git</span>
+            <span class="skill-badge">Cloud Architecture</span>
+          </div>
         </div>
       </section>
 
       <!-- Projects Section -->
-      <section id="projects" class="section section-alt">
-        <div class="container">
-          <h2 class="section-title">Projects</h2>
-          
-          <div class="project-card">
-            <div class="project-icon">🖥️</div>
-            <h3 class="project-title">Desktop Experience</h3>
-            <p class="project-description">
-              Interactive Windows-style desktop environment with draggable windows and animations.
-            </p>
-            <a href="../desktop/index.html" class="btn-secondary">View on Desktop</a>
-          </div>
+      <section id="projects" class="content-section">
+        <div class="section-header">
+          <h2 class="section-title">Featured Projects</h2>
+        </div>
+        <div class="projects-grid">
+          <article class="project-card">
+            <div class="card-icon">🖥️</div>
+            <h3 class="card-title">Interactive Desktop</h3>
+            <p class="card-description">Full-featured Windows-style desktop environment with draggable windows, terminal with command system, email client, and smooth anime.js animations.</p>
+            <a href="../desktop/index.html" class="card-link">Open App →</a>
+          </article>
 
-          <div class="project-card">
-            <div class="project-icon">🎨</div>
-            <h3 class="project-title">UI/UX Design</h3>
-            <p class="project-description">
-              Clean and modern interfaces designed with user experience in mind.
-            </p>
-          </div>
+          <article class="project-card">
+            <div class="card-icon">☁️</div>
+            <h3 class="card-title">Cloud Infrastructure</h3>
+            <p class="card-description">Experience with Azure resource deployment, infrastructure-as-code, and cloud-native application architecture design.</p>
+          </article>
 
-          <div class="project-card">
-            <div class="project-icon">⚡</div>
-            <h3 class="project-title">Performance</h3>
-            <p class="project-description">
-              Optimized web applications built for speed and efficiency.
-            </p>
-          </div>
+          <article class="project-card">
+            <div class="card-icon">🔄</div>
+            <h3 class="card-title">CI/CD Pipelines</h3>
+            <p class="card-description">Expertise in designing and implementing automated deployment pipelines, testing frameworks, and release management systems.</p>
+          </article>
         </div>
       </section>
 
       <!-- Contact Section -->
-      <section id="contact" class="section">
-        <div class="container">
-          <h2 class="section-title">Get in Touch</h2>
-          <p class="section-text">
-            Interested in working together? Let's connect!
-          </p>
-          <div class="contact-links">
-            <a href="mailto:hello@example.com" class="contact-link">📧 Email</a>
-            <a href="https://github.com" class="contact-link">💻 GitHub</a>
-            <a href="https://linkedin.com" class="contact-link">💼 LinkedIn</a>
-          </div>
+      <section id="contact" class="content-section contact-section">
+        <div class="section-header">
+          <h2 class="section-title">Get In Touch</h2>
+          <p class="section-tagline">Let's connect and collaborate on exciting DevOps projects</p>
+        </div>
+        <div class="contact-methods">
+          <a href="mailto:kubaadamczyk2002@gmail.com" class="contact-card">
+            <span class="contact-icon">✉️</span>
+            <span class="contact-label">Email</span>
+          </a>
+          <a href="https://github.com/MoMoiin" class="contact-card">
+            <span class="contact-icon">🐙</span>
+            <span class="contact-label">GitHub</span>
+          </a>
+          <a href="https://linkedin.com/in/jakub-adamczyk" class="contact-card">
+            <span class="contact-icon">💼</span>
+            <span class="contact-label">LinkedIn</span>
+          </a>
         </div>
       </section>
+
+      <!-- Desktop Link -->
+      <section class="cta-section">
+        <h3 class="cta-title">Experience the Interactive Desktop</h3>
+        <p class="cta-description">Explore a fully interactive Windows-style desktop environment with terminal, email client, and web browser</p>
+        <a href="../desktop/index.html" class="btn-primary btn-lg">View Desktop Version</a>
+      </section>
     </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&copy; 2026 Jakub Adamczyk. All rights reserved. | <a href="https://github.com/MoMoiin/MoMoiin.github.io">GitHub Repo</a></p>
+    </footer>
 
     <!-- Mobile Footer -->
     <footer class="mobile-footer">
