@@ -38,9 +38,10 @@ export const htmlTemplate = `<!-- Browser Window Component -->
 
 <!-- Window Content -->
 <div class="window-content">
-  <h1>Welcome to My Website</h1>
-  <p>This is a draggable browser window simulation.</p>
-  <button class="cta-button">Get Started</button>
+  <h1>Welcome to the desktop version of my portfolio website!</h1>
+  <p>This is a window recreation on how a modern web application would look and behave in a desktop environment. \n if you dont like this version you can go back to a static page by clicking this button </p>
+  
+  <button class="cta-button" onclick="window.location.href='./pages/mobile/index.html'">Go to the Static site</button>
   <div class="feature-grid">
     <div class="feature-card">
       <h3>Feature 1</h3>

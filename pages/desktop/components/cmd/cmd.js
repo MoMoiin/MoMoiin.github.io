@@ -28,11 +28,11 @@ export const htmlTemplate = `<!-- CMD Window Component -->
   <div class="cmd-header">MoMo-OS [Version 1.0.0 - Dream Edition]</div>
   <div class="cmd-header">(c) MoMoiin Studios. All creations unlocked.</div>
 
-  <pre class="cmd-banner">▄▄▄      ▄▄▄       ▄▄▄      ▄▄▄                       ▄▄▄▄  ▄▄▄  ▄▄▄▄      ▄▄    
+  <div class="cmd-banner">▄▄▄      ▄▄▄       ▄▄▄      ▄▄▄                       ▄▄▄▄  ▄▄▄  ▄▄▄▄      ▄▄    
 ████▄  ▄████       ████▄  ▄████       ▀▀              ▀███  ███  ███▀      ██    
 ███▀████▀███ ▄███▄ ███▀████▀███ ▄███▄ ██  ████▄        ███  ███  ███ ▄█▀█▄ ████▄ 
 ███  ▀▀  ███ ██ ██ ███  ▀▀  ███ ██ ██ ██  ██ ██ ▀▀▀▀▀  ███▄▄███▄▄███ ██▄█▀ ██ ██ 
-███      ███ ▀███▀ ███      ███ ▀███▀ ██▄ ██ ██         ▀████▀████▀  ▀█▄▄▄ ████▀ </pre>
+███      ███ ▀███▀ ███      ███ ▀███▀ ██▄ ██ ██         ▀████▀████▀  ▀█▄▄▄ ████▀ </div>
 
 
   <div class="cmd-output" aria-live="polite"></div>
