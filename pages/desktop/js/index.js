@@ -512,17 +512,39 @@ async function init() {
   
   // Initialize start button
   initializeStartButton(windowManager);
-  
-  // Create initial Browser window
-  try {
-    await windowManager.createWindow('browser', 'Jakub Adamczyk', '🌐');
-  } catch (error) {
-    console.error('Failed to create Browser window:', error);
-  }
-  
-  // Add quick launch buttons to taskbar
+  // Add quick launch buttons to taskbar (persistent launchers)
   const taskbarCenter = document.getElementById('taskbarCenter');
-  
+
+  // Browser Button (persistent launcher)
+  const browserBtn = document.createElement('button');
+  browserBtn.className = 'taskbar-app';
+  browserBtn.setAttribute('data-tooltip', 'Browser');
+  browserBtn.setAttribute('data-launcher-type', 'browser');
+  browserBtn.innerHTML = '<span>🌐</span>';
+  browserBtn.addEventListener('click', async () => {
+    const span = browserBtn.querySelector('span');
+    animate(span, {
+      scale: [0.7, 1.15, 1],
+      duration: 600,
+      ease: 'out(5)'
+    });
+
+    // If a Browser window already exists, restore it
+    const existingBrowser = Array.from(windowManager.windows.entries()).find(([, v]) => v.type === 'browser');
+    if (existingBrowser) {
+      const existingId = existingBrowser[0];
+      windowManager.handleRestore(existingId);
+      return;
+    }
+
+    try {
+      await windowManager.createWindow('browser', 'Jakub Adamczyk', '🌐');
+    } catch (error) {
+      console.error('Failed to create Browser window:', error);
+    }
+  });
+  taskbarCenter.appendChild(browserBtn);
+
   // CMD Button (persistent launcher)
   const cmdBtn = document.createElement('button');
   cmdBtn.className = 'taskbar-app';
@@ -582,7 +604,39 @@ async function init() {
     }
   });
   taskbarCenter.appendChild(emailBtn);
-  
+
+  // Create initial windows on every load with a layout
+  try {
+    const browserId = await windowManager.createWindow('browser', 'Jakub Adamczyk', '🌐');
+    const cmdId = await windowManager.createWindow('cmd', 'Command Prompt', '💻');
+    const emailId = await windowManager.createWindow('email', 'Mail', '✉️');
+
+    // Apply initial layout
+    const browserEl = windowManager.windows.get(browserId).element;
+    const cmdEl = windowManager.windows.get(cmdId).element;
+    const emailEl = windowManager.windows.get(emailId).element;
+
+    // Browser: left-center large
+    browserEl.style.width = '60vw';
+    browserEl.style.height = '93vh';
+    browserEl.style.left = '0.5%';
+    browserEl.style.top = '1.5%';
+
+    // CMD: bottom-left smaller
+    cmdEl.style.width = '34vw';
+    cmdEl.style.height = '45vh';
+    cmdEl.style.left = '61%';
+    cmdEl.style.top = '1.5%';
+
+    // Email: right side tall
+    emailEl.style.width = '34vw';
+    emailEl.style.height = '46.5vh';
+    emailEl.style.left = '61%';
+    emailEl.style.top = '50%';
+  } catch (error) {
+    console.error('Failed to create initial windows:', error);
+  }
+
   // Expose windowManager globally for adding more windows
   window.windowManager = windowManager;
 }
