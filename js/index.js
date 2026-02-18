@@ -27,7 +27,7 @@ const CONFIG = {
   },
   background: {
     animationSpeed: 0.002,
-    colors: ['#667eea', '#764ba2', '#f093fb']
+    colors: ['#1f2937', '#535964', '#af928e']
   }
 };
 
@@ -72,6 +72,7 @@ const elements = {
 
 const state = {
   isMaximized: false,
+  wasMaximizedBeforeMinimize: false,
   isResizing: false,
   previousSize: { width: 0, height: 0, top: 0, left: 0 },
   resize: {
@@ -91,6 +92,21 @@ const state = {
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
+
+/**
+ * Debounce function to limit execution rate
+ */
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 /**
  * Centers the window in the container
@@ -154,11 +170,24 @@ function initializeWindow() {
   
   // Prevent dragging from content areas
   [elements.content, elements.addressBar].forEach(element => {
-    element.addEventListener('mousedown', e => e.stopPropagation());
+    element.addEventListener('mousedown', e => e.stopPropagation(), { passive: false });
   });
   
-  // Recenter on window resize
-  window.addEventListener('resize', centerWindow);
+  // Handle browser resize with debouncing for better performance
+  const handleResize = debounce(() => {
+    if (state.isMaximized) {
+      // Update maximized window size
+      const maxWidth = window.innerWidth;
+      const maxHeight = window.innerHeight - CONFIG.taskbar.height;
+      elements.window.style.width = `${maxWidth}px`;
+      elements.window.style.height = `${maxHeight}px`;
+    } else {
+      // Recenter normal window
+      centerWindow();
+    }
+  }, 150);
+  
+  window.addEventListener('resize', handleResize, { passive: true });
 }
 
 // ============================================================================
@@ -175,10 +204,17 @@ function handleMaximize() {
       left: elements.window.offsetLeft
     };
     
-    // Animate to fullscreen
+    // Maximize to fill viewport (scales with browser)
     const maxWidth = window.innerWidth;
     const maxHeight = window.innerHeight - CONFIG.taskbar.height;
     
+    // Override CSS constraints
+    elements.window.style.maxWidth = 'none';
+    elements.window.style.maxHeight = 'none';
+    
+    state.isMaximized = true;
+    
+    // Animate to maximized state
     animate(elements.window, {
       width: [`${maxWidth}px`],
       height: [`${maxHeight}px`],
@@ -188,10 +224,15 @@ function handleMaximize() {
       duration: CONFIG.animation.duration.maximize,
       ease: CONFIG.animation.easing.default
     });
-    
-    state.isMaximized = true;
   } else {
-    // Restore to previous size
+    // Restore to previous size first
+    state.isMaximized = false;
+    
+    // Restore CSS constraints
+    elements.window.style.maxWidth = '';
+    elements.window.style.maxHeight = '';
+    
+    // Animate to restored state
     animate(elements.window, {
       width: [`${state.previousSize.width}px`],
       height: [`${state.previousSize.height}px`],
@@ -201,21 +242,30 @@ function handleMaximize() {
       duration: CONFIG.animation.duration.maximize,
       ease: CONFIG.animation.easing.default
     });
-    
-    state.isMaximized = false;
   }
 }
 
-function handleMinimize() {
-  const taskbarRect = elements.taskbar.browserIcon.getBoundingClientRect();
+function handleMinimize(targetIcon = null) {
+  // Use provided icon or default to browser icon
+  const icon = targetIcon || elements.taskbar.browserIcon;
+  const taskbarRect = icon.getBoundingClientRect();
   const windowRect = elements.window.getBoundingClientRect();
   
   setTaskbarActive(false);
   
+  // Save maximized state before minimizing
+  state.wasMaximizedBeforeMinimize = state.isMaximized;
+  
+  // Calculate center points for smooth animation to icon center
+  const iconCenterX = taskbarRect.left + taskbarRect.width / 2;
+  const iconCenterY = taskbarRect.top + taskbarRect.height / 2;
+  const windowCenterX = windowRect.left + windowRect.width / 2;
+  const windowCenterY = windowRect.top + windowRect.height / 2;
+  
   animate(elements.window, {
     scale: [0.3],
-    translateX: [taskbarRect.left - windowRect.left],
-    translateY: [taskbarRect.top - windowRect.top],
+    translateX: [iconCenterX - windowCenterX],
+    translateY: [iconCenterY - windowCenterY],
     opacity: [0],
     duration: CONFIG.animation.duration.minimize,
     ease: CONFIG.animation.easing.inOut
@@ -227,6 +277,7 @@ function handleMinimize() {
 
 function handleRestore() {
   if (elements.window.style.display === 'none') {
+    // Window is minimized - restore it
     elements.window.style.display = 'flex';
     elements.window.style.opacity = '0';
     elements.window.style.transform = 'scale(0.3)';
@@ -238,7 +289,16 @@ function handleRestore() {
       opacity: [1],
       duration: CONFIG.animation.duration.minimize,
       ease: CONFIG.animation.easing.default
+    }).then(() => {
+      // After restore animation, re-maximize if it was maximized before
+      if (state.wasMaximizedBeforeMinimize) {
+        state.wasMaximizedBeforeMinimize = false;
+        handleMaximize();
+      }
     });
+  } else {
+    // Window is open - minimize it to the browser icon
+    handleMinimize(elements.taskbar.browserIcon);
   }
 }
 
@@ -328,12 +388,12 @@ function stopResize() {
 function initializeResizeHandles() {
   // Attach event listeners to all resize handles
   Object.values(elements.resize).forEach(handle => {
-    handle.addEventListener('mousedown', e => initResize(e, handle));
+    handle.addEventListener('mousedown', e => initResize(e, handle), { passive: false });
   });
   
   // Global resize and stop listeners
-  document.addEventListener('mousemove', handleResize);
-  document.addEventListener('mouseup', stopResize);
+  document.addEventListener('mousemove', handleResize, { passive: true });
+  document.addEventListener('mouseup', stopResize, { passive: true });
 }
 
 // ============================================================================
@@ -341,20 +401,36 @@ function initializeResizeHandles() {
 // ============================================================================
 
 function resizeCanvas() {
-  elements.canvas.width = elements.canvas.offsetWidth;
-  elements.canvas.height = elements.canvas.offsetHeight;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = elements.canvas.getBoundingClientRect();
+  
+  // Set canvas size accounting for device pixel ratio for crisp rendering
+  elements.canvas.width = rect.width * dpr;
+  elements.canvas.height = rect.height * dpr;
+  
+  // Scale context to match device pixel ratio
+  const ctx = elements.canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  
+  // Store actual display size for gradient calculations
+  elements.canvas.displayWidth = rect.width;
+  elements.canvas.displayHeight = rect.height;
 }
 
 function animateBackground() {
-  const ctx = elements.canvas.getContext('2d');
+  const ctx = elements.canvas.getContext('2d', { alpha: false });
   state.background.gradientOffset += CONFIG.background.animationSpeed;
+  
+  // Use display dimensions for gradient (not scaled by DPR)
+  const width = elements.canvas.displayWidth || elements.canvas.width;
+  const height = elements.canvas.displayHeight || elements.canvas.height;
   
   // Create rotating gradient
   const gradient = ctx.createLinearGradient(
     0, 
     0, 
-    elements.canvas.width * Math.cos(state.background.gradientOffset), 
-    elements.canvas.height * Math.sin(state.background.gradientOffset)
+    width * Math.cos(state.background.gradientOffset), 
+    height * Math.sin(state.background.gradientOffset)
   );
   
   // Apply color stops
@@ -364,15 +440,63 @@ function animateBackground() {
   
   // Render gradient
   ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, elements.canvas.width, elements.canvas.height);
+  ctx.fillRect(0, 0, width, height);
   
   requestAnimationFrame(animateBackground);
 }
 
 function initializeBackground() {
+  if (!elements.canvas) {
+    console.error('Canvas element not found!');
+    return;
+  }
   resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('resize', debounce(resizeCanvas, 150), { passive: true });
   animateBackground();
+}
+
+// ============================================================================
+// TASKBAR ICON ANIMATIONS
+// ============================================================================
+
+/**
+ * Animates taskbar icon with Windows-style bounce effect on click
+ */
+function animateIconClick(iconElement) {
+  animate(iconElement, {
+    scale: [0.7, 1.15, 1],
+    duration: 600,
+    ease: 'out(5)'
+  });
+}
+
+function initializeTaskbarAnimations() {
+  // Animate all taskbar app buttons - target the inner span
+  const taskbarApps = document.querySelectorAll('.taskbar-app');
+  taskbarApps.forEach(app => {
+    app.addEventListener('click', () => {
+      const icon = app.querySelector('span');
+      if (icon) animateIconClick(icon);
+    });
+  });
+  
+  // Animate start button - target the SVG
+  const startButton = document.querySelector('.start-button');
+  if (startButton) {
+    startButton.addEventListener('click', () => {
+      const svg = startButton.querySelector('svg');
+      if (svg) animateIconClick(svg);
+    });
+  }
+  
+  // Animate individual tray icons (not the whole tray)
+  const trayIcons = document.querySelectorAll('.tray-icon');
+  trayIcons.forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      animateIconClick(icon);
+    });
+  });
 }
 
 // ============================================================================
@@ -384,6 +508,7 @@ function init() {
   initializeWindowControls();
   initializeResizeHandles();
   initializeBackground();
+  initializeTaskbarAnimations();
   
   // Start clock
   updateClock();

@@ -4,101 +4,201 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>HTML 5 Boilerplate</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <script type="importmap">
-      {
-        "imports": {
-          "animejs": "./node_modules/animejs/dist/modules/index.js"
+    <title>Loading...</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      .loader-container {
+        text-align: center;
+        padding: 40px;
+        max-width: 600px;
+      }
+
+      .loader-title {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 24px;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .loader-text {
+        font-size: 18px;
+        margin-bottom: 40px;
+        opacity: 0.95;
+        animation: fadeIn 0.5s ease 0.1s backwards;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        margin: 0 auto 40px;
+        animation: spin 1s linear infinite, fadeIn 0.5s ease 0.2s backwards;
+      }
+
+      .manual-links {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: fadeIn 0.5s ease 0.3s backwards;
+      }
+
+      .manual-link {
+        display: inline-block;
+        padding: 12px 24px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .manual-link:hover {
+        background: white;
+        color: #667eea;
+        transform: translateY(-2px);
+      }
+
+      .device-info {
+        margin-top: 32px;
+        font-size: 14px;
+        opacity: 0.8;
+        animation: fadeIn 0.5s ease 0.4s backwards;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
         }
       }
-    </script>
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .loader-title {
+          font-size: 36px;
+        }
+
+        .loader-text {
+          font-size: 16px;
+        }
+
+        .manual-links {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .manual-link {
+          width: 100%;
+          max-width: 250px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div class="large row centered">
-      <canvas id="bgCanvas"></canvas>
-      <div class="square draggable">
-        <div class="window-titlebar">
-          <span class="window-title">Jakub Adamczyk Resume</span>
-          <div class="window-controls">
-            <span title="Minimize">&#8212;</span>
-            <span title="Maximize">&#9723;</span>
-            <span title="Close">&#10005;</span>
-          </div>
-        </div>
-        <div class="address-bar">
-          <div class="address-input" >
-            <span class="lock-icon">🔒</span>
-            <span class="url">https://Jakub.Adamczyk.Awsome</span>
-          </div>
-        </div>
-        <div class="window-content">
-          <h1>Welcome to My Website</h1>
-          <p>This is a draggable browser window simulation.</p>
-          <button class="cta-button">Get Started</button>
-          <div class="feature-grid">
-            <div class="feature-card">
-              <h3>Feature 1</h3>
-              <p>Amazing functionality here</p>
-            </div>
-            <div class="feature-card">
-              <h3>Feature 2</h3>
-              <p>More great features</p>
-            </div>
-          </div>
-        </div>
-        <div class="resize-handle resize-top"></div>
-        <div class="resize-handle resize-right"></div>
-        <div class="resize-handle resize-bottom"></div>
-        <div class="resize-handle resize-left"></div>
-        <div class="resize-handle resize-corner-tl"></div>
-        <div class="resize-handle resize-corner-tr"></div>
-        <div class="resize-handle resize-corner-bl"></div>
-        <div class="resize-handle resize-corner-br"></div>
+    <div class="loader-container">
+      <h1 class="loader-title">Welcome</h1>
+      <p class="loader-text">Detecting your device...</p>
+      <div class="spinner"></div>
+      
+      <div class="manual-links">
+        <a href="mobile.html" class="manual-link">📱 Mobile View</a>
+        <a href="desktop.html" class="manual-link">🖥️ Desktop View</a>
       </div>
-    </div>
-    <script type="module" src="js/index.js"></script>
 
-    <!-- Windows-style Taskbar -->
-    <div class="taskbar">
-      <div class="taskbar-left">
-        <button class="start-button" data-tooltip="Start">
-          <svg width="20" height="20" viewBox="0 0 20 20">
-            <rect x="1" y="1" width="8" height="8" fill="currentColor"/>
-            <rect x="11" y="1" width="8" height="8" fill="currentColor"/>
-            <rect x="1" y="11" width="8" height="8" fill="currentColor"/>
-            <rect x="11" y="11" width="8" height="8" fill="currentColor"/>
-          </svg>
-        </button>
-<!--         <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <span class="search-text">Type here to search</span>
-        </div> -->
-      </div>
-      
-      <div class="taskbar-center">
-        <button class="taskbar-app active" data-tooltip="Browser">
-          <span>🌐</span>
-        </button>
-        <button class="taskbar-app" data-tooltip="File Explorer">
-          <span>📁</span>
-        </button>
-        <button class="taskbar-app" data-tooltip="Mail">
-          <span>✉️</span>
-        </button>
-      </div>
-      
-      <div class="taskbar-right">
-        <div class="system-tray">
-          <span class="tray-icon">🔊</span>
-          <span class="tray-icon">📶</span>
-          <span class="tray-icon">🔋</span>
-          <div class="datetime">
-            <div class="time">12:00 PM</div>
-            <div class="date">2/18/2026</div>
-          </div>
-        </div>
-      </div>
+      <p class="device-info" id="deviceInfo"></p>
     </div>
+
+    <script>
+      // Configuration - Breakpoint for mobile vs desktop (in pixels)
+      const MOBILE_BREAKPOINT = 1024;
+
+      // Get screen dimensions
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+      // Display device info
+      const deviceInfo = document.getElementById('deviceInfo');
+      deviceInfo.textContent = `Screen: ${screenWidth}x${screenHeight} | ${isTouchDevice ? 'Touch' : 'Desktop'} Device`;
+
+      // Determine which version to load
+      function detectAndRedirect() {
+        // Check if user has a manual preference stored
+        const userPreference = localStorage.getItem('viewPreference');
+        
+        if (userPreference === 'mobile') {
+          window.location.href = 'mobile.html';
+          return;
+        }
+        
+        if (userPreference === 'desktop') {
+          window.location.href = 'desktop.html';
+          return;
+        }
+
+        // Auto-detect based on screen size
+        if (screenWidth < MOBILE_BREAKPOINT) {
+          // Small screen - redirect to mobile
+          window.location.href = 'mobile.html';
+        } else {
+          // Large screen - redirect to desktop
+          window.location.href = 'desktop.html';
+        }
+      }
+
+      // Add event listeners to manual links to save preference
+      document.querySelectorAll('.manual-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = e.currentTarget.getAttribute('href');
+          const preference = href.includes('mobile') ? 'mobile' : 'desktop';
+          localStorage.setItem('viewPreference', preference);
+        });
+      });
+
+      // Redirect after a short delay (for smooth loading experience)
+      setTimeout(detectAndRedirect, 800);
+
+      // Also handle viewport resize (orientation change)
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          // Only auto-redirect if no manual preference is set
+          if (!localStorage.getItem('viewPreference')) {
+            detectAndRedirect();
+          }
+        }, 250);
+      });
+    </script>
   </body>
 </html>
