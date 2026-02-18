@@ -8,7 +8,7 @@ const CONFIG = {
   window: {
     minWidth: 400,
     minHeight: 300,
-    borderRadius: 8
+    borderRadius: 12
   },
   taskbar: {
     height: 48
@@ -38,13 +38,13 @@ const CONFIG = {
 const elements = {
   window: document.querySelector('.draggable'),
   container: document.querySelector('.large.row.centered'),
-  titleBar: document.querySelector('.window-titlebar'),
+  titleBar: document.querySelector('.chrome-tabs'),
   content: document.querySelector('.window-content'),
   addressBar: document.querySelector('.address-bar'),
   controls: {
-    minimize: document.querySelector('.window-controls span:nth-child(1)'),
-    maximize: document.querySelector('.window-controls span:nth-child(2)'),
-    close: document.querySelector('.window-controls span:nth-child(3)')
+    minimize: document.querySelector('.minimize-btn'),
+    maximize: document.querySelector('.maximize-btn'),
+    close: document.querySelector('.close-btn')
   },
   taskbar: {
     browserIcon: document.querySelector('.taskbar-app.active')
@@ -170,6 +170,11 @@ function initializeWindow() {
   
   // Prevent dragging from content areas
   [elements.content, elements.addressBar].forEach(element => {
+    element.addEventListener('mousedown', e => e.stopPropagation(), { passive: false });
+  });
+  
+  // Prevent dragging from tabs and controls
+  document.querySelectorAll('.tab, .window-controls, .control-btn, .new-tab-button, .nav-buttons, .address-input, .menu-btn').forEach(element => {
     element.addEventListener('mousedown', e => e.stopPropagation(), { passive: false });
   });
   

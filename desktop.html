@@ -18,19 +18,38 @@
     <div class="large row centered">
       <canvas id="bgCanvas"></canvas>
       <div class="square draggable">
-        <div class="window-titlebar">
-          <span class="window-title">Jakub Adamczyk Resume</span>
+        <!-- Chrome-style Tab Bar -->
+        <div class="chrome-tabs">
+          <div class="tab-container">
+            <div class="tab active">
+              <div class="tab-content">
+                <span class="tab-icon">🌐</span>
+                <span class="tab-title">Jakub Adamczyk</span>
+                <button class="tab-close" title="Close tab">×</button>
+              </div>
+            </div>
+            <button class="new-tab-button" title="New tab">+</button>
+          </div>
           <div class="window-controls">
-            <span title="Minimize">&#8212;</span>
-            <span title="Maximize">&#9723;</span>
-            <span title="Close">&#10005;</span>
+            <button class="control-btn minimize-btn" title="Minimize">−</button>
+            <button class="control-btn maximize-btn" title="Maximize">□</button>
+            <button class="control-btn close-btn" title="Close">×</button>
           </div>
         </div>
+        
+        <!-- Chrome-style Address Bar -->
         <div class="address-bar">
-          <div class="address-input" >
-            <span class="lock-icon">🔒</span>
-            <span class="url">https://Jakub.Adamczyk.Awsome</span>
+          <div class="nav-buttons">
+            <button class="nav-btn" title="Back" disabled>←</button>
+            <button class="nav-btn" title="Forward" disabled>→</button>
+            <button class="nav-btn" title="Reload">↻</button>
           </div>
+          <div class="address-input">
+            <span class="lock-icon">🔒</span>
+            <span class="url">jakub-adamczyk.com</span>
+            <span class="star-icon" title="Bookmark">☆</span>
+          </div>
+          <button class="menu-btn" title="Menu">⋮</button>
         </div>
         <div class="window-content">
           <h1>Welcome to My Website</h1>
