@@ -40,6 +40,7 @@ class WindowManager {
     this.windows = new Map();
     this.container = document.getElementById('windowsContainer');
     this.taskbarCenter = document.getElementById('taskbarCenter');
+    this.maxZIndex = 10;
     this.state = {
       isResizing: false,
       resize: {}
@@ -68,11 +69,21 @@ class WindowManager {
     componentLink.href = `./components/${type}/${type}.css`;
     document.head.appendChild(componentLink);
     
+    // Reset transform to ensure proper positioning and dragging
+    windowEl.style.transform = 'none';
+    windowEl.style.opacity = '1';
+    windowEl.style.display = 'flex';
+    
     // Initialize window controls
     this.initializeWindowControls(windowEl);
     this.initializeResizeHandles(windowEl);
+    
+    // Bring window to front on any click
+    windowEl.addEventListener('mousedown', () => this.bringToFront(windowId));
+    windowEl.addEventListener('touchstart', () => this.bringToFront(windowId));
+    
     this.centerWindow(windowEl);
-    this.makeWindowDraggable(windowEl);
+    this.makeWindowDraggable(windowEl, windowId);
     
     // Add taskbar button
     this.addTaskbarButton(windowId, icon, type);
@@ -90,19 +101,39 @@ class WindowManager {
       previousSize: { width: 0, height: 0, top: 0, left: 0 }
     });
     
+    // Bring newly created window to front
+    this.bringToFront(windowId);
+    
     return windowId;
+  }
+
+  bringToFront(windowId) {
+    const windowData = this.windows.get(windowId);
+    if (windowData) {
+      this.maxZIndex++;
+      windowData.element.style.zIndex = this.maxZIndex;
+    }
   }
 
   centerWindow(windowEl) {
     const containerRect = this.container.getBoundingClientRect();
-    const windowWidth = windowEl.offsetWidth;
-    const windowHeight = windowEl.offsetHeight;
+    let windowWidth = windowEl.offsetWidth;
+    let windowHeight = windowEl.offsetHeight;
+    
+    // If dimensions aren't calculated yet, force a layout recalculation
+    if (windowWidth === 0 || windowHeight === 0) {
+      windowEl.style.visibility = 'hidden';
+      windowEl.style.display = 'flex';
+      windowWidth = windowEl.offsetWidth || 960;  // fallback to default
+      windowHeight = windowEl.offsetHeight || 540; // fallback to default
+      windowEl.style.visibility = '';
+    }
     
     windowEl.style.left = `${(containerRect.width - windowWidth) / 2}px`;
     windowEl.style.top = `${(containerRect.height - windowHeight) / 2}px`;
   }
 
-  makeWindowDraggable(windowEl) {
+  makeWindowDraggable(windowEl, windowId) {
     const titleBar = windowEl.querySelector('.chrome-tabs');
     if (!titleBar) return;
 
@@ -138,6 +169,9 @@ class WindowManager {
     };
 
     const startDrag = (clientX, clientY) => {
+      // Bring window to front when starting drag
+      this.bringToFront(windowId);
+      
       // record start positions
       isDragging = true;
       startX = clientX;
@@ -243,6 +277,12 @@ class WindowManager {
       taskbarBtn.classList.remove('active');
     }
     
+    // Save current position before minimizing
+    windowData.savedPosition = {
+      top: windowEl.offsetTop,
+      left: windowEl.offsetLeft
+    };
+    
     windowData.wasMaximized = windowData.isMaximized;
     
     const taskbarRect = taskbarBtn?.getBoundingClientRect() || { left: 0, top: 0, width: 0, height: 0 };
@@ -261,8 +301,8 @@ class WindowManager {
       duration: CONFIG.animation.duration.minimize,
       ease: CONFIG.animation.easing.inOut
     }).then(() => {
+      // Hide without resetting transform yet - prevents visible jump
       windowEl.style.display = 'none';
-      windowEl.style.transform = 'scale(1) translate(0, 0)';
       windowEl.style.opacity = '1';
     });
   }
@@ -272,17 +312,27 @@ class WindowManager {
     const windowEl = windowData.element;
     const taskbarBtn = document.querySelector(`[data-window-id="${windowId}"]`);
     
+    // Bring window to front when restoring
+    this.bringToFront(windowId);
+    
     if (taskbarBtn) {
       taskbarBtn.classList.add('active');
     }
     
     if (windowEl.style.display === 'none') {
+      // Reset transform while window is hidden to prevent visible jump
+      windowEl.style.transform = 'none';
+      
+      // Restore saved position before showing
+      if (windowData.savedPosition) {
+        windowEl.style.left = `${windowData.savedPosition.left}px`;
+        windowEl.style.top = `${windowData.savedPosition.top}px`;
+      }
+      
       windowEl.style.display = 'flex';
       windowEl.style.opacity = '0';
-      windowEl.style.transform = 'scale(0.3)';
       
       animate(windowEl, {
-        scale: [1],
         opacity: [1],
         duration: CONFIG.animation.duration.minimize,
         ease: CONFIG.animation.easing.default
@@ -331,8 +381,8 @@ class WindowManager {
     if (launcher) {
       launcher.classList.add('active');
       launcher.setAttribute('data-window-id', windowId);
-      // Ensure click restores this window
-      launcher.onclick = () => this.handleRestore(windowId);
+      // Don't override the launcher's original click handler - it checks if a window exists
+      // and either restores or creates a new one
       return;
     }
 
