@@ -606,6 +606,13 @@ function initializeStartButton(windowManager) {
 // INITIALIZATION
 // ============================================================================
 
+// SVG Icons
+const SVG_ICONS = {
+  browser: '<svg viewBox="0 0 24 24" style="width:20px;height:20px;"><circle cx="12" cy="12" r="10" fill="#F4B400"/><circle cx="12" cy="12" r="7" fill="#0F9D58"/><circle cx="13" cy="11" r="2.5" fill="#4285F4"/><path d="M12 2 A10 10 0 0 1 19 5" fill="none" stroke="#EA4335" stroke-width="3" stroke-linecap="round"/><path d="M19 5 A10 10 0 0 1 22 12" fill="none" stroke="#F4B400" stroke-width="3" stroke-linecap="round"/><path d="M22 12 A10 10 0 0 1 12 22" fill="none" stroke="#0F9D58" stroke-width="3" stroke-linecap="round"/></svg>',
+  cmd: '<svg viewBox="0 0 24 24" style="width:20px;height:20px;"><rect x="2" y="3" width="20" height="18" rx="2" fill="#000D26" stroke="#0078D4" stroke-width="1.5"/><text x="5" y="16" font-family="Courier" font-size="6" fill="#00FF00" font-weight="bold">C:\\</text><circle cx="20" cy="16" r="1.5" fill="#00FF00"/></svg>',
+  email: '<svg viewBox="0 0 24 24" style="width:20px;height:20px;"><rect x="2" y="4" width="20" height="16" rx="2" fill="#0078D4"/><path d="M2 6l10 7 10-7" stroke="#ffffff" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>'
+};
+
 async function init() {
   const windowManager = new WindowManager();
   
@@ -627,7 +634,7 @@ async function init() {
   browserBtn.className = 'taskbar-app';
   browserBtn.setAttribute('data-tooltip', 'Browser');
   browserBtn.setAttribute('data-launcher-type', 'browser');
-  browserBtn.innerHTML = '<span>🌐</span>';
+  browserBtn.innerHTML = `<span>${SVG_ICONS.browser}</span>`;
   browserBtn.addEventListener('click', async () => {
     const span = browserBtn.querySelector('span');
     animate(span, {
@@ -645,7 +652,7 @@ async function init() {
     }
 
     try {
-      await windowManager.createWindow('browser', 'Jakub Adamczyk', '🌐');
+      await windowManager.createWindow('browser', 'Jakub Adamczyk', SVG_ICONS.browser);
     } catch (error) {
       console.error('Failed to create Browser window:', error);
     }
@@ -655,9 +662,9 @@ async function init() {
   // CMD Button (persistent launcher)
   const cmdBtn = document.createElement('button');
   cmdBtn.className = 'taskbar-app';
-  cmdBtn.setAttribute('data-tooltip', 'Command Prompt');
+  cmdBtn.setAttribute('data-tooltip', 'MoMo Terminal');
   cmdBtn.setAttribute('data-launcher-type', 'cmd');
-  cmdBtn.innerHTML = '<span>💻</span>';
+  cmdBtn.innerHTML = `<span>${SVG_ICONS.cmd}</span>`;
   cmdBtn.addEventListener('click', async () => {
     const span = cmdBtn.querySelector('span');
     animate(span, {
@@ -675,7 +682,7 @@ async function init() {
     }
 
     try {
-      await windowManager.createWindow('cmd', 'Command Prompt', '💻');
+      await windowManager.createWindow('cmd', 'MoMo Terminal', SVG_ICONS.cmd);
     } catch (error) {
       console.error('Failed to create CMD window:', error);
     }
@@ -687,7 +694,7 @@ async function init() {
   emailBtn.className = 'taskbar-app';
   emailBtn.setAttribute('data-tooltip', 'Mail');
   emailBtn.setAttribute('data-launcher-type', 'email');
-  emailBtn.innerHTML = '<span>✉️</span>';
+  emailBtn.innerHTML = `<span>${SVG_ICONS.email}</span>`;
   emailBtn.addEventListener('click', async () => {
     const span = emailBtn.querySelector('span');
     animate(span, {
@@ -705,7 +712,7 @@ async function init() {
     }
 
     try {
-      await windowManager.createWindow('email', 'Mail', '✉️');
+      await windowManager.createWindow('email', 'Mail', SVG_ICONS.email);
     } catch (error) {
       console.error('Failed to create Email window:', error);
     }
@@ -714,9 +721,9 @@ async function init() {
 
   // Create initial windows on every load with a layout
   try {
-    const browserId = await windowManager.createWindow('browser', 'Jakub Adamczyk', '🌐');
-    const cmdId = await windowManager.createWindow('cmd', 'Command Prompt', '💻');
-    const emailId = await windowManager.createWindow('email', 'Mail', '✉️');
+    const browserId = await windowManager.createWindow('browser', 'Jakub Adamczyk', SVG_ICONS.browser);
+    const cmdId = await windowManager.createWindow('cmd', 'MoMo Terminal', SVG_ICONS.cmd);
+    const emailId = await windowManager.createWindow('email', 'Mail', SVG_ICONS.email);
 
     // Apply initial layout
     const browserEl = windowManager.windows.get(browserId).element;

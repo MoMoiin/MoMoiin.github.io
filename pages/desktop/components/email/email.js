@@ -1,11 +1,13 @@
 // Email Component JavaScript
 
+const EMAIL_ICON = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;"><rect x="2" y="4" width="20" height="16" rx="2" fill="#0078D4"/><path d="M2 6l10 7 10-7" stroke="#ffffff" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>';
+
 export const htmlTemplate = `<!-- Email Window Component -->
 <div class="chrome-tabs">
   <div class="tab-container">
     <div class="tab active">
       <div class="tab-content">
-        <span class="tab-icon">✉️</span>
+        <span class="tab-icon">${EMAIL_ICON}</span>
         <span class="tab-title">Mail</span>
         <button class="tab-close" title="Close tab">×</button>
       </div>

@@ -1,12 +1,16 @@
 // CMD Component JavaScript
 
+const CMD_ICON = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;"><rect x="2" y="3" width="20" height="18" rx="2" fill="#000D26" stroke="#0078D4" stroke-width="1.5"/><text x="5" y="16" font-family="Courier" font-size="6" fill="#00FF00" font-weight="bold">C:\\</text><circle cx="20" cy="16" r="1.5" fill="#00FF00"/></svg>';
+const BROWSER_ICON = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10" fill="#F4B400"/><circle cx="12" cy="12" r="7" fill="#0F9D58"/><circle cx="13" cy="11" r="2.5" fill="#4285F4"/><path d="M12 2 A10 10 0 0 1 19 5" fill="none" stroke="#EA4335" stroke-width="3" stroke-linecap="round"/><path d="M19 5 A10 10 0 0 1 22 12" fill="none" stroke="#F4B400" stroke-width="3" stroke-linecap="round"/><path d="M22 12 A10 10 0 0 1 12 22" fill="none" stroke="#0F9D58" stroke-width="3" stroke-linecap="round"/></svg>';
+const EMAIL_ICON = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;"><rect x="2" y="4" width="20" height="16" rx="2" fill="#0078D4"/><path d="M2 6l10 7 10-7" stroke="#ffffff" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>';
+
 export const htmlTemplate = `<!-- CMD Window Component -->
 <div class="chrome-tabs">
   <div class="tab-container">
     <div class="tab active">
       <div class="tab-content">
-        <span class="tab-icon">💻</span>
-        <span class="tab-title">Command Prompt</span>
+        <span class="tab-icon">${CMD_ICON}</span>
+        <span class="tab-title">MoMo Terminal</span>
         <button class="tab-close" title="Close tab">×</button>
       </div>
     </div>
@@ -21,8 +25,8 @@ export const htmlTemplate = `<!-- CMD Window Component -->
 
 <!-- Window Content -->
 <div class="window-content cmd-content">
-  <div class="cmd-header">Microsoft Windows [Version 10.0.19041.1348]</div>
-  <div class="cmd-header">(c) Microsoft Corporation. All rights reserved.</div>
+  <div class="cmd-header">MoMo-OS [Version 1.0.0 - Dream Edition]</div>
+  <div class="cmd-header">(c) MoMoiin Studios. All creations unlocked.</div>
 
   <div class="cmd-output" aria-live="polite"></div>
 
@@ -58,7 +62,7 @@ export function init(windowElement) {
     whoami: ['Jakub Adamczyk'],
     ls: ['Documents', 'Downloads', 'Pictures', 'Projects', 'README.md'],
     pwd: ['/home/jakub'],
-    version: ['MoMoiin Desktop v1.0.0'],
+    version: ['MoMo-OS v1.0.0 - Dream Edition'],
     about: ['This is a demo desktop environment built with HTML/CSS/JS.']
   };
 
@@ -101,7 +105,8 @@ export function init(windowElement) {
         if (existing) {
           window.windowManager.handleRestore(existing[0]);
         } else {
-          window.windowManager.createWindow(type, type.charAt(0).toUpperCase() + type.slice(1), type === 'browser' ? '🌐' : type === 'cmd' ? '💻' : '✉️');
+          const iconMap = { browser: BROWSER_ICON, cmd: CMD_ICON, email: EMAIL_ICON };
+          window.windowManager.createWindow(type, type.charAt(0).toUpperCase() + type.slice(1), iconMap[type] || EMAIL_ICON);
         }
       } else {
         appendLine('Usage: open <browser|cmd|email>');
@@ -112,7 +117,7 @@ export function init(windowElement) {
       if (window.windowManager) {
         const existing = Array.from(window.windowManager.windows.entries()).find(([, v]) => v.type === 'email');
         if (existing) window.windowManager.handleRestore(existing[0]);
-        else window.windowManager.createWindow('email', 'Mail', '✉️');
+        else window.windowManager.createWindow('email', 'Mail', EMAIL_ICON);
       }
       return;
     }

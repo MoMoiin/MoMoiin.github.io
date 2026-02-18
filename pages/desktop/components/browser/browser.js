@@ -1,11 +1,13 @@
 // Browser Component JavaScript
 
+const BROWSER_ICON = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10" fill="#F4B400"/><circle cx="12" cy="12" r="7" fill="#0F9D58"/><circle cx="13" cy="11" r="2.5" fill="#4285F4"/><path d="M12 2 A10 10 0 0 1 19 5" fill="none" stroke="#EA4335" stroke-width="3" stroke-linecap="round"/><path d="M19 5 A10 10 0 0 1 22 12" fill="none" stroke="#F4B400" stroke-width="3" stroke-linecap="round"/><path d="M22 12 A10 10 0 0 1 12 22" fill="none" stroke="#0F9D58" stroke-width="3" stroke-linecap="round"/></svg>';
+
 export const htmlTemplate = `<!-- Browser Window Component -->
 <div class="chrome-tabs">
   <div class="tab-container">
     <div class="tab active">
       <div class="tab-content">
-        <span class="tab-icon">🌐</span>
+        <span class="tab-icon">${BROWSER_ICON}</span>
         <span class="tab-title">Jakub Adamczyk</span>
         <button class="tab-close" title="Close tab">×</button>
       </div>
