@@ -1,0 +1,497 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+.large.row.centered {
+  width: 100vw;
+  height: calc(100vh - 48px);
+  position: relative;
+  overflow: hidden;
+}
+
+#bgCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.square.draggable {
+  width: 60vw;
+  height: 60vh;
+  min-width: 400px;
+  min-height: 300px;
+  max-width: 90vw;
+  max-height: 80vh;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  position: absolute;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title Bar */
+.window-titlebar {
+  height: 30px;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 0 16px;
+  cursor: move;
+  flex-shrink: 0;
+}
+
+.window-title {
+  font-size: 12px;
+  color: #000;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-weight: 400;
+}
+
+.window-controls {
+  display: flex;
+  height: 100%;
+}
+
+.window-controls span {
+  width: 46px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #000;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+  font-family: 'Segoe UI Symbol', Arial;
+}
+
+.window-controls span:nth-child(1):hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.window-controls span:nth-child(2):hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.window-controls span:nth-child(3):hover {
+  background: #e81123;
+  color: white;
+}
+
+/* Address Bar */
+.address-bar {
+  height: 48px;
+  background: #f3f3f3;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  flex-shrink: 0;
+}
+
+.address-input {
+  flex: 1;
+  height: 32px;
+  background: white;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  transition: border-color 0.15s;
+}
+
+.address-input:hover {
+  border-color: #b0b0b0;
+}
+
+.lock-icon {
+  font-size: 14px;
+}
+
+.url {
+  font-size: 10px;
+  color: #333;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Window Content */
+.window-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px;
+  background: white;
+}
+
+/* Windows-style scrollbar */
+.window-content::-webkit-scrollbar {
+  width: 12px;
+}
+
+.window-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 6px;
+  border: 2px solid #f1f1f1;
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.window-content h1 {
+  margin: 0 0 16px 0;
+  font-size: 32px;
+  color: #1f1f1f;
+  font-weight: 600;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.window-content p {
+  margin: 0 0 20px 0;
+  font-size: 15px;
+  color: #5a5a5a;
+  line-height: 1.6;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.cta-button {
+  background: #0067c0;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  transition: background 0.1s;
+}
+
+.cta-button:hover {
+  background: #005a9e;
+}
+
+.cta-button:active {
+  background: #004a7f;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.feature-card {
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 20px;
+  transition: all 0.2s;
+}
+
+.feature-card:hover {
+  background: #f5f5f5;
+  border-color: #d4d4d4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #1f1f1f;
+  font-weight: 600;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.feature-card p {
+  margin: 0;
+  font-size: 13px;
+  color: #5a5a5a;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* Resize Handles */
+.resize-handle {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+/* Edge Handles */
+.resize-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.resize-right {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.resize-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.resize-left {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+/* Corner Handles */
+.resize-corner-tl {
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+}
+
+.resize-corner-tr {
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nesw-resize;
+}
+
+.resize-corner-bl {
+  bottom: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nesw-resize;
+}
+
+.resize-corner-br {
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+}
+
+
+/* Windows-style Taskbar */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 48px;
+  background: rgba(32, 32, 32, 0.85);
+  backdrop-filter: blur(30px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  z-index: 1000;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Start Button */
+.start-button {
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.start-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.start-button svg {
+  opacity: 0.9;
+}
+
+/* Search Box */
+.taskbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  left: 8px;
+}
+
+.search-box {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  min-width: 200px;
+  cursor: text;
+}
+
+.search-icon {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.search-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Taskbar Apps */
+.taskbar-center {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.taskbar-app {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.taskbar-app:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.taskbar-app.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background: #0078d4;
+  border-radius: 2px;
+}
+
+/* Taskbar Tooltips */
+.taskbar-app[data-tooltip]::before,
+.start-button[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 55px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(45, 45, 45, 0.95);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 10000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.taskbar-app:hover[data-tooltip]::before,
+.start-button:hover[data-tooltip]::before {
+  opacity: 1;
+  transition-delay: 0.5s;
+}
+
+/* System Tray */
+.taskbar-right {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 8px;
+}
+
+.system-tray {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+  height: 48px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.system-tray:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tray-icon {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.datetime {
+  font-size: 12px;
+  color: white;
+  text-align: center;
+  line-height: 1.2;
+  margin-right: 12px;
+  position: relative;
+}
+
+.time {
+  font-size: 12px;
+  color: white;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-weight: 500;
+}
+
+.date {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}

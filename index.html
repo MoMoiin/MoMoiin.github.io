@@ -1,277 +1,104 @@
-
- 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8" />
-      <title>MoMoin</title>
-      <meta name="viewport" content="width=device-width">
-      <meta name="description" content="Full-Stack Engineer, Jakub Adamczyk personal portfolio website, with projects and information. ">
-      <link
-         rel="stylesheet"
-         href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
-         />
-      <link rel="stylesheet" href="public/style.css" />
-      <link rel="icon" type="image/x-icon" href="public/img/terminal .svg" />
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
-   </head>
-   <body>
-      <div class="sidebarNav">
-         <a class="scrollLink" href="#section2"
-            >
-            <div class="sidebarNavItem"><img class= "introduction" src="public/img/briefcase.svg" alt="introduction"></div>
-         </a
-            >
-         <a class="scrollLink" href="#section3"
-            >
-            <div class="sidebarNavItem"><img class= "project3" src="public/img/info.svg" alt="project!"></div>
-         </a
-            >
-         <a class="scrollLink" href="#section4"
-            >
-            <div class="sidebarNavItem"><img class= "contact" src="public/img/layers.svg" alt="contact"></div>
-         </a
-            >
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>HTML 5 Boilerplate</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "animejs": "./node_modules/animejs/dist/modules/index.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="large row centered">
+      <canvas id="bgCanvas"></canvas>
+      <div class="square draggable">
+        <div class="window-titlebar">
+          <span class="window-title">Jakub Adamczyk Resume</span>
+          <div class="window-controls">
+            <span title="Minimize">&#8212;</span>
+            <span title="Maximize">&#9723;</span>
+            <span title="Close">&#10005;</span>
+          </div>
+        </div>
+        <div class="address-bar">
+          <div class="address-input" >
+            <span class="lock-icon">🔒</span>
+            <span class="url">https://Jakub.Adamczyk.Awsome</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <h1>Welcome to My Website</h1>
+          <p>This is a draggable browser window simulation.</p>
+          <button class="cta-button">Get Started</button>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h3>Feature 1</h3>
+              <p>Amazing functionality here</p>
+            </div>
+            <div class="feature-card">
+              <h3>Feature 2</h3>
+              <p>More great features</p>
+            </div>
+          </div>
+        </div>
+        <div class="resize-handle resize-top"></div>
+        <div class="resize-handle resize-right"></div>
+        <div class="resize-handle resize-bottom"></div>
+        <div class="resize-handle resize-left"></div>
+        <div class="resize-handle resize-corner-tl"></div>
+        <div class="resize-handle resize-corner-tr"></div>
+        <div class="resize-handle resize-corner-bl"></div>
+        <div class="resize-handle resize-corner-br"></div>
       </div>
-      <section class="top">
-         <a class="navJump" style="height: 100px"></a>
-      </section>
-      <section class="section">
-         <a
-            class="navJump"
-            style="height: 100px"
-            name="section1"
-            id="section1"
-            ></a>
-         <a class="navJump" style="height: 100px"></a>
-         <div class="shadow-title parallax-top-shadow">MoMoin</div>
-         <div
-            class="section-parallax parallax-00"
-            style="background-image: url('public/img/Animated Shape (4).svg')"
-            ></div>
-         <div
-            class="section-parallax parallax-01"
-            style="background-image: url('public/img/Animated Shape (5).svg')"
-            ></div>
-         <div class="section full-height">
-            <div class="section-title-wrap">
-               <div class="container">
-                  <div class="row">
-                     <div class="col-12 text-center parallax-fade-top">
-                        <p>Software Developer</p>
-                        <h1>MoMoin</h1>
-                        <p2>Jakub Adamczyk</p2>
-                        <svg class="arrows">
-                           <path class="a1" d="M0 0 L30 32 L60 0"></path>
-                           <path class="a2" d="M0 20 L30 52 L60 20"></path>
-                           <path class="a3" d="M0 40 L30 72 L60 40"></path>
-                        </svg>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </section>
-      <section class="section" >
-         <a
-            class="navJump"
-            style="height: 100px"
-            name="section2"
-            id="section2"
-            ></a>
-         <div class="section padding_bottom over-hide background-dark z-bigger-2">
-            <div class="project-link-wrap">
-               <h1>Introduction</h1>
-            </div>
-            <div class="container">
-               <div class="intro-link-wrap"> 
-                <p>Hello! I'm an enthusiastic mechatronic engineer graduate currently persuing masters in software architecture who likes resolving problems through programming.
-                     When it comes to creating products, I'm flexible across the board. I primarily work with devops work and server stuff.</br></br>
-                     I am proficient in PHP, Python, Java, and SQL. Front-end skills include javascript, CSS/Scss, HTML, Node.js, and React. As a hobby, I also experiment in other computer languages.
-                     </br></br>
-                     Always looking for methods to grow! I've always been a multipotentialite, with a never-ending list of tasks and interests!
-                     </br></br>
-                     Sita presently employs me as a Software Engineer.
-                  </p>
-                  
-               </div>
-            </div>
-         </div>
-      </section>
-      <section class="section">
-         <a
-            class="navJump"
-            style="height: 100px"
-            name="section3"
-            id="section3"
-            ></a>
-         <div class="section over-hide background-dark z-bigger-2">
-            <div class="project-link-wrap">
-               <h1>Skills </h1>
-            </div>
-            <div class="container">
-               <div class="programs-link-wrap">
-                  <div class="container">
-                     <div class="parent">
-                        <div class="div2">
-                           <i class="devicon-php-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           PHP
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-python-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Python</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-javascript-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Javascript</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-java-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Java</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-mysql-plain-wordmark" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >MySQL</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-css3-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >CSS/SCSS</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-html5-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >HTML</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-react-original" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >React.js</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-nodejs-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Node.js</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-apache-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Apache2</p>
-                        </div>
-                        <div class="div2" >
-                           <i class="devicon-git-plain" style=" font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Git</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         </div>
-      </section>
-      <section class="section" >
-         <a
-            class="navJump"
-            style="height: 100px"
-            name="section4"
-            id="section4"
-            ></a>
-         <div class="section  over-hide background-dark z-bigger-2">
-            <div class="projects-link-wrap">
-               <h1>Projects</h1>
-            </div>
-            <div class="container">
-               <div class="parent">
-                  <div >
-                     <svg xmlns="http://www.w3.org/2000/svg"  width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" ></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                     </svg>
-                     </br>
-                     <div class="BackTop-link-wrap"></div>
-                     <a href="https://github.com/MoMoiin/MoMoiin.github.io" target="_blank">Personal Website</a>
-                     </br>
-                     <p>My Personal Github website with info.</p>
-                  </div>
-                  <div >
-                     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                        <rect x="6" y="14" width="12" height="8"></rect>
-                     </svg>
-                     </br>
-                     <div class="BackTop-link-wrap"></div>
-                     <a href="https://github.com/MoMoiin/Ender-3-SKR-mini-E3-v3-Marlin-Config-2.1.1" target="_blank">3D Printer config</a>
-                     </br>
-                     <p>A version of Marlin config for my personal 3D printer. </p>
-                  </div>
-                  <div >
-                     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path>
-                        <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
-                     </svg>
-                     </br><a href="https://github.com/MoMoiin/Java-practice-programs" target="_blank">Java applications</a>
-                     </br>
-                     <p>Small Projects using java.</p>
-                  </div>
-               </div>
-            </div>
-         </div>
-         </div>
-      </section>
-      <!--
-         <section class="section" style="background: #c475e8">
-           <a
-             class="navJump"
-             style="height: 100px"
-             name="section4"
-             id="section4"
-           ></a>
-         
-           <h1>Section 4</h1>
-         </section>
-         
-         <section class="section" style="background: #8abbff">
-           <a
-             class="navJump"
-             style="height: 100px"
-             name="section5"
-             id="section5"
-           ></a>
-         
-           <h1>Section 5</h1>
-         </section>
-         <-- Link to page
-         ================================================== -->
-      <a
-         href="https://github.com/MoMoiin"
-         class="link-to-portfolio hover-target"
-         target="”_blank”"
-         ></a>
-      <a
-         href="https://www.linkedin.com/in/jakub-adamczyk-ab4b42231/"
-         class="link-to-Linkedin hover-target"
-         target="”_blank”"
-         ></a>
-      <!-- partial -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-      <script src="public/script.js"></script>
-   </body>
+    </div>
+    <script type="module" src="index.js"></script>
+
+    <!-- Windows-style Taskbar -->
+    <div class="taskbar">
+      <div class="taskbar-left">
+        <button class="start-button" data-tooltip="Start">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <rect x="1" y="1" width="8" height="8" fill="currentColor"/>
+            <rect x="11" y="1" width="8" height="8" fill="currentColor"/>
+            <rect x="1" y="11" width="8" height="8" fill="currentColor"/>
+            <rect x="11" y="11" width="8" height="8" fill="currentColor"/>
+          </svg>
+        </button>
+<!--         <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <span class="search-text">Type here to search</span>
+        </div> -->
+      </div>
+      
+      <div class="taskbar-center">
+        <button class="taskbar-app active" data-tooltip="Browser">
+          <span>🌐</span>
+        </button>
+        <button class="taskbar-app" data-tooltip="File Explorer">
+          <span>📁</span>
+        </button>
+        <button class="taskbar-app" data-tooltip="Mail">
+          <span>✉️</span>
+        </button>
+      </div>
+      
+      <div class="taskbar-right">
+        <div class="system-tray">
+          <span class="tray-icon">🔊</span>
+          <span class="tray-icon">📶</span>
+          <span class="tray-icon">🔋</span>
+          <div class="datetime">
+            <div class="time">12:00 PM</div>
+            <div class="date">2/18/2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
