@@ -108,6 +108,8 @@ class WindowManager {
     
     createDraggable(windowEl, {
       container: this.container,
+      releaseStiffness: 300,
+      releaseDamping: 20,
       handle: titleBar
     });
   }

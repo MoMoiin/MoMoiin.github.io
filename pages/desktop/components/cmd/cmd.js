@@ -55,7 +55,7 @@ export function init(windowElement) {
         // Create new output line
         const newLine = document.createElement('div');
         newLine.className = 'cmd-line';
-        newLine.textContent = `C:\\Users\\Jakub> ${text}`;
+        newLine.textContent = `C:\\Users\\root> ${text}`;
         output.appendChild(newLine);
         
         // Clear input
