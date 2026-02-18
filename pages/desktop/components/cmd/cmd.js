@@ -23,12 +23,16 @@ export const htmlTemplate = `<!-- CMD Window Component -->
 <div class="window-content cmd-content">
   <div class="cmd-header">Microsoft Windows [Version 10.0.19041.1348]</div>
   <div class="cmd-header">(c) Microsoft Corporation. All rights reserved.</div>
-  <div class="cmd-line"></div>
-  <div class="cmd-line">C:\\Users\\Jakub> </div>
-  <div class="cmd-input" contenteditable="true"></div>
-  <div class="cmd-output">
-    <p>Welcome to the Command Prompt Window!</p>
-    <p>This is a demo terminal window.</p>
+
+  <div class="cmd-output" aria-live="polite"></div>
+
+  <!-- Hidden input proxy to capture keystrokes (moved off-screen so it can receive focus) -->
+  <input type="text" class="cmd-input-proxy" autocomplete="off" spellcheck="false" tabindex="-1" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;" />
+
+  <!-- Display line -->
+  <div class="cmd-line-display">
+    <span class="cmd-prompt">C:\\Users\\root&gt;</span>
+    <span class="cmd-display"></span>
   </div>
 </div>
 
@@ -43,29 +47,118 @@ export const htmlTemplate = `<!-- CMD Window Component -->
 <div class="resize-handle resize-corner-br"></div>`;
 
 export function init(windowElement) {
-  // CMD-specific initialization
-  const cmdInput = windowElement.querySelector('.cmd-input');
-  
-  if (cmdInput) {
-    cmdInput.addEventListener('keypress', (e) => {
+  // Simple terminal using invisible input proxy to capture all keystrokes
+  const proxy = windowElement.querySelector('.cmd-input-proxy');
+  const output = windowElement.querySelector('.cmd-output');
+  const display = windowElement.querySelector('.cmd-display');
+  const content = windowElement.querySelector('.window-content');
+
+  const COMMANDS = {
+    help: ['Available: clear, echo <text>, date, time, whoami, ls, pwd, version, about, open <app>, mail, exit'],
+    whoami: ['Jakub Adamczyk'],
+    ls: ['Documents', 'Downloads', 'Pictures', 'Projects', 'README.md'],
+    pwd: ['/home/jakub'],
+    version: ['MoMoiin Desktop v1.0.0'],
+    about: ['This is a demo desktop environment built with HTML/CSS/JS.']
+  };
+
+  function appendLine(text, cls = 'cmd-line') {
+    const el = document.createElement('div');
+    el.className = cls;
+    el.textContent = text;
+    output.appendChild(el);
+    const content = windowElement.querySelector('.window-content');
+    content.scrollTop = content.scrollHeight;
+  }
+
+  function runCommand(raw) {
+    const cmd = String(raw || '').trim();
+    if (!cmd) return;
+    const parts = cmd.split(/\s+/);
+    const name = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
+    if (name === 'clear') {
+      output.innerHTML = '';
+      return;
+    }
+    if (name === 'echo') {
+      appendLine(args.join(' '));
+      return;
+    }
+    if (name === 'date') {
+      appendLine(new Date().toLocaleDateString());
+      return;
+    }
+    if (name === 'time') {
+      appendLine(new Date().toLocaleTimeString());
+      return;
+    }
+    if (name === 'open') {
+      if (args[0] && window.windowManager) {
+        const type = args[0].toLowerCase();
+        const existing = Array.from(window.windowManager.windows.entries()).find(([, v]) => v.type === type);
+        if (existing) {
+          window.windowManager.handleRestore(existing[0]);
+        } else {
+          window.windowManager.createWindow(type, type.charAt(0).toUpperCase() + type.slice(1), type === 'browser' ? '🌐' : type === 'cmd' ? '💻' : '✉️');
+        }
+      } else {
+        appendLine('Usage: open <browser|cmd|email>');
+      }
+      return;
+    }
+    if (name === 'mail') {
+      if (window.windowManager) {
+        const existing = Array.from(window.windowManager.windows.entries()).find(([, v]) => v.type === 'email');
+        if (existing) window.windowManager.handleRestore(existing[0]);
+        else window.windowManager.createWindow('email', 'Mail', '✉️');
+      }
+      return;
+    }
+    if (name === 'exit') {
+      const closeBtn = windowElement.querySelector('.close-btn');
+      if (closeBtn) closeBtn.click();
+      return;
+    }
+    if (COMMANDS[name]) {
+      COMMANDS[name].forEach(l => appendLine(l));
+      return;
+    }
+    appendLine(`${name}: command not found`);
+  }
+
+  // Focus the proxy when window is clicked (use capture phase for reliability)
+  windowElement.addEventListener('mousedown', (e) => {
+    const control = e.target.closest('.control-btn, .tab-close, .new-tab-button');
+    if (control) return;
+    // Always focus proxy on any click in the window
+    e.preventDefault();
+    proxy.focus();
+  }, true);
+
+  if (proxy) {
+    // Sync proxy input to display
+    proxy.addEventListener('input', () => {
+      display.textContent = proxy.value;
+      content.scrollTop = content.scrollHeight;
+    });
+
+    // Handle Enter key
+    proxy.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        const text = cmdInput.textContent;
-        const output = windowElement.querySelector('.cmd-output');
-        
-        // Create new output line
-        const newLine = document.createElement('div');
-        newLine.className = 'cmd-line';
-        newLine.textContent = `C:\\Users\\root> ${text}`;
-        output.appendChild(newLine);
-        
-        // Clear input
-        cmdInput.textContent = '';
-        
-        // Scroll to bottom
-        windowElement.querySelector('.window-content').scrollTop = 
-          windowElement.querySelector('.window-content').scrollHeight;
+        e.preventDefault();
+        const text = proxy.value;
+        appendLine(`C:\\Users\\root> ${text}`);
+        runCommand(text);
+        proxy.value = '';
+        display.textContent = '';
+        content.scrollTop = content.scrollHeight;
       }
     });
+
+    // Focus on init
+    setTimeout(() => proxy.focus(), 50);
   }
 }
 

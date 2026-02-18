@@ -20,6 +20,18 @@
   color: #00b050;
 }
 
+.cmd-prompt-line {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.cmd-prompt {
+  color: #00b050;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
 .cmd-input {
   outline: none;
   color: #00b050;
@@ -30,10 +42,51 @@
   margin: 0;
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
   font-size: 13px;
+  display: inline-block;
+  vertical-align: bottom;
+  position: relative;
+  caret-color: transparent; /* hide native caret */
+  min-width: 10px;
 }
 
 .cmd-input:focus {
-  outline: 1px dashed #00b050;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Hide selection highlight inside terminal */
+.cmd-content ::selection {
+  background: transparent;
+}
+
+/* Make prompt and input appear on same line when input follows a cmd-line */
+.cmd-line + .cmd-input {
+  display: inline-block;
+  margin-left: 6px;
+}
+
+/* Blinking caret implemented as a pseudo-element */
+.cmd-input::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 2px;
+  width: 1px;
+  height: 1em;
+  background: #00b050;
+  opacity: 0;
+  transition: opacity 0.05s linear;
+}
+
+.cmd-input:focus::after {
+  opacity: 1;
+  animation: cmd-blink 1s steps(1) infinite;
+}
+
+@keyframes cmd-blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 .cmd-output {

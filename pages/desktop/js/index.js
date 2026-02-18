@@ -105,13 +105,70 @@ class WindowManager {
   makeWindowDraggable(windowEl) {
     const titleBar = windowEl.querySelector('.chrome-tabs');
     if (!titleBar) return;
-    
-    createDraggable(windowEl, {
-      container: this.container,
-      releaseStiffness: 300,
-      releaseDamping: 20,
-      handle: titleBar
+
+    // Custom title-bar-only dragging (mouse + touch)
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+
+    const onPointerMove = (clientX, clientY) => {
+      if (!isDragging) return;
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+      const newLeft = Math.max(0, startLeft + dx);
+      const newTop = Math.max(0, startTop + dy);
+      windowEl.style.left = `${newLeft}px`;
+      windowEl.style.top = `${newTop}px`;
+    };
+
+    const onMouseMove = (e) => onPointerMove(e.clientX, e.clientY);
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches[0]) onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
+    };
+
+    const stopDrag = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', stopDrag);
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchend', stopDrag);
+    };
+
+    const startDrag = (clientX, clientY) => {
+      // record start positions
+      isDragging = true;
+      startX = clientX;
+      startY = clientY;
+      const rect = windowEl.getBoundingClientRect();
+      // Convert to container-relative coordinates if container is positioned
+      const containerRect = this.container.getBoundingClientRect();
+      startLeft = rect.left - containerRect.left + this.container.scrollLeft;
+      startTop = rect.top - containerRect.top + this.container.scrollTop;
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', stopDrag);
+      document.addEventListener('touchmove', onTouchMove, { passive: false });
+      document.addEventListener('touchend', stopDrag);
+    };
+
+    titleBar.addEventListener('mousedown', (e) => {
+      // don't start drag when clicking controls inside title bar
+      if (e.target.closest('.control-btn, .tab-close, .new-tab-button, .nav-btn, .address-input, .menu-btn')) return;
+      startDrag(e.clientX, e.clientY);
+      e.preventDefault();
     });
+
+    titleBar.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        const t = e.touches[0];
+        // don't start drag when touching controls
+        if (e.target.closest('.control-btn, .tab-close, .new-tab-button, .nav-btn, .address-input, .menu-btn')) return;
+        startDrag(t.clientX, t.clientY);
+        e.preventDefault();
+      }
+    }, { passive: false });
   }
 
   initializeWindowControls(windowEl) {
