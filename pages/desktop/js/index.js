@@ -244,11 +244,15 @@ class WindowManager {
     const windowData = this.windows.get(windowId);
     const windowEl = windowData.element;
     const taskbarBtn = document.querySelector(`[data-window-id="${windowId}"]`);
-    
+
     if (taskbarBtn) {
       taskbarBtn.classList.remove('active');
+      // If this button is a persistent launcher (has data-launcher-type), keep it
+      if (taskbarBtn.hasAttribute('data-launcher-type')) {
+        taskbarBtn.removeAttribute('data-window-id');
+      }
     }
-    
+
     animate(windowEl, {
       scale: [0.9],
       opacity: [0],
@@ -257,25 +261,36 @@ class WindowManager {
     }).then(() => {
       windowEl.remove();
       this.windows.delete(windowId);
-      if (taskbarBtn) {
+      // If button exists and is NOT a launcher, remove it
+      if (taskbarBtn && !taskbarBtn.hasAttribute('data-launcher-type')) {
         taskbarBtn.remove();
       }
     });
   }
 
   addTaskbarButton(windowId, icon, type) {
+    // If a persistent launcher exists for this type, reuse it
+    const launcher = this.taskbarCenter.querySelector(`[data-launcher-type="${type}"]`);
+    if (launcher) {
+      launcher.classList.add('active');
+      launcher.setAttribute('data-window-id', windowId);
+      // Ensure click restores this window
+      launcher.onclick = () => this.handleRestore(windowId);
+      return;
+    }
+
     const button = document.createElement('button');
     button.className = 'taskbar-app active';
     button.setAttribute('data-tooltip', type.charAt(0).toUpperCase() + type.slice(1));
     button.setAttribute('data-window-id', windowId);
     button.innerHTML = `<span>${icon}</span>`;
-    
+
     button.addEventListener('click', () => {
       this.handleRestore(windowId);
     });
-    
+
     this.taskbarCenter.appendChild(button);
-    
+
     // Animate icon click
     button.addEventListener('click', (e) => {
       const span = button.querySelector('span');
@@ -508,10 +523,11 @@ async function init() {
   // Add quick launch buttons to taskbar
   const taskbarCenter = document.getElementById('taskbarCenter');
   
-  // CMD Button
+  // CMD Button (persistent launcher)
   const cmdBtn = document.createElement('button');
   cmdBtn.className = 'taskbar-app';
   cmdBtn.setAttribute('data-tooltip', 'Command Prompt');
+  cmdBtn.setAttribute('data-launcher-type', 'cmd');
   cmdBtn.innerHTML = '<span>💻</span>';
   cmdBtn.addEventListener('click', async () => {
     const span = cmdBtn.querySelector('span');
@@ -520,6 +536,15 @@ async function init() {
       duration: 600,
       ease: 'out(5)'
     });
+
+    // If a CMD window already exists, restore it
+    const existingCmd = Array.from(windowManager.windows.entries()).find(([, v]) => v.type === 'cmd');
+    if (existingCmd) {
+      const existingId = existingCmd[0];
+      windowManager.handleRestore(existingId);
+      return;
+    }
+
     try {
       await windowManager.createWindow('cmd', 'Command Prompt', '💻');
     } catch (error) {
@@ -527,11 +552,12 @@ async function init() {
     }
   });
   taskbarCenter.appendChild(cmdBtn);
-  
-  // Email Button
+
+  // Email Button (persistent launcher)
   const emailBtn = document.createElement('button');
   emailBtn.className = 'taskbar-app';
   emailBtn.setAttribute('data-tooltip', 'Mail');
+  emailBtn.setAttribute('data-launcher-type', 'email');
   emailBtn.innerHTML = '<span>✉️</span>';
   emailBtn.addEventListener('click', async () => {
     const span = emailBtn.querySelector('span');
@@ -540,6 +566,15 @@ async function init() {
       duration: 600,
       ease: 'out(5)'
     });
+
+    // If an Email window already exists, restore it
+    const existingEmail = Array.from(windowManager.windows.entries()).find(([, v]) => v.type === 'email');
+    if (existingEmail) {
+      const existingId = existingEmail[0];
+      windowManager.handleRestore(existingId);
+      return;
+    }
+
     try {
       await windowManager.createWindow('email', 'Mail', '✉️');
     } catch (error) {
