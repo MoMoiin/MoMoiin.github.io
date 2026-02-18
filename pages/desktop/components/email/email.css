@@ -1,107 +1,175 @@
-/* Email Component Styles */
+/* Email Component Styles - Outlook Style */
 
-.email-content {
-  display: flex;
-  flex-direction: column;
-  background: #f5f5f5 !important;
+.email-outlook {
+  display: flex !important;
+  background: #f3f3f3 !important;
   color: #333;
   padding: 0 !important;
+  gap: 0;
 }
 
-.email-header {
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+.outlook-sidebar {
+  width: 200px;
+  background: #f8f8f8;
+  border-right: 1px solid #d0d0d0;
   padding: 12px;
+  overflow-y: auto;
+  flex-shrink: 0;
 }
 
-.compose-btn {
+.outlook-compose-btn {
+  width: 100%;
   background: #0078d4;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 10px;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: 500;
-  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 16px;
   transition: background 0.2s;
 }
 
-.compose-btn:hover {
+.outlook-compose-btn:hover {
   background: #106ebe;
 }
 
-.email-folders {
+.outlook-folders {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
-.folder {
+.folder-item {
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 4px;
-  transition: background 0.2s;
   font-size: 13px;
-}
-
-.folder:hover {
-  background: #f0f0f0;
-}
-
-.email-list {
-  flex: 1;
-  overflow-y: auto;
-  background: white;
-}
-
-.email-item {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background 0.2s;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  align-items: start;
-}
-
-.email-item:hover {
-  background: #f9f9f9;
-}
-
-.email-item.selected {
-  background: #e7f3ff;
-}
-
-.email-item.unread {
-  font-weight: 600;
-  background: #f0f8ff;
-}
-
-.email-from {
-  grid-column: 1;
-  font-weight: 600;
-  color: #0078d4;
-}
-
-.email-subject {
-  grid-column: 1;
-  font-weight: 500;
+  transition: all 0.2s;
   color: #333;
 }
 
-.email-preview {
-  grid-column: 1;
-  font-size: 12px;
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.folder-item:hover {
+  background: #e6e6e6;
 }
 
-.email-time {
-  grid-column: 2;
+.folder-item.active {
+  background: #0078d4;
+  color: white;
+  font-weight: 600;
+}
+
+.outlook-main {
+  flex: 1;
+  background: white;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.compose-form {
+  max-width: 600px;
+}
+
+.compose-form h2 {
+  margin: 0 0 8px 0;
+  color: #0078d4;
+  font-size: 24px;
+}
+
+.compose-subtitle {
+  color: #666;
+  margin: 0 0 20px 0;
+  font-size: 13px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  background: white;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #0078d4;
+  box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.outlook-send-btn {
+  background: #0078d4;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s;
+  margin-bottom: 24px;
+}
+
+.outlook-send-btn:hover {
+  background: #106ebe;
+}
+
+.outlook-send-btn:active {
+  background: #005a9e;
+}
+
+.contact-info {
+  border-top: 1px solid #ddd;
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+.contact-info h3 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.contact-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contact-info li {
+  padding: 6px 0;
   font-size: 12px;
-  color: #999;
-  white-space: nowrap;
+  color: #555;
+  line-height: 1.5;
+}
+
+.contact-info a {
+  color: #0078d4;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
 }
