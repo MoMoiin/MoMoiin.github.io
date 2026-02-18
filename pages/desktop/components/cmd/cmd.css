@@ -1,0 +1,47 @@
+/* CMD Component Styles */
+
+.cmd-content {
+  background: #0c0c0c !important;
+  color: #00b050;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  padding: 12px !important;
+}
+
+.cmd-header {
+  margin: 0;
+  color: #00b050;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.cmd-line {
+  margin: 4px 0;
+  color: #00b050;
+}
+
+.cmd-input {
+  outline: none;
+  color: #00b050;
+  min-height: 20px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+}
+
+.cmd-input:focus {
+  outline: 1px dashed #00b050;
+}
+
+.cmd-output {
+  margin-top: 12px;
+}
+
+.cmd-output p {
+  margin: 4px 0;
+  color: #00b050;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}

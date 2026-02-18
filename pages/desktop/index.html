@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Desktop Experience</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "animejs": "../../node_modules/animejs/dist/modules/index.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="large row centered">
+      <canvas id="bgCanvas"></canvas>
+      <div class="windows-container" id="windowsContainer">
+        <!-- Windows will be added here dynamically -->
+      </div>
+    </div>
+
+    <!-- Windows-style Taskbar -->
+    <div class="taskbar">
+      <div class="taskbar-left">
+        <button class="start-button" data-tooltip="Start">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <rect x="1" y="1" width="8" height="8" fill="currentColor"/>
+            <rect x="11" y="1" width="8" height="8" fill="currentColor"/>
+            <rect x="1" y="11" width="8" height="8" fill="currentColor"/>
+            <rect x="11" y="11" width="8" height="8" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="taskbar-center" id="taskbarCenter">
+        <!-- Taskbar apps will be added here dynamically -->
+      </div>
+      
+      <div class="taskbar-right">
+        <div class="system-tray">
+          <a href="../mobile/index.html" class="tray-icon" data-tooltip="Mobile View" style="text-decoration: none; cursor: pointer;" title="Switch to Mobile View">📱</a>
+          <span class="tray-icon">🔊</span>
+          <span class="tray-icon">📶</span>
+          <span class="tray-icon">🔋</span>
+          <div class="datetime">
+            <div class="time">12:00 PM</div>
+            <div class="date">2/18/2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/index.js"></script>
+    <script>
+      // Save preference when switching to mobile view
+      document.querySelectorAll('a[href="../mobile/index.html"]').forEach(link => {
+        link.addEventListener('click', () => {
+          localStorage.setItem('viewPreference', 'mobile');
+        });
+      });
+    </script>
+  </body>
+</html>

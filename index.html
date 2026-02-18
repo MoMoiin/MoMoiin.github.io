@@ -131,8 +131,8 @@
       <div class="spinner"></div>
       
       <div class="manual-links">
-        <a href="mobile.html" class="manual-link">📱 Mobile View</a>
-        <a href="desktop.html" class="manual-link">🖥️ Desktop View</a>
+        <a href="pages/mobile/index.html" class="manual-link">📱 Mobile View</a>
+        <a href="pages/desktop/index.html" class="manual-link">🖥️ Desktop View</a>
       </div>
 
       <p class="device-info" id="deviceInfo"></p>
@@ -157,22 +157,22 @@
         const userPreference = localStorage.getItem('viewPreference');
         
         if (userPreference === 'mobile') {
-          window.location.href = 'mobile.html';
+          window.location.href = 'pages/mobile/index.html';
           return;
         }
         
         if (userPreference === 'desktop') {
-          window.location.href = 'desktop.html';
+          window.location.href = 'pages/desktop/index.html';
           return;
         }
 
         // Auto-detect based on screen size
         if (screenWidth < MOBILE_BREAKPOINT) {
           // Small screen - redirect to mobile
-          window.location.href = 'mobile.html';
+          window.location.href = 'pages/mobile/index.html';
         } else {
           // Large screen - redirect to desktop
-          window.location.href = 'desktop.html';
+          window.location.href = 'pages/desktop/index.html';
         }
       }
 
