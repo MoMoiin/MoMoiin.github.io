@@ -731,22 +731,22 @@ async function init() {
     const emailEl = windowManager.windows.get(emailId).element;
 
     // Browser: left-center large
-    browserEl.style.width = '60vw';
-    browserEl.style.height = '93vh';
+    browserEl.style.width = '32vw';
+    browserEl.style.height = '64vh';
     browserEl.style.left = '0.5%';
     browserEl.style.top = '1.5%';
 
     // CMD: bottom-left smaller
-    cmdEl.style.width = '34vw';
+    cmdEl.style.width = '25vw';
     cmdEl.style.height = '45vh';
-    cmdEl.style.left = '61%';
-    cmdEl.style.top = '1.5%';
+    cmdEl.style.left = '37%';
+    cmdEl.style.top = '25%';
 
     // Email: right side tall
-    emailEl.style.width = '34vw';
-    emailEl.style.height = '46.5vh';
-    emailEl.style.left = '61%';
-    emailEl.style.top = '50%';
+    emailEl.style.width = '15vw';
+    emailEl.style.height = '63vh';
+    emailEl.style.left = '75%';
+    emailEl.style.top = '20%';
   } catch (error) {
     console.error('Failed to create initial windows:', error);
   }

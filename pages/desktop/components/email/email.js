@@ -23,16 +23,7 @@ export const htmlTemplate = `<!-- Email Window Component (Outlook Style) -->
 
 <!-- Window Content -->
 <div class="window-content email-outlook">
-  <div class="outlook-sidebar">
-    <button class="outlook-compose-btn">+ New Email</button>
-    <div class="outlook-folders">
-      <div class="folder-item active">📧 Inbox</div>
-      <div class="folder-item">📤 Sent</div>
-      <div class="folder-item">📋 Drafts</div>
-      <div class="folder-item">⭐ Important</div>
-      <div class="folder-item">🗑️ Trash</div>
-    </div>
-  </div>
+ 
 
   <div class="outlook-main">
     <div class="compose-form">
@@ -64,7 +55,7 @@ export const htmlTemplate = `<!-- Email Window Component (Outlook Style) -->
       <div class="contact-info">
         <h3>Other Ways to Connect</h3>
         <ul>
-          <li><strong>LinkedIn:</strong> <a href="https://linkedin.com/in/jakub-adamczyk" target="_blank">linkedin.com/in/jakub-adamczyk</a></li>
+          <li><strong>LinkedIn:</strong> <a href="https://linkedin.com/in/jakub-adamczyk-software" target="_blank">linkedin.com/in/jakub-adamczyk-software</a></li>
           <li><strong>GitHub:</strong> <a href="https://github.com/MoMoiin" target="_blank">github.com/MoMoiin</a></li>
           <li><strong>Email:</strong> <a href="mailto:kubaadamczyk2002@gmail.com">kubaadamczyk2002@gmail.com</a></li>
         </ul>
