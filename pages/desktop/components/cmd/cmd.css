@@ -15,6 +15,18 @@
   word-wrap: break-word;
 }
 
+.cmd-banner {
+  color: #00b050;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 11px;
+  white-space: pre;
+  overflow-x: auto;
+  margin: 8px 0;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+}
+
 .cmd-line {
   margin: 4px 0;
   color: #00b050;

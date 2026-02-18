@@ -28,6 +28,13 @@ export const htmlTemplate = `<!-- CMD Window Component -->
   <div class="cmd-header">MoMo-OS [Version 1.0.0 - Dream Edition]</div>
   <div class="cmd-header">(c) MoMoiin Studios. All creations unlocked.</div>
 
+  <pre class="cmd-banner">▄▄▄      ▄▄▄       ▄▄▄      ▄▄▄                       ▄▄▄▄  ▄▄▄  ▄▄▄▄      ▄▄    
+████▄  ▄████       ████▄  ▄████       ▀▀              ▀███  ███  ███▀      ██    
+███▀████▀███ ▄███▄ ███▀████▀███ ▄███▄ ██  ████▄        ███  ███  ███ ▄█▀█▄ ████▄ 
+███  ▀▀  ███ ██ ██ ███  ▀▀  ███ ██ ██ ██  ██ ██ ▀▀▀▀▀  ███▄▄███▄▄███ ██▄█▀ ██ ██ 
+███      ███ ▀███▀ ███      ███ ▀███▀ ██▄ ██ ██         ▀████▀████▀  ▀█▄▄▄ ████▀ </pre>
+
+
   <div class="cmd-output" aria-live="polite"></div>
 
   <!-- Hidden input proxy to capture keystrokes (moved off-screen so it can receive focus) -->
@@ -61,9 +68,15 @@ export function init(windowElement) {
     help: ['Available: clear, echo <text>, date, time, whoami, ls, pwd, version, about, open <app>, mail, exit'],
     whoami: ['Jakub Adamczyk'],
     ls: ['Documents', 'Downloads', 'Pictures', 'Projects', 'README.md'],
-    pwd: ['/home/jakub'],
+    pwd: ['/home/root'],
     version: ['MoMo-OS v1.0.0 - Dream Edition'],
-    about: ['This is a demo desktop environment built with HTML/CSS/JS.']
+    about: [
+      'Hello! I\'m an enthusiastic mechatronic engineer graduate currently pursuing masters in software architecture who likes resolving problems through programming.',
+      '',
+      'When it comes to creating products, I\'m flexible across the board. I primarily work with DevOps work and server stuff.',
+      '',
+      'Type "help" for available commands.'
+    ]
   };
 
   function appendLine(text, cls = 'cmd-line') {
@@ -164,6 +177,27 @@ export function init(windowElement) {
 
     // Focus on init
     setTimeout(() => proxy.focus(), 50);
+
+    // Display professional bio on load
+    appendLine('');
+    appendLine('═══════════════════════════════════════════════════════════════════════════════════════════');
+    appendLine('');
+    appendLine('    JAKUB ADAMCZYK - Mechatronic Engineer & Devops Software Engineer');
+    appendLine('');
+    appendLine('═══════════════════════════════════════════════════════════════════════════════════════════');
+    appendLine('');
+    appendLine('Hello! I\'m an enthusiastic mechatronic engineer graduate currently pursuing a');
+    appendLine('Master\'s degree in Software Architecture. I\'m passionate about solving problems');
+    appendLine('through programming and creative technology solutions.');
+    appendLine('');
+    appendLine('When it comes to creating products, I\'m flexible across the board. I primarily');
+    appendLine('work with DevOps, cloud infrastructure, and server-side development.');
+    appendLine('');
+    appendLine('───────────────────────────────────────────────────────────────────────────────────────────');
+    appendLine('   Contact: Kubaadamczyk2002@gmail.com  |   LinkedIn  |  GitHub');
+    appendLine('  Type "help" for commands  |   Type "clear" to start fresh');
+    appendLine('───────────────────────────────────────────────────────────────────────────────────────────');
+    appendLine('');
   }
 }
 
