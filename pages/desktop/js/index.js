@@ -730,19 +730,19 @@ async function init() {
     const cmdEl = windowManager.windows.get(cmdId).element;
     const emailEl = windowManager.windows.get(emailId).element;
 
-    // Browser: left-center large
+    // Browser
     browserEl.style.width = '32vw';
     browserEl.style.height = '64vh';
     browserEl.style.left = '0.5%';
     browserEl.style.top = '1.5%';
 
-    // CMD: bottom-left smaller
-    cmdEl.style.width = '25vw';
-    cmdEl.style.height = '45vh';
+    // CMD
+    cmdEl.style.width = '35vw';
+    cmdEl.style.height = '50vh';
     cmdEl.style.left = '37%';
     cmdEl.style.top = '25%';
 
-    // Email: right side tall
+    // Email
     emailEl.style.width = '15vw';
     emailEl.style.height = '63vh';
     emailEl.style.left = '75%';
