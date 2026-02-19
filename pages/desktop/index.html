@@ -17,9 +17,38 @@
   <body>
     <div class="large row centered">
       <canvas id="bgCanvas"></canvas>
+      <div class="desktop-icons" id="desktopIcons">
+        <!-- Desktop icons will be added here dynamically -->
+      </div>
       <div class="windows-container" id="windowsContainer">
         <!-- Windows will be added here dynamically -->
       </div>
+    </div>
+
+    <!-- Start Menu -->
+    <div class="start-menu" id="startMenu">
+      <div class="start-menu-header">
+        <div class="user-profile">
+          <div class="user-avatar">👤</div>
+          <span class="user-name">MoMoin</span>
+        </div>
+      </div>
+      <div class="start-menu-content">
+        <div class="pinned-apps">
+          <div class="section-title">Pinned</div>
+          <div class="app-grid" id="pinnedApps">
+            <!-- Apps will be added dynamically -->
+          </div>
+        </div>
+      </div>
+      <div class="start-menu-footer">
+        <button class="power-button" data-tooltip="Power">⏻</button>
+      </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+      <!-- Context menu items will be added dynamically -->
     </div>
 
     <!-- Windows-style Taskbar -->

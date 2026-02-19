@@ -1,4 +1,5 @@
 import { createDraggable, animate } from 'animejs';
+import { WINDOW_TYPES, ICON_TYPES, SVG_ICONS, APP_DEFINITIONS, CONTEXT_MENU_ITEMS } from './constants.js';
 
 // ============================================================================
 // CONFIGURATION
@@ -43,9 +44,12 @@ class WindowManager {
     this.maxZIndex = 10;
     this.state = {
       isResizing: false,
-      resize: {}
+      resize: {},
+      isDraggingWindow: false,
+      snapZone: null
     };
     this.canvasElement = document.getElementById('bgCanvas');
+    this.snapThreshold = 20; // pixels from edge to trigger snap
   }
 
   async createWindow(type, title, icon) {
@@ -152,6 +156,9 @@ class WindowManager {
       const newTop = Math.max(0, startTop + dy);
       windowEl.style.left = `${newLeft}px`;
       windowEl.style.top = `${newTop}px`;
+      
+      // Check for snap zones
+      this.checkSnapZone(clientX, clientY, windowEl);
     };
 
     const onMouseMove = (e) => onPointerMove(e.clientX, e.clientY);
@@ -162,6 +169,14 @@ class WindowManager {
     const stopDrag = () => {
       if (!isDragging) return;
       isDragging = false;
+      this.state.isDraggingWindow = false;
+      
+      // Apply snap if in snap zone
+      if (this.state.snapZone) {
+        this.applySnap(windowEl, windowId, this.state.snapZone);
+        this.state.snapZone = null;
+      }
+      
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', stopDrag);
       document.removeEventListener('touchmove', onTouchMove);
@@ -174,6 +189,7 @@ class WindowManager {
       
       // record start positions
       isDragging = true;
+      this.state.isDraggingWindow = true;
       startX = clientX;
       startY = clientY;
       const rect = windowEl.getBoundingClientRect();
@@ -203,6 +219,131 @@ class WindowManager {
         e.preventDefault();
       }
     }, { passive: false });
+  }
+
+  checkSnapZone(x, y, windowEl) {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight - CONFIG.taskbar.height;
+    
+    // Check if near left edge
+    if (x < this.snapThreshold) {
+      this.state.snapZone = 'left';
+      this.showSnapPreview('left');
+    }
+    // Check if near right edge
+    else if (x > screenWidth - this.snapThreshold) {
+      this.state.snapZone = 'right';
+      this.showSnapPreview('right');
+    }
+    // Check if near top edge (maximize)
+    else if (y < this.snapThreshold) {
+      this.state.snapZone = 'top';
+      this.showSnapPreview('top');
+    }
+    else {
+      this.state.snapZone = null;
+      this.hideSnapPreview();
+    }
+  }
+
+  showSnapPreview(zone) {
+    let preview = document.getElementById('snapPreview');
+    if (!preview) {
+      preview = document.createElement('div');
+      preview.id = 'snapPreview';
+      preview.style.position = 'fixed';
+      preview.style.border = '2px solid rgba(139, 92, 246, 0.8)';
+      preview.style.background = 'rgba(139, 92, 246, 0.2)';
+      preview.style.pointerEvents = 'none';
+      preview.style.zIndex = '9998';
+      preview.style.transition = 'all 0.1s ease';
+      document.body.appendChild(preview);
+    }
+    
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight - CONFIG.taskbar.height;
+    
+    if (zone === 'left') {
+      preview.style.left = '0';
+      preview.style.top = '0';
+      preview.style.width = `${screenWidth / 2}px`;
+      preview.style.height = `${screenHeight}px`;
+    } else if (zone === 'right') {
+      preview.style.left = `${screenWidth / 2}px`;
+      preview.style.top = '0';
+      preview.style.width = `${screenWidth / 2}px`;
+      preview.style.height = `${screenHeight}px`;
+    } else if (zone === 'top') {
+      preview.style.left = '0';
+      preview.style.top = '0';
+      preview.style.width = `${screenWidth}px`;
+      preview.style.height = `${screenHeight}px`;
+    }
+    
+    preview.style.display = 'block';
+  }
+
+  hideSnapPreview() {
+    const preview = document.getElementById('snapPreview');
+    if (preview) {
+      preview.style.display = 'none';
+    }
+  }
+
+  applySnap(windowEl, windowId, zone) {
+    const windowData = this.windows.get(windowId);
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight - CONFIG.taskbar.height;
+    
+    // Save previous size if not maximized
+    if (!windowData.isMaximized) {
+      windowData.previousSize = {
+        width: windowEl.offsetWidth,
+        height: windowEl.offsetHeight,
+        top: windowEl.offsetTop,
+        left: windowEl.offsetLeft
+      };
+    }
+    
+    windowEl.style.maxWidth = 'none';
+    windowEl.style.maxHeight = 'none';
+    
+    if (zone === 'left') {
+      windowData.isMaximized = false;
+      animate(windowEl, {
+        width: [`${screenWidth / 2}px`],
+        height: [`${screenHeight}px`],
+        top: ['0px'],
+        left: ['0px'],
+        borderRadius: ['0px'],
+        duration: CONFIG.animation.duration.maximize,
+        ease: CONFIG.animation.easing.default
+      });
+    } else if (zone === 'right') {
+      windowData.isMaximized = false;
+      animate(windowEl, {
+        width: [`${screenWidth / 2}px`],
+        height: [`${screenHeight}px`],
+        top: ['0px'],
+        left: [`${screenWidth / 2}px`],
+        borderRadius: ['0px'],
+        duration: CONFIG.animation.duration.maximize,
+        ease: CONFIG.animation.easing.default
+      });
+    } else if (zone === 'top') {
+      windowData.isMaximized = true;
+      animate(windowEl, {
+        width: [`${screenWidth}px`],
+        height: [`${screenHeight}px`],
+        top: ['0px'],
+        left: ['0px'],
+        borderRadius: ['0px'],
+        duration: CONFIG.animation.duration.maximize,
+        ease: CONFIG.animation.easing.default
+      });
+    }
+    
+    this.hideSnapPreview();
   }
 
   initializeWindowControls(windowEl) {
@@ -583,14 +724,102 @@ function updateClock() {
 }
 
 // ============================================================================
-// START BUTTON & TASKBAR ANIMATIONS
+// DESKTOP ICONS MANAGER
 // ============================================================================
 
-function initializeStartButton(windowManager) {
-  const startButton = document.querySelector('.start-button');
-  if (startButton) {
-    startButton.addEventListener('click', () => {
-      const svg = startButton.querySelector('svg');
+class DesktopIconsManager {
+  constructor(windowManager) {
+    this.windowManager = windowManager;
+    this.container = document.getElementById('desktopIcons');
+    this.icons = [];
+  }
+
+  createIcon(name, icon, type) {
+    const iconEl = document.createElement('div');
+    iconEl.className = 'desktop-icon';
+    iconEl.innerHTML = `
+      <div class="desktop-icon-image">${icon}</div>
+      <div class="desktop-icon-label">${name}</div>
+    `;
+    
+    // Double-click to open
+    let clickCount = 0;
+    let clickTimer = null;
+    
+    iconEl.addEventListener('click', (e) => {
+      // Don't stop propagation so desktop click handler can still work
+      
+      // Clear previous selections
+      document.querySelectorAll('.desktop-icon.selected').forEach(icon => {
+        if (icon !== iconEl) icon.classList.remove('selected');
+      });
+      
+      // Select this icon
+      iconEl.classList.add('selected');
+      
+      clickCount++;
+      
+      if (clickCount === 1) {
+        clickTimer = setTimeout(() => {
+          clickCount = 0;
+        }, 300);
+      } else if (clickCount === 2) {
+        clearTimeout(clickTimer);
+        clickCount = 0;
+        this.openIcon(type, name, icon);
+      }
+    });
+    
+    this.container.appendChild(iconEl);
+    this.icons.push({ element: iconEl, name, type });
+    
+    return iconEl;
+  }
+
+  async openIcon(type, name, icon) {
+    const implementedTypes = [WINDOW_TYPES.BROWSER, WINDOW_TYPES.TERMINAL, WINDOW_TYPES.EMAIL, WINDOW_TYPES.EXPLORER];
+    
+    if (implementedTypes.includes(type)) {
+      // Check if window already exists
+      const existing = Array.from(this.windowManager.windows.entries()).find(([, v]) => v.type === type);
+      if (existing) {
+        this.windowManager.handleRestore(existing[0]);
+      } else {
+        await this.windowManager.createWindow(type, name, icon);
+      }
+    } else if (type === ICON_TYPES.RECYCLE_BIN) {
+      alert('Recycle Bin is empty');
+    }
+  }
+
+  clearSelection() {
+    document.querySelectorAll('.desktop-icon.selected').forEach(icon => {
+      icon.classList.remove('selected');
+    });
+  }
+}
+
+// ============================================================================
+// START MENU MANAGER
+// ============================================================================
+
+class StartMenuManager {
+  constructor(windowManager) {
+    this.windowManager = windowManager;
+    this.menu = document.getElementById('startMenu');
+    this.startButton = document.querySelector('.start-button');
+    this.isOpen = false;
+    
+    this.initializeStartButton();
+    this.populateApps();
+  }
+
+  initializeStartButton() {
+    this.startButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggle();
+      
+      const svg = this.startButton.querySelector('svg');
       if (svg) {
         animate(svg, {
           scale: [0.7, 1.15, 1],
@@ -599,19 +828,284 @@ function initializeStartButton(windowManager) {
         });
       }
     });
+    
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (this.isOpen && !this.menu.contains(e.target) && !this.startButton.contains(e.target)) {
+        this.close();
+      }
+    });
+  }
+
+  toggle() {
+    if (this.isOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+
+  open() {
+    this.isOpen = true;
+    this.menu.classList.add('open');
+  }
+
+  close() {
+    this.isOpen = false;
+    this.menu.classList.remove('open');
+  }
+
+  populateApps() {
+    const appGrid = document.getElementById('pinnedApps');
+    
+    APP_DEFINITIONS.forEach(app => {
+      const appEl = document.createElement('button');
+      appEl.className = 'start-menu-app';
+      appEl.innerHTML = `
+        <div class="start-menu-app-icon">${app.icon}</div>
+        <div class="start-menu-app-name">${app.name}</div>
+      `;
+      
+      appEl.addEventListener('click', async () => {
+        this.close();
+        
+        const implementedTypes = [WINDOW_TYPES.BROWSER, WINDOW_TYPES.TERMINAL, WINDOW_TYPES.EMAIL, WINDOW_TYPES.EXPLORER];
+        
+        if (implementedTypes.includes(app.type)) {
+          // Check if window already exists
+          const existing = Array.from(this.windowManager.windows.entries()).find(([, v]) => v.type === app.type);
+          if (existing) {
+            this.windowManager.handleRestore(existing[0]);
+          } else {
+            await this.windowManager.createWindow(app.type, app.name, app.icon);
+          }
+        } else {
+          alert(`${app.name} is not implemented yet`);
+        }
+      });
+      
+      appGrid.appendChild(appEl);
+    });
+  }
+}
+
+// ============================================================================
+// CONTEXT MENU MANAGER
+// ============================================================================
+
+class ContextMenuManager {
+  constructor(desktopIconsManager) {
+    this.desktopIconsManager = desktopIconsManager;
+    this.menu = document.getElementById('contextMenu');
+    this.initializeContextMenu();
+  }
+
+  initializeContextMenu() {
+    // Right-click on desktop
+    document.addEventListener('contextmenu', (e) => {
+      // Only show on desktop background, not on windows or icons
+      if (e.target.closest('.window, .desktop-icon, .taskbar, .start-menu')) {
+        return;
+      }
+      
+      e.preventDefault();
+      this.show(e.clientX, e.clientY);
+    });
+    
+    // Close when clicking anywhere
+    document.addEventListener('click', () => {
+      this.close();
+    });
+  }
+
+  show(x, y) {
+    const items = CONTEXT_MENU_ITEMS.map(item => {
+      if (item.type === 'separator') {
+        return '<div class="context-menu-separator"></div>';
+      }
+      return `
+        <button class="context-menu-item" data-action="${item.action}">
+          <span class="context-menu-icon">${item.icon}</span>
+          <span>${item.label}</span>
+        </button>
+      `;
+    }).join('');
+    
+    this.menu.innerHTML = items;
+    
+    // Add click handlers
+    this.menu.querySelectorAll('.context-menu-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const action = item.getAttribute('data-action');
+        this.handleContextAction(action);
+        this.close();
+      });
+    });
+    
+    // Position the menu
+    this.menu.style.left = `${x}px`;
+    this.menu.style.top = `${y}px`;
+    this.menu.classList.add('open');
+    
+    // Adjust if menu goes off screen
+    const rect = this.menu.getBoundingClientRect();
+    if (rect.right > window.innerWidth) {
+      this.menu.style.left = `${window.innerWidth - rect.width - 10}px`;
+    }
+    if (rect.bottom > window.innerHeight) {
+      this.menu.style.top = `${window.innerHeight - rect.height - 10}px`;
+    }
+  }
+
+  handleContextAction(action) {
+    const actions = {
+      'refresh': () => location.reload(),
+      'new-folder': () => alert('New Folder is not implemented yet'),
+      'new-document': () => alert('New Text Document is not implemented yet'),
+      'personalize': () => alert('Personalize is not implemented yet'),
+      'display-settings': () => alert('Display settings is not implemented yet')
+    };
+
+    if (actions[action]) {
+      actions[action]();
+    }
+  }
+
+  close() {
+    this.menu.classList.remove('open');
+  }
+}
+
+// ============================================================================
+// SYSTEM TRAY MANAGER
+// ============================================================================
+
+class SystemTrayManager {
+  constructor() {
+    this.trayIcons = document.querySelectorAll('.tray-icon');
+    this.datetime = document.querySelector('.datetime');
+    this.initialize();
+  }
+
+  initialize() {
+    this.initializeTrayIcons();
+    this.initializeDatetime();
+  }
+
+  initializeTrayIcons() {
+    this.trayIcons.forEach(icon => {
+      icon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const tooltip = icon.getAttribute('data-tooltip');
+        this.handleTrayIconClick(tooltip);
+      });
+    });
+  }
+
+  handleTrayIconClick(tooltip) {
+    const actions = {
+      'Volume': () => alert('Volume control is not implemented yet'),
+      'Network': () => alert('Network settings is not implemented yet'),
+      'Battery': () => alert('Battery: 85% (Plugged in)')
+    };
+
+    if (actions[tooltip]) {
+      actions[tooltip]();
+    }
+  }
+
+  initializeDatetime() {
+    if (this.datetime) {
+      this.datetime.style.cursor = 'pointer';
+      this.datetime.addEventListener('click', () => {
+        alert('Calendar is not implemented yet');
+      });
+    }
+  }
+}
+
+// ============================================================================
+// TASKBAR MANAGER
+// ============================================================================
+
+class TaskbarManager {
+  constructor(windowManager) {
+    this.windowManager = windowManager;
+    this.taskbarCenter = document.getElementById('taskbarCenter');
+  }
+
+  createLauncher(config) {
+    const { type, name, icon, tooltip } = config;
+    const button = document.createElement('button');
+    button.className = 'taskbar-app';
+    button.setAttribute('data-tooltip', tooltip);
+    button.setAttribute('data-launcher-type', type);
+    button.innerHTML = `<span>${icon}</span>`;
+
+    button.addEventListener('click', async () => {
+      this.animateLauncherClick(button);
+      await this.handleLauncherClick(type, name, icon);
+    });
+
+    this.taskbarCenter.appendChild(button);
+    return button;
+  }
+
+  animateLauncherClick(button) {
+    const span = button.querySelector('span');
+    if (span) {
+      animate(span, {
+        scale: [0.7, 1.15, 1],
+        duration: 600,
+        ease: 'out(5)'
+      });
+    }
+  }
+
+  async handleLauncherClick(type, name, icon) {
+    // Check if window already exists
+    const existing = Array.from(this.windowManager.windows.entries())
+      .find(([, v]) => v.type === type);
+
+    if (existing) {
+      this.windowManager.handleRestore(existing[0]);
+    } else {
+      try {
+        await this.windowManager.createWindow(type, name, icon);
+      } catch (error) {
+        console.error(`Failed to create ${type} window:`, error);
+      }
+    }
+  }
+
+  initializeDefaultLaunchers() {
+    this.createLauncher({
+      type: WINDOW_TYPES.BROWSER,
+      name: 'Jakub Adamczyk',
+      icon: SVG_ICONS.browser,
+      tooltip: 'Browser'
+    });
+
+    this.createLauncher({
+      type: WINDOW_TYPES.TERMINAL,
+      name: 'MoMo Terminal',
+      icon: SVG_ICONS.cmd,
+      tooltip: 'MoMo Terminal'
+    });
+
+    this.createLauncher({
+      type: WINDOW_TYPES.EMAIL,
+      name: 'Mail',
+      icon: SVG_ICONS.email,
+      tooltip: 'Mail'
+    });
   }
 }
 
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
-
-// SVG Icons
-const SVG_ICONS = {
-  browser: '<svg viewBox="0 0 24 24" style="width:20px;height:20px;"><circle cx="12" cy="12" r="10" fill="#F4B400"/><circle cx="12" cy="12" r="7" fill="#0F9D58"/><circle cx="13" cy="11" r="2.5" fill="#4285F4"/><path d="M12 2 A10 10 0 0 1 19 5" fill="none" stroke="#EA4335" stroke-width="3" stroke-linecap="round"/><path d="M19 5 A10 10 0 0 1 22 12" fill="none" stroke="#F4B400" stroke-width="3" stroke-linecap="round"/><path d="M22 12 A10 10 0 0 1 12 22" fill="none" stroke="#0F9D58" stroke-width="3" stroke-linecap="round"/></svg>',
-  cmd: '<svg viewBox="0 0 24 24" style="width:20px;height:20px;"><rect x="2" y="3" width="20" height="18" rx="2" fill="#000D26" stroke="#0078D4" stroke-width="1.5"/><text x="5" y="16" font-family="Courier" font-size="6" fill="#00FF00" font-weight="bold">C:\\</text><circle cx="20" cy="16" r="1.5" fill="#00FF00"/></svg>',
-  email: '<svg viewBox="0 0 24 24" style="width:20px;height:20px;"><rect x="2" y="4" width="20" height="16" rx="2" fill="#0078D4"/><path d="M2 6l10 7 10-7" stroke="#ffffff" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>'
-};
 
 async function init() {
   const windowManager = new WindowManager();
@@ -624,106 +1118,39 @@ async function init() {
   updateClock();
   setInterval(updateClock, 1000);
   
-  // Initialize start button
-  initializeStartButton(windowManager);
-  // Add quick launch buttons to taskbar (persistent launchers)
-  const taskbarCenter = document.getElementById('taskbarCenter');
-
-  // Browser Button (persistent launcher)
-  const browserBtn = document.createElement('button');
-  browserBtn.className = 'taskbar-app';
-  browserBtn.setAttribute('data-tooltip', 'Browser');
-  browserBtn.setAttribute('data-launcher-type', 'browser');
-  browserBtn.innerHTML = `<span>${SVG_ICONS.browser}</span>`;
-  browserBtn.addEventListener('click', async () => {
-    const span = browserBtn.querySelector('span');
-    animate(span, {
-      scale: [0.7, 1.15, 1],
-      duration: 600,
-      ease: 'out(5)'
-    });
-
-    // If a Browser window already exists, restore it
-    const existingBrowser = Array.from(windowManager.windows.entries()).find(([, v]) => v.type === 'browser');
-    if (existingBrowser) {
-      const existingId = existingBrowser[0];
-      windowManager.handleRestore(existingId);
-      return;
-    }
-
-    try {
-      await windowManager.createWindow('browser', 'Jakub Adamczyk', SVG_ICONS.browser);
-    } catch (error) {
-      console.error('Failed to create Browser window:', error);
+  // Initialize desktop icons
+  const desktopIconsManager = new DesktopIconsManager(windowManager);
+  desktopIconsManager.createIcon('This PC', SVG_ICONS.thispc, ICON_TYPES.THIS_PC);
+  desktopIconsManager.createIcon('Recycle Bin', SVG_ICONS.recyclebin, ICON_TYPES.RECYCLE_BIN);
+  desktopIconsManager.createIcon('Browser', SVG_ICONS.browser, WINDOW_TYPES.BROWSER);
+  desktopIconsManager.createIcon('Terminal', SVG_ICONS.cmd, WINDOW_TYPES.TERMINAL);
+  
+  // Click on desktop background to clear selections
+  document.querySelector('.large.row.centered').addEventListener('click', (e) => {
+    // Clear selection if clicking on desktop background (not on icons or windows)
+    if (!e.target.closest('.desktop-icon, .window, .taskbar, .start-menu, .context-menu')) {
+      desktopIconsManager.clearSelection();
     }
   });
-  taskbarCenter.appendChild(browserBtn);
-
-  // CMD Button (persistent launcher)
-  const cmdBtn = document.createElement('button');
-  cmdBtn.className = 'taskbar-app';
-  cmdBtn.setAttribute('data-tooltip', 'MoMo Terminal');
-  cmdBtn.setAttribute('data-launcher-type', 'cmd');
-  cmdBtn.innerHTML = `<span>${SVG_ICONS.cmd}</span>`;
-  cmdBtn.addEventListener('click', async () => {
-    const span = cmdBtn.querySelector('span');
-    animate(span, {
-      scale: [0.7, 1.15, 1],
-      duration: 600,
-      ease: 'out(5)'
-    });
-
-    // If a CMD window already exists, restore it
-    const existingCmd = Array.from(windowManager.windows.entries()).find(([, v]) => v.type === 'cmd');
-    if (existingCmd) {
-      const existingId = existingCmd[0];
-      windowManager.handleRestore(existingId);
-      return;
-    }
-
-    try {
-      await windowManager.createWindow('cmd', 'MoMo Terminal', SVG_ICONS.cmd);
-    } catch (error) {
-      console.error('Failed to create CMD window:', error);
-    }
-  });
-  taskbarCenter.appendChild(cmdBtn);
-
-  // Email Button (persistent launcher)
-  const emailBtn = document.createElement('button');
-  emailBtn.className = 'taskbar-app';
-  emailBtn.setAttribute('data-tooltip', 'Mail');
-  emailBtn.setAttribute('data-launcher-type', 'email');
-  emailBtn.innerHTML = `<span>${SVG_ICONS.email}</span>`;
-  emailBtn.addEventListener('click', async () => {
-    const span = emailBtn.querySelector('span');
-    animate(span, {
-      scale: [0.7, 1.15, 1],
-      duration: 600,
-      ease: 'out(5)'
-    });
-
-    // If an Email window already exists, restore it
-    const existingEmail = Array.from(windowManager.windows.entries()).find(([, v]) => v.type === 'email');
-    if (existingEmail) {
-      const existingId = existingEmail[0];
-      windowManager.handleRestore(existingId);
-      return;
-    }
-
-    try {
-      await windowManager.createWindow('email', 'Mail', SVG_ICONS.email);
-    } catch (error) {
-      console.error('Failed to create Email window:', error);
-    }
-  });
-  taskbarCenter.appendChild(emailBtn);
+  
+  // Initialize start menu
+  const startMenuManager = new StartMenuManager(windowManager);
+  
+  // Initialize context menu
+  const contextMenuManager = new ContextMenuManager(desktopIconsManager);
+  
+  // Initialize system tray
+  new SystemTrayManager();
+  
+  // Initialize taskbar launchers
+  const taskbarManager = new TaskbarManager(windowManager);
+  taskbarManager.initializeDefaultLaunchers();
 
   // Create initial windows on every load with a layout
   try {
-    const browserId = await windowManager.createWindow('browser', 'Jakub Adamczyk', SVG_ICONS.browser);
-    const cmdId = await windowManager.createWindow('cmd', 'MoMo Terminal', SVG_ICONS.cmd);
-    const emailId = await windowManager.createWindow('email', 'Mail', SVG_ICONS.email);
+    const browserId = await windowManager.createWindow(WINDOW_TYPES.BROWSER, 'Jakub Adamczyk', SVG_ICONS.browser);
+    const cmdId = await windowManager.createWindow(WINDOW_TYPES.TERMINAL, 'MoMo Terminal', SVG_ICONS.cmd);
+    const emailId = await windowManager.createWindow(WINDOW_TYPES.EMAIL, 'Mail', SVG_ICONS.email);
 
     // Apply initial layout
     const browserEl = windowManager.windows.get(browserId).element;
