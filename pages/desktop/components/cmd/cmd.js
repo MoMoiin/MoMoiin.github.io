@@ -194,7 +194,7 @@ export function init(windowElement) {
     appendLine('work with DevOps, cloud infrastructure, and server-side development.');
     appendLine('');
     appendLine('───────────────────────────────────────────────────────────────────────────────────────────');
-    appendLine('   Contact: Kubaadamczyk2002@gmail.com  |   LinkedIn  |  GitHub');
+    appendLine('   Contact: Kubaadamczyk2002@gmail.com  |   LinkedIn: https://linkedin.com/in/jakub-adamczyk-software  |  GitHub: https://github.com/MoMoiin');
     appendLine('  Type "help" for commands  |   Type "clear" to start fresh');
     appendLine('───────────────────────────────────────────────────────────────────────────────────────────');
     appendLine('');
