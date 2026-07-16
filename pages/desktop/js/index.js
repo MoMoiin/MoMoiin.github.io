@@ -777,8 +777,13 @@ class DesktopIconsManager {
   }
 
   async openIcon(type, name, icon) {
+    // "This PC" opens the file explorer
+    if (type === ICON_TYPES.THIS_PC) {
+      type = WINDOW_TYPES.EXPLORER;
+    }
+
     const implementedTypes = [WINDOW_TYPES.BROWSER, WINDOW_TYPES.TERMINAL, WINDOW_TYPES.EMAIL, WINDOW_TYPES.EXPLORER];
-    
+
     if (implementedTypes.includes(type)) {
       // Check if window already exists
       const existing = Array.from(this.windowManager.windows.entries()).find(([, v]) => v.type === type);
@@ -1124,6 +1129,8 @@ async function init() {
   desktopIconsManager.createIcon('Recycle Bin', SVG_ICONS.recyclebin, ICON_TYPES.RECYCLE_BIN);
   desktopIconsManager.createIcon('Browser', SVG_ICONS.browser, WINDOW_TYPES.BROWSER);
   desktopIconsManager.createIcon('Terminal', SVG_ICONS.cmd, WINDOW_TYPES.TERMINAL);
+  desktopIconsManager.createIcon('Projects', SVG_ICONS.explorer, WINDOW_TYPES.EXPLORER);
+  desktopIconsManager.createIcon('Mail', SVG_ICONS.email, WINDOW_TYPES.EMAIL);
   
   // Click on desktop background to clear selections
   document.querySelector('.large.row.centered').addEventListener('click', (e) => {
@@ -1157,23 +1164,23 @@ async function init() {
     const cmdEl = windowManager.windows.get(cmdId).element;
     const emailEl = windowManager.windows.get(emailId).element;
 
-    // Browser
-    browserEl.style.width = '32vw';
-    browserEl.style.height = '64vh';
-    browserEl.style.left = '0.5%';
-    browserEl.style.top = '1.5%';
+    // Browser (renders the portfolio site)
+    browserEl.style.width = '38vw';
+    browserEl.style.height = '76vh';
+    browserEl.style.left = '1%';
+    browserEl.style.top = '2%';
 
     // CMD
-    cmdEl.style.width = '35vw';
-    cmdEl.style.height = '50vh';
-    cmdEl.style.left = '37%';
-    cmdEl.style.top = '25%';
+    cmdEl.style.width = '36vw';
+    cmdEl.style.height = '52vh';
+    cmdEl.style.left = '41%';
+    cmdEl.style.top = '10%';
 
     // Email
-    emailEl.style.width = '15vw';
-    emailEl.style.height = '63vh';
-    emailEl.style.left = '75%';
-    emailEl.style.top = '20%';
+    emailEl.style.width = '22vw';
+    emailEl.style.height = '70vh';
+    emailEl.style.left = '77%';
+    emailEl.style.top = '8%';
   } catch (error) {
     console.error('Failed to create initial windows:', error);
   }

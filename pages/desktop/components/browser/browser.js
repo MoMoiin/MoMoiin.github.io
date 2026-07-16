@@ -24,34 +24,22 @@ export const htmlTemplate = `<!-- Browser Window Component -->
 <!-- Chrome-style Address Bar -->
 <div class="address-bar">
   <div class="nav-buttons">
-    <button class="nav-btn" title="Back" disabled>←</button>
-    <button class="nav-btn" title="Forward" disabled>→</button>
-    <button class="nav-btn" title="Reload">↻</button>
+    <button class="nav-btn browser-back" title="Back">←</button>
+    <button class="nav-btn browser-forward" title="Forward">→</button>
+    <button class="nav-btn browser-reload" title="Reload">↻</button>
   </div>
   <div class="address-input">
     <span class="lock-icon">🔒</span>
-    <span class="url">jakub-adamczyk.com</span>
+    <span class="url">momoiin.github.io</span>
     <span class="star-icon" title="Bookmark">☆</span>
   </div>
-  <button class="menu-btn" title="Menu">⋮</button>
+  <button class="menu-btn browser-open-full" title="Open in full page">⋮</button>
 </div>
 
-<!-- Window Content -->
-<div class="window-content">
-  <h1>Welcome to the desktop version of my portfolio website!</h1>
-  <p>This is a window recreation on how a modern web application would look and behave in a desktop environment. \n if you dont like this version you can go back to a static page by clicking this button </p>
-  
-  <button class="cta-button" onclick="window.location.href='./pages/mobile/index.html'">Go to the Static site</button>
-  <div class="feature-grid">
-    <div class="feature-card">
-      <h3>Feature 1</h3>
-      <p>Amazing functionality here</p>
-    </div>
-    <div class="feature-card">
-      <h3>Feature 2</h3>
-      <p>More great features</p>
-    </div>
-  </div>
+<!-- Window Content: the real portfolio site, rendered inside the "browser" -->
+<div class="window-content" style="padding:0;overflow:hidden;">
+  <iframe class="browser-frame" src="../../index.html" title="Jakub Adamczyk — Portfolio"
+    style="display:block;width:100%;height:100%;border:none;background:#f2f2f2;"></iframe>
 </div>
 
 <!-- Resize Handles -->
@@ -65,19 +53,37 @@ export const htmlTemplate = `<!-- Browser Window Component -->
 <div class="resize-handle resize-corner-br"></div>`;
 
 export function init(windowElement) {
-  // Browser-specific initialization
-  const tabClose = windowElement.querySelector('.tab-close');
-  const newTabBtn = windowElement.querySelector('.new-tab-button');
-  
-  if (tabClose) {
-    tabClose.addEventListener('click', () => {
-      console.log('Close tab clicked');
+  const frame = windowElement.querySelector('.browser-frame');
+  const backBtn = windowElement.querySelector('.browser-back');
+  const forwardBtn = windowElement.querySelector('.browser-forward');
+  const reloadBtn = windowElement.querySelector('.browser-reload');
+  const openFullBtn = windowElement.querySelector('.browser-open-full');
+
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      try { frame.contentWindow.history.back(); } catch (e) { /* cross-origin page */ }
     });
   }
-  
-  if (newTabBtn) {
-    newTabBtn.addEventListener('click', () => {
-      console.log('New tab clicked');
+
+  if (forwardBtn) {
+    forwardBtn.addEventListener('click', () => {
+      try { frame.contentWindow.history.forward(); } catch (e) { /* cross-origin page */ }
+    });
+  }
+
+  if (reloadBtn) {
+    reloadBtn.addEventListener('click', () => {
+      try {
+        frame.contentWindow.location.reload();
+      } catch (e) {
+        frame.src = frame.src;
+      }
+    });
+  }
+
+  if (openFullBtn) {
+    openFullBtn.addEventListener('click', () => {
+      window.open('../../index.html', '_blank');
     });
   }
 }

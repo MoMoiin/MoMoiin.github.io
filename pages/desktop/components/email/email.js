@@ -104,11 +104,11 @@ export const htmlTemplate = `<!-- Email Window Component (Outlook Style) -->
             </svg>
             <span>GitHub</span>
           </a>
-          <a href="mailto:kubaadamczyk2002@gmail.com" class="contact-link">
+          <a href="mailto:jakub.adamczyk.software@gmail.com" class="contact-link">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
               <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
             </svg>
-            <span>kubaadamczyk2002@gmail.com</span>
+            <span>jakub.adamczyk.software@gmail.com</span>
           </a>
         </div>
       </div>
@@ -157,7 +157,7 @@ export function init(windowElement) {
       }
 
       // Create mailto link
-      const mailtoLink = `mailto:kubaadamczyk2002@gmail.com?subject=${encodeURIComponent(subject || 'Contact Form Submission')}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+      const mailtoLink = `mailto:jakub.adamczyk.software@gmail.com?subject=${encodeURIComponent(subject || 'Contact Form Submission')}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
       
       // Show success message
       const originalText = sendBtn.innerHTML;

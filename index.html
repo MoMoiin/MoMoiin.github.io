@@ -1,204 +1,511 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Loading...</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
 
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jakub Adamczyk — DevOps & Platform Engineer</title>
+  <meta name="description"
+    content="DevOps/Platform Engineer at SITA working with Azure, AWS, Kubernetes and Terraform on aviation cloud infrastructure. Portfolio styled as the Azure portal, plus an interactive desktop built in vanilla JS." />
+  <link rel="canonical" href="https://momoiin.github.io/" />
+  <meta name="theme-color" content="#0078d4" />
 
-      .loader-container {
-        text-align: center;
-        padding: 40px;
-        max-width: 600px;
-      }
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jakub Adamczyk — DevOps & Platform Engineer" />
+  <meta property="og:description"
+    content="Cloud infrastructure for aviation — Azure, AWS, Kubernetes, Terraform, CI/CD. Portfolio styled as the Azure portal." />
+  <meta property="og:url" content="https://momoiin.github.io/" />
 
-      .loader-title {
-        font-size: 48px;
-        font-weight: 800;
-        margin-bottom: 24px;
-        animation: fadeIn 0.5s ease;
-      }
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2350e6ff'/%3E%3Cstop offset='1' stop-color='%230078d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M18 4 L30 4 L17 44 L5 44 Z'/%3E%3Cpath fill='%230078d4' d='M31 12 L43 44 L19 44 Z'/%3E%3C/svg%3E" />
 
-      .loader-text {
-        font-size: 18px;
-        margin-bottom: 40px;
-        opacity: 0.95;
-        animation: fadeIn 0.5s ease 0.1s backwards;
-      }
+  <link rel="stylesheet" href="css/style.css" />
+</head>
 
-      .spinner {
-        width: 50px;
-        height: 50px;
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top-color: white;
-        border-radius: 50%;
-        margin: 0 auto 40px;
-        animation: spin 1s linear infinite, fadeIn 0.5s ease 0.2s backwards;
-      }
+<body>
 
-      .manual-links {
-        display: flex;
-        gap: 16px;
-        justify-content: center;
-        flex-wrap: wrap;
-        animation: fadeIn 0.5s ease 0.3s backwards;
-      }
-
-      .manual-link {
-        display: inline-block;
-        padding: 12px 24px;
-        background: rgba(255, 255, 255, 0.2);
-        border: 2px solid white;
-        border-radius: 8px;
-        color: white;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-      }
-
-      .manual-link:hover {
-        background: white;
-        color: #667eea;
-        transform: translateY(-2px);
-      }
-
-      .device-info {
-        margin-top: 32px;
-        font-size: 14px;
-        opacity: 0.8;
-        animation: fadeIn 0.5s ease 0.4s backwards;
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @media (max-width: 600px) {
-        .loader-title {
-          font-size: 36px;
-        }
-
-        .loader-text {
-          font-size: 16px;
-        }
-
-        .manual-links {
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .manual-link {
-          width: 100%;
-          max-width: 250px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="loader-container">
-      <h1 class="loader-title">Welcome</h1>
-      <p class="loader-text">Detecting your device...</p>
-      <div class="spinner"></div>
-      
-      <div class="manual-links">
-        <a href="pages/mobile/index.html" class="manual-link">📱 Mobile View</a>
-        <a href="pages/desktop/index.html" class="manual-link">🖥️ Desktop View</a>
-      </div>
-
-      <p class="device-info" id="deviceInfo"></p>
+  <!-- ===== Portal top bar ===== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="menuToggle" aria-label="Show portal menu" aria-expanded="false">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+      <a class="topbar-brand" href="#overview">Microsoft Azure <span class="brand-note">(unofficial portfolio)</span></a>
     </div>
+    <div class="topbar-search">
+      <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true">
+        <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <input type="search" id="portalSearch" placeholder="Search experience, projects, and skills (G+/)" aria-label="Search this page" />
+    </div>
+    <div class="topbar-right">
+      <a class="topbar-icon" href="pages/desktop/index.html" target="_top" data-tip="Cloud Shell — launch desktop experience" aria-label="Launch desktop experience">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <rect x="1" y="3" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" />
+          <path d="M5 8l3 2.5L5 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M10 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </a>
+      <span class="topbar-icon" data-tip="No new notifications" tabindex="0">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <path d="M10 2.5a5 5 0 0 0-5 5V11l-1.6 2.6c-.3.5 0 1.1.6 1.1h12c.6 0 .9-.6.6-1.1L15 11V7.5a5 5 0 0 0-5-5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+          <path d="M8 17a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span class="topbar-icon" data-tip="Settings — this portal ships as-is" tabindex="0">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6" />
+          <path d="M10 2.8v2.1M10 15.1v2.1M2.8 10h2.1M15.1 10h2.1M4.9 4.9l1.5 1.5M13.6 13.6l1.5 1.5M15.1 4.9l-1.5 1.5M6.4 13.6l-1.5 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </span>
+      <a class="topbar-icon" href="https://github.com/MoMoiin" target="_blank" rel="noopener noreferrer" data-tip="Help? See my GitHub" aria-label="GitHub">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+          <path d="M8 7.8c.2-1 1-1.6 2-1.6 1.1 0 2 .8 2 1.8 0 1.5-2 1.6-2 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          <circle cx="10" cy="13.8" r="0.9" fill="currentColor" />
+        </svg>
+      </a>
+      <a class="account" href="mailto:jakub.adamczyk.software@gmail.com" data-tip="jakub.adamczyk.software@gmail.com" aria-label="Email Jakub">
+        <span class="account-info">
+          <span class="account-mail">jakub.adamczyk.software@gmail.com</span>
+          <span class="account-dir">JAKUB ADAMCZYK — PORTFOLIO</span>
+        </span>
+        <span class="avatar">JA</span>
+      </a>
+    </div>
+  </header>
 
-    <script>
-      // Configuration - Breakpoint for mobile vs desktop (in pixels)
-      const MOBILE_BREAKPOINT = 1024;
+  <!-- ===== Global portal menu (hamburger flyout) ===== -->
+  <nav class="global-menu" id="globalMenu" aria-label="Portal menu">
+    <ul>
+      <li><a href="#contact" class="global-link">
+          <span class="global-icon create-icon" aria-hidden="true">＋</span>Create a resource</a></li>
+      <li><a href="#overview" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M3 10.5 10 4l7 6.5M5 9.5V17h4v-4h2v4h4V9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Home</a></li>
+      <li><a href="#overview" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="2.5" y="2.5" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /><rect x="11" y="2.5" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /><rect x="2.5" y="11" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /><rect x="11" y="11" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg></span>Dashboard</a></li>
+      <li><a href="#projects" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M4 5h12M4 10h12M4 15h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg></span>All services</a></li>
+      <li><a href="#projects" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 2 3 6v8l7 4 7-4V6l-7-4Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" /><path d="M3 6l7 4 7-4M10 10v8" fill="none" stroke="currentColor" stroke-width="1.5" /></svg></span>All resources</a></li>
+      <li><a href="#experience" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="1" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M3 8h14M8 8v9" stroke="currentColor" stroke-width="1.5" /></svg></span>Resource groups</a></li>
+    </ul>
+    <p class="global-caption">Portfolio</p>
+    <ul>
+      <li><a href="#overview" class="global-link">Overview</a></li>
+      <li><a href="#experience" class="global-link">Experience</a></li>
+      <li><a href="#projects" class="global-link">Projects</a></li>
+      <li><a href="#skills" class="global-link">Skills</a></li>
+      <li><a href="#education" class="global-link">Education</a></li>
+      <li><a href="#contact" class="global-link">Contact</a></li>
+      <li><a href="pages/desktop/index.html" target="_top" class="global-link">Interactive desktop</a></li>
+    </ul>
+  </nav>
+  <div class="global-overlay" id="globalOverlay"></div>
 
-      // Get screen dimensions
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  <div class="portal-body">
 
-      // Display device info
-      const deviceInfo = document.getElementById('deviceInfo');
-      deviceInfo.textContent = `Screen: ${screenWidth}x${screenHeight} | ${isTouchDevice ? 'Touch' : 'Desktop'} Device`;
+    <!-- ===== Resource menu (sidebar) ===== -->
+    <nav class="sidebar" id="sidebar" aria-label="Resource menu">
+      <div class="sidebar-search">
+        <svg viewBox="0 0 20 20" width="12" height="12" aria-hidden="true">
+          <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2" />
+          <path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <input type="search" id="menuFilter" placeholder="Search (Ctrl+/)" aria-label="Filter menu items" />
+      </div>
+      <ul class="resource-menu">
+        <li><a href="#overview" class="active">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10.5 10 4l7 6.5M5 9.5V17h4v-4h2v4h4V9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Overview</a></li>
+        <li><a href="#experience">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.2" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M10 5.8V10l3 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Activity log (Experience)</a></li>
+      </ul>
+      <p class="menu-group">Settings</p>
+      <ul class="resource-menu">
+        <li><a href="#projects">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="2.5" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /><rect x="11.5" y="2.5" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /><rect x="2.5" y="11.5" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /><rect x="11.5" y="11.5" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+            Deployments (Projects)</a></li>
+        <li><a href="#skills">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h12M4 10h12M4 14h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /><circle cx="8" cy="6" r="1.7" fill="currentColor" /><circle cx="13" cy="10" r="1.7" fill="currentColor" /><circle cx="6.5" cy="14" r="1.7" fill="currentColor" /></svg>
+            Configuration (Skills)</a></li>
+        <li><a href="#education">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4 2 8l8 4 8-4-8-4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /><path d="M5.5 10v4c0 1.2 2 2.4 4.5 2.4s4.5-1.2 4.5-2.4v-4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+            Properties (Education)</a></li>
+      </ul>
+      <p class="menu-group">Support + troubleshooting</p>
+      <ul class="resource-menu">
+        <li><a href="#contact">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8a7 7 0 0 1 14 0v5a2 2 0 0 1-2 2h-2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /><rect x="2" y="9" width="4" height="6" rx="1.4" fill="currentColor" /><rect x="14" y="9" width="4" height="6" rx="1.4" fill="currentColor" /></svg>
+            New Support Request (Contact)</a></li>
+      </ul>
+      <p class="menu-group">Experiences</p>
+      <ul class="resource-menu">
+        <li><a href="pages/desktop/index.html" target="_top">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="3.5" width="16" height="10.5" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M7.5 17h5M10 14.5V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            Interactive desktop</a></li>
+        <li><a href="https://github.com/MoMoiin/MoMoiin.github.io" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5 3 10l4 5M13 5l4 5-4 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Source code</a></li>
+      </ul>
+    </nav>
 
-      // Determine which version to load
-      function detectAndRedirect() {
-        // Check if user has a manual preference stored
-        const userPreference = localStorage.getItem('viewPreference');
-        
-        if (userPreference === 'mobile') {
-          window.location.href = 'pages/mobile/index.html';
-          return;
-        }
-        
-        if (userPreference === 'desktop') {
-          window.location.href = 'pages/desktop/index.html';
-          return;
-        }
+    <!-- ===== Blade content ===== -->
+    <main class="blade">
 
-        // Auto-detect based on screen size
-        if (screenWidth < MOBILE_BREAKPOINT) {
-          // Small screen - redirect to mobile
-          window.location.href = 'pages/mobile/index.html';
-        } else {
-          // Large screen - redirect to desktop
-          window.location.href = 'pages/desktop/index.html';
-        }
-      }
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="#overview">Home</a>
+        <span class="crumb-sep">›</span>
+        <span aria-current="page">jakub-adamczyk</span>
+      </nav>
 
-      // Add event listeners to manual links to save preference
-      document.querySelectorAll('.manual-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          const href = e.currentTarget.getAttribute('href');
-          const preference = href.includes('mobile') ? 'mobile' : 'desktop';
-          localStorage.setItem('viewPreference', preference);
-        });
-      });
+      <!-- Resource header -->
+      <section id="overview" class="resource-header">
+        <div class="resource-title">
+          <span class="resource-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48">
+              <defs>
+                <linearGradient id="azA" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#50e6ff" />
+                  <stop offset="1" stop-color="#0078d4" />
+                </linearGradient>
+              </defs>
+              <path fill="url(#azA)" d="M18 4 L30 4 L17 44 L5 44 Z" />
+              <path fill="#0078d4" d="M31 12 L43 44 L19 44 Z" />
+            </svg>
+          </span>
+          <div>
+            <h1>jakub-adamczyk <span class="resource-kind">| DevOps / Platform Engineer</span></h1>
+            <p class="resource-type">Engineer · Aviation cloud infrastructure</p>
+          </div>
+        </div>
 
-      // Redirect after a short delay (for smooth loading experience)
-      setTimeout(detectAndRedirect, 800);
+        <!-- Command toolbar -->
+        <div class="toolbar" role="toolbar" aria-label="Commands">
+          <a class="toolbar-btn" href="pages/desktop/index.html" target="_top">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="3.5" width="16" height="10.5" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M7.5 17h5M10 14.5V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            Launch desktop
+          </a>
+          <a class="toolbar-btn" href="mailto:jakub.adamczyk.software@gmail.com">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="m3 6 7 5 7-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>
+            Connect
+          </a>
+          <a class="toolbar-btn" href="https://github.com/MoMoiin" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5 3 10l4 5M13 5l4 5-4 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            GitHub
+          </a>
+          <span class="toolbar-sep" aria-hidden="true"></span>
+          <button class="toolbar-btn" id="refreshBtn" type="button">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 8A7 7 0 1 0 17 11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M17 4v4h-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Refresh
+          </button>
+        </div>
 
-      // Also handle viewport resize (orientation change)
-      let resizeTimer;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          // Only auto-redirect if no manual preference is set
-          if (!localStorage.getItem('viewPreference')) {
-            detectAndRedirect();
-          }
-        }, 250);
-      });
-    </script>
-  </body>
+        <!-- Essentials -->
+        <div class="essentials">
+          <div class="essentials-bar">
+            <button class="essentials-toggle" id="essentialsToggle" type="button" aria-expanded="true">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              Essentials
+            </button>
+            <button class="json-view" id="jsonView" type="button">JSON View</button>
+          </div>
+          <div class="essentials-grid" id="essentialsGrid">
+            <div class="essentials-col">
+              <div class="kv"><span class="k">Resource group</span><a class="v link" href="#experience">aviation-platform-rg</a></div>
+              <div class="kv"><span class="k">Status</span><span class="v"><span class="status-dot" aria-hidden="true"></span>Running — remote-ready</span></div>
+              <div class="kv"><span class="k">Location</span><span class="v">Strabane, Northern Ireland, UK (GMT/BST)</span></div>
+              <div class="kv"><span class="k">Current employer</span><a class="v link" href="#experience">SITA</a></div>
+              <div class="kv"><span class="k">Role</span><span class="v">Software Engineer (DevOps/Platform)</span></div>
+            </div>
+            <div class="essentials-col">
+              <div class="kv"><span class="k">Experience</span><span class="v">4 years — DevOps/Platform</span></div>
+              <div class="kv"><span class="k">Education</span><span class="v">MSc Software Architecture &amp; Design (in progress)</span></div>
+              <div class="kv"><span class="k">Right to work</span><span class="v">Full right to work in UK and Ireland/EU</span></div>
+              <div class="kv"><span class="k">GitHub</span><a class="v link" href="https://github.com/MoMoiin" target="_blank" rel="noopener noreferrer">github.com/MoMoiin</a></div>
+              <div class="kv"><span class="k">Email</span><a class="v link" href="mailto:jakub.adamczyk.software@gmail.com">jakub.adamczyk.software@gmail.com</a></div>
+            </div>
+            <div class="kv kv-tags">
+              <span class="k">Tags <a class="link" href="#skills">(edit)</a></span>
+              <span class="v tags">
+                <span>azure</span><span>aws</span><span>kubernetes</span><span>terraform</span><span>ci-cd</span><span>ansible</span><span>python</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blade tabs -->
+        <div class="blade-tabs" role="navigation" aria-label="Overview sections">
+          <a href="#overview" class="tab-link active">Get started</a>
+          <a href="#experience" class="tab-link">Activity log</a>
+          <a href="#projects" class="tab-link">Deployments</a>
+          <a href="#skills" class="tab-link">Configuration</a>
+          <a href="#contact" class="tab-link">Support</a>
+        </div>
+
+        <!-- About -->
+        <div class="about-block">
+          <h2 class="block-title">About this engineer</h2>
+          <p>
+            DevOps/Platform Engineer with 4 years' experience owning cloud infrastructure end-to-end, from
+            architecture design to security remediation. Currently designing and running Azure/AWS infrastructure
+            for SITA, supporting IT for 1,000+ airports and 400+ airlines across 200+ countries. Pursuing an MSc in
+            Software Architecture &amp; Design; targeting remote platform and MLOps roles in regulated,
+            high-availability environments.
+          </p>
+        </div>
+      </section>
+
+      <!-- Experience -->
+      <section id="experience" class="section">
+        <h2 class="section-title">Activity log — Experience</h2>
+
+        <article class="job">
+          <header class="job-head">
+            <div>
+              <h3 class="job-role">Software Engineer (DevOps/Platform) · <span class="job-org">SITA</span></h3>
+              <p class="job-period">Apr 2025 – Present · Letterkenny, Ireland</p>
+            </div>
+            <span class="pill pill-green">Active</span>
+          </header>
+          <p class="job-note">SITA provides IT infrastructure to 1,000+ airports and 400+ airlines across 200+
+            countries; outages affect flight operations and passenger processing at global scale.</p>
+          <ul class="job-list">
+            <li>Designed and built an automated PR review pipeline integrating Azure OpenAI with Azure DevOps,
+              architecting the summarization and comment-posting workflow; adopted across multiple engineering
+              teams.</li>
+            <li>Owned end-to-end implementation of a new Azure landing zone for private cloud migration, covering 2
+              core products. Given the target architecture, independently designed the Terraform module structure and
+              CI/CD pipelines now used by developers, QA, and DevOps engineers across both teams.</li>
+            <li>Remediated security gaps across Azure Kubernetes Service (AKS), including access control (IAM/RBAC),
+              root permission restrictions, and node configuration hardening, raising Azure Defender security score
+              from 32% to 71%.</li>
+            <li>Built automated VM and AKS scheduling to reduce idle compute, cutting idle time by 91.7% (~669
+              hours).</li>
+            <li>Extended Terraform infrastructure-as-code practices to AWS, including managed EKS version
+              upgrades.</li>
+            <li>Work daily with distributed engineering teams across multiple countries and time zones, collaborating
+              asynchronously through code review, documentation, and shared Terraform modules.</li>
+            <li>Mentored three engineers through the private cloud to Azure migration, covering AKS operations and
+              production support.</li>
+          </ul>
+        </article>
+
+        <article class="job">
+          <header class="job-head">
+            <div>
+              <h3 class="job-role">Software Engineer (Full-Stack) · <span class="job-org">Bruss GmbH</span></h3>
+              <p class="job-period">May 2022 – Apr 2025 · Sligo, Ireland</p>
+            </div>
+            <span class="pill">Completed</span>
+          </header>
+          <p class="job-note">Bruss GmbH manufactures rubber sealing components for the automotive industry, with its
+            Sligo site serving as a production facility.</p>
+          <ul class="job-list">
+            <li>Promoted to sole software engineer after the incumbent's departure, inheriting a LAMP stack,
+              Arduino-based machine input devices (shot counters, oven temperature), and an on-site vSphere
+              server.</li>
+            <li>Replaced a manual paper safety log process across 300 machines with a self-built app, feeding data
+              into a SQL database and integrating with SAP via a custom API.</li>
+            <li>Built a development environment with CI/CD via GitHub Actions, moving the team off direct production
+              changes.</li>
+            <li>Requested and onboarded an intern, delegating work and training them on the new systems.</li>
+          </ul>
+        </article>
+
+        <article class="job">
+          <header class="job-head">
+            <div>
+              <h3 class="job-role">Mechatronic Engineering Intern · <span class="job-org">Bruss GmbH</span></h3>
+              <p class="job-period">Sep 2021 – May 2022 · Sligo, Ireland</p>
+            </div>
+            <span class="pill">Completed</span>
+          </header>
+          <ul class="job-list">
+            <li>Managed QA on inspection machines and designed custom components to resolve recurring mechanical
+              faults, working with senior engineers on process efficiency.</li>
+          </ul>
+        </article>
+      </section>
+
+      <!-- Projects -->
+      <section id="projects" class="section">
+        <h2 class="section-title">Deployments — Projects &amp; case studies</h2>
+        <div class="projects-grid">
+
+          <article class="project-card">
+            <header class="project-head">
+              <span class="project-glyph" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><rect x="3" y="5" width="26" height="17" rx="2" fill="#0078d4" /><rect x="6" y="8" width="20" height="11" fill="#50e6ff" /><rect x="11" y="25" width="10" height="2.5" rx="1.2" fill="#0078d4" /></svg>
+              </span>
+              <span class="pill pill-blue">This site</span>
+            </header>
+            <h3 class="project-title">Interactive Desktop Experience</h3>
+            <p class="project-desc">A Windows-style desktop environment built in vanilla JS — draggable/resizable
+              windows, a working terminal with a command system, email client and file explorer. No framework,
+              deployed by GitHub Actions.</p>
+            <div class="tags"><span>vanilla-js</span><span>github-actions</span><span>anime.js</span></div>
+            <a class="card-link" href="pages/desktop/index.html" target="_top">Launch it →</a>
+          </article>
+
+          <article class="project-card">
+            <header class="project-head">
+              <span class="project-glyph" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="16" rx="3" fill="#0078d4" /><circle cx="12" cy="14" r="2.5" fill="#50e6ff" /><circle cx="20" cy="14" r="2.5" fill="#50e6ff" /><path d="M12 25h8" stroke="#0078d4" stroke-width="2.5" stroke-linecap="round" /><path d="M16 22v3" stroke="#0078d4" stroke-width="2.5" /></svg>
+              </span>
+              <span class="pill">SITA</span>
+            </header>
+            <h3 class="project-title">AI-Powered PR Reviewer</h3>
+            <p class="project-desc">Automated PR review pipeline integrating Azure OpenAI with Azure DevOps —
+              summarization and comment-posting workflow; adopted across multiple engineering teams.</p>
+            <div class="tags"><span>azure-openai</span><span>azure-devops</span><span>python</span></div>
+          </article>
+
+          <article class="project-card">
+            <header class="project-head">
+              <span class="project-glyph" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M16 3 28 9v6c0 7-5 12.5-12 14C9 27.5 4 22 4 15V9l12-6Z" fill="#0078d4" /><path d="m10.5 15.5 3.5 3.5 7-7" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+              <span class="pill">SITA</span>
+            </header>
+            <h3 class="project-title">AKS Security Hardening</h3>
+            <p class="project-desc">Remediated security gaps across Azure Kubernetes Service (AKS), including access
+              control (IAM/RBAC), root permission restrictions, and node configuration hardening, raising Azure
+              Defender security score from 32% to 71%.</p>
+            <div class="tags"><span>aks</span><span>iam-rbac</span><span>azure-defender</span></div>
+          </article>
+
+          <article class="project-card">
+            <header class="project-head">
+              <span class="project-glyph" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><rect x="4" y="16" width="7" height="7" fill="#50e6ff" /><rect x="12.5" y="16" width="7" height="7" fill="#0078d4" /><rect x="21" y="16" width="7" height="7" fill="#50e6ff" /><rect x="8" y="8" width="7" height="7" fill="#0078d4" /><rect x="17" y="8" width="7" height="7" fill="#0078d4" /></svg>
+              </span>
+              <span class="pill">SITA</span>
+            </header>
+            <h3 class="project-title">Azure Landing Zone</h3>
+            <p class="project-desc">New Azure landing zone for private cloud migration, covering 2 core products —
+              Terraform module structure and CI/CD pipelines now used by developers, QA, and DevOps engineers.</p>
+            <div class="tags"><span>terraform</span><span>azure</span><span>ci-cd</span></div>
+          </article>
+
+          <article class="project-card">
+            <header class="project-head">
+              <span class="project-glyph" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M4 26V14l7 4v-4l7 4v-4l10 6v6H4Z" fill="#0078d4" /><rect x="6" y="6" width="3" height="8" fill="#50e6ff" /><path d="M23 22h2v2h-2zM18 22h2v2h-2zM13 22h2v2h-2z" fill="#fff" /></svg>
+              </span>
+              <span class="pill">Bruss</span>
+            </header>
+            <h3 class="project-title">Factory Safety-Log Platform</h3>
+            <p class="project-desc">Replaced a manual paper safety log process across 300 machines with a self-built
+              app, feeding data into a SQL database and integrating with SAP via a custom API.</p>
+            <div class="tags"><span>lamp</span><span>sql</span><span>sap-api</span></div>
+          </article>
+
+          <article class="project-card">
+            <header class="project-head">
+              <span class="project-glyph" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M16 4 4 14h3v12h18V14h3L16 4Z" fill="#0078d4" /><rect x="12" y="18" width="8" height="8" fill="#50e6ff" /><path d="M13.5 21.5h5M13.5 23.5h5" stroke="#0078d4" stroke-width="1.2" /></svg>
+              </span>
+              <span class="pill">Personal</span>
+            </header>
+            <h3 class="project-title">Homelab</h3>
+            <p class="project-desc">Self-hosted Proxmox server running containerized services (Docker, LXC), including
+              VPN-routed container networking and media/automation services; hands-on Linux networking, storage, and
+              virtualization troubleshooting.</p>
+            <div class="tags"><span>proxmox</span><span>docker-lxc</span><span>linux</span></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section id="skills" class="section">
+        <h2 class="section-title">Configuration — Skills</h2>
+        <dl class="skills-table">
+          <div class="skills-row">
+            <dt>Cloud &amp; Virtualization</dt>
+            <dd><span>Azure</span><span>AWS</span><span>vSphere</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>Containers &amp; Orchestration</dt>
+            <dd><span>Kubernetes (AKS, EKS)</span><span>Docker</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>IaC &amp; Automation</dt>
+            <dd><span>Terraform</span><span>Ansible</span><span>Bash</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>CI/CD</dt>
+            <dd><span>Azure DevOps</span><span>GitHub Actions</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>Security</dt>
+            <dd><span>IAM / RBAC</span><span>AKS hardening</span><span>Azure Defender</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>Languages &amp; Data</dt>
+            <dd><span>Python</span><span>C# / .NET</span><span>SQL</span><span>MySQL</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>AI Integration</dt>
+            <dd><span>Azure OpenAI</span></dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- Education -->
+      <section id="education" class="section">
+        <h2 class="section-title">Properties — Education</h2>
+        <ul class="education-list">
+          <li>
+            <div>
+              <p class="edu-degree">MSc Software Architecture &amp; Design <span class="pill pill-blue">in progress</span></p>
+              <p class="edu-school">Munster Technological University</p>
+            </div>
+            <span class="edu-dates">2025 – 2027</span>
+          </li>
+          <li>
+            <div>
+              <p class="edu-degree">BE Mechatronic Systems</p>
+              <p class="edu-school">Atlantic Technological University</p>
+            </div>
+            <span class="edu-dates">2021 – 2024</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Contact -->
+      <section id="contact" class="section">
+        <h2 class="section-title">Support + troubleshooting — Get in touch</h2>
+        <p class="contact-lead">Targeting remote platform and MLOps roles in regulated, high-availability
+          environments — or just talk infrastructure.</p>
+        <div class="contact-actions">
+          <a class="btn-azure" href="mailto:jakub.adamczyk.software@gmail.com">＋ New support request (email me)</a>
+          <a class="btn-azure-ghost" href="https://www.linkedin.com/in/jakub-adamczyk-software/" target="_blank"
+            rel="noopener noreferrer">LinkedIn</a>
+          <a class="btn-azure-ghost" href="https://github.com/MoMoiin" target="_blank"
+            rel="noopener noreferrer">GitHub</a>
+        </div>
+      </section>
+
+      <footer class="blade-footer">
+        <p>&copy; <span id="year">2026</span> Jakub Adamczyk · Unofficial Azure-portal-inspired design, not affiliated
+          with Microsoft · Hand-built, no framework, deployed by
+          <a target="_blank" rel="noopener noreferrer"
+            href="https://github.com/MoMoiin/MoMoiin.github.io/blob/main/.github/workflows/deploy.yml">GitHub Actions</a> ·
+          <a target="_blank" rel="noopener noreferrer" href="https://github.com/MoMoiin/MoMoiin.github.io">Source</a>
+        </p>
+      </footer>
+
+    </main>
+  </div>
+
+  <script type="module" src="js/index.js"></script>
+</body>
+
 </html>

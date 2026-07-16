@@ -1,113 +1,132 @@
-// Google-style Portfolio - Enhanced Navigation & Interactions
+// Azure-portal-style interactions: global flyout menu, resource-menu filter,
+// Essentials collapse, JSON View, scroll-spy, search jump, refresh, year.
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Smooth scroll for anchor links
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      // Don't prevent default for anchor links that just scroll
-      if (this.querySelector(this.getAttribute('href'))) {
+  // Footer year
+  const year = document.getElementById('year');
+  if (year) year.textContent = new Date().getFullYear();
+
+  // Hamburger opens the global portal menu flyout
+  const menuToggle = document.getElementById('menuToggle');
+  const overlay = document.getElementById('globalOverlay');
+
+  const closeMenu = () => {
+    document.body.classList.remove('menu-open');
+    if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+  };
+
+  if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+      const open = document.body.classList.toggle('menu-open');
+      menuToggle.setAttribute('aria-expanded', String(open));
+    });
+  }
+  if (overlay) overlay.addEventListener('click', closeMenu);
+  document.querySelectorAll('.global-link').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  // Resource menu filter (the "Search (Ctrl+/)" box)
+  const menuFilter = document.getElementById('menuFilter');
+  if (menuFilter) {
+    menuFilter.addEventListener('input', () => {
+      const query = menuFilter.value.trim().toLowerCase();
+      document.querySelectorAll('.resource-menu li').forEach((li) => {
+        li.style.display = li.textContent.toLowerCase().includes(query) ? '' : 'none';
+      });
+      document.querySelectorAll('.menu-group').forEach((group) => {
+        group.style.display = query ? 'none' : '';
+      });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === '/') {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          
-          // Update active nav link
-          document.querySelectorAll('.header-nav .nav-link').forEach(link => {
-            link.classList.remove('active');
-          });
-          this.classList.add('active');
+        menuFilter.focus();
+      }
+    });
+  }
+
+  // Essentials expand/collapse
+  const essentialsToggle = document.getElementById('essentialsToggle');
+  if (essentialsToggle) {
+    essentialsToggle.addEventListener('click', () => {
+      const panel = essentialsToggle.closest('.essentials');
+      const collapsed = panel.classList.toggle('collapsed');
+      essentialsToggle.setAttribute('aria-expanded', String(!collapsed));
+    });
+  }
+
+  // JSON View — the resource as a real portal would show it
+  const jsonView = document.getElementById('jsonView');
+  if (jsonView) {
+    jsonView.addEventListener('click', () => {
+      const resource = {
+        id: '/subscriptions/portfolio/resourceGroups/aviation-platform-rg/providers/Engineers/jakub-adamczyk',
+        name: 'jakub-adamczyk',
+        type: 'Engineers/devops-platform',
+        location: 'Strabane, Northern Ireland, UK (GMT/BST)',
+        properties: {
+          role: 'Software Engineer (DevOps/Platform)',
+          employer: 'SITA',
+          status: 'Running — remote-ready',
+          experienceYears: 4,
+          education: 'MSc Software Architecture & Design (in progress)',
+          rightToWork: 'Full right to work in UK and Ireland/EU',
+          email: 'jakub.adamczyk.software@gmail.com',
+          github: 'https://github.com/MoMoiin',
+          linkedin: 'https://www.linkedin.com/in/jakub-adamczyk-software/'
+        },
+        tags: {
+          cloud: 'azure, aws',
+          containers: 'kubernetes (aks, eks), docker',
+          iac: 'terraform, ansible, bash',
+          cicd: 'azure devops, github actions'
         }
-      }
+      };
+      const blob = new Blob([JSON.stringify(resource, null, 2)], { type: 'application/json' });
+      window.open(URL.createObjectURL(blob), '_blank');
     });
-  });
+  }
 
-  // Highlight nav items on scroll
-  const navLinks = document.querySelectorAll('.header-nav .nav-link');
-  const sections = document.querySelectorAll('[id]');
+  // Refresh command reloads the page, like the portal's Refresh
+  const refreshBtn = document.getElementById('refreshBtn');
+  if (refreshBtn) refreshBtn.addEventListener('click', () => window.location.reload());
 
-  window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.clientHeight;
-      
-      if (pageYOffset >= sectionTop - 200) {
-        current = section.getAttribute('id');
-      }
-    });
+  // Scroll-spy: highlight resource menu items and blade tabs for the section in view
+  const spyLinks = Array.from(document.querySelectorAll('.resource-menu a[href^="#"], .blade-tabs a[href^="#"]'));
+  const sections = [...new Set(
+    spyLinks.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean)
+  )];
 
-    navLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('href').substring(1) === current) {
-        link.classList.add('active');
-      }
-    });
-  });
+  if (sections.length && 'IntersectionObserver' in window) {
+    const setActive = (id) => {
+      spyLinks.forEach((link) => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+      });
+    };
 
-  // Add click handlers for nav links
-  navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      const href = link.getAttribute('href');
-      if (href.startsWith('#')) {
-        const target = document.querySelector(href);
-        if (target) {
-          e.preventDefault();
-          navLinks.forEach(l => l.classList.remove('active'));
-          link.classList.add('active');
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
-    });
-  });
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    }, { rootMargin: '-15% 0px -75% 0px' });
 
-  // Add hover effects to project cards
-  const projectCards = document.querySelectorAll('.project-card');
-  projectCards.forEach(card => {
-    card.addEventListener('mouseenter', () => {
-      card.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-    });
-    
-    card.addEventListener('mouseleave', () => {
-      card.style.boxShadow = 'none';
-    });
-  });
+    sections.forEach((section) => spy.observe(section));
+  }
 
-  // Track when switching to desktop view
-  const desktopLinks = document.querySelectorAll('a[href="../desktop/index.html"]');
-  desktopLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      localStorage.setItem('lastView', 'desktop');
+  // Global search: on Enter, jump to the first section whose text matches
+  const search = document.getElementById('portalSearch');
+  if (search) {
+    search.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const query = search.value.trim().toLowerCase();
+      if (!query) return;
+      const target = sections.find((section) =>
+        section.textContent.toLowerCase().includes(query));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-  });
-
-  // Add animation to buttons
-  const buttons = document.querySelectorAll('.btn-primary');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      // Create ripple effect
-      const rect = this.getBoundingClientRect();
-      const size = Math.max(rect.width, rect.height);
-      const x = e.clientX - rect.left - size / 2;
-      const y = e.clientY - rect.top - size / 2;
-      
-      const ripple = document.createElement('span');
-      ripple.style.width = ripple.style.height = size + 'px';
-      ripple.style.left = x + 'px';
-      ripple.style.top = y + 'px';
-      ripple.style.position = 'absolute';
-      ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
-      ripple.style.borderRadius = '50%';
-      ripple.style.pointerEvents = 'none';
-      ripple.style.animation = 'ripple-animation 600ms ease-out';
-      
-      this.style.position = 'relative';
-      this.style.overflow = 'hidden';
-      this.appendChild(ripple);
-      
-      setTimeout(() => ripple.remove(), 600);
-    });
-  });
+  }
 });
-
-
