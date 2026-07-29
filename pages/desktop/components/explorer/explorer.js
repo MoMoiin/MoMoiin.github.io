@@ -9,7 +9,7 @@ export const htmlTemplate = `<!-- Explorer Window Component -->
       <div class="tab-content">
         <span class="tab-icon">${FOLDER_ICON}</span>
         <span class="tab-title">This PC</span>
-        <button class="tab-close" title="Close tab">×</button>
+        <button class="tab-close" title="Close tab">�-</button>
       </div>
     </div>
     <button class="new-tab-button" title="New tab">+</button>
@@ -17,7 +17,7 @@ export const htmlTemplate = `<!-- Explorer Window Component -->
   <div class="window-controls">
     <button class="control-btn minimize-btn" title="Minimize">−</button>
     <button class="control-btn maximize-btn" title="Maximize">□</button>
-    <button class="control-btn close-btn" title="Close">×</button>
+    <button class="control-btn close-btn" title="Close">�-</button>
   </div>
 </div>
 
@@ -51,7 +51,7 @@ export const htmlTemplate = `<!-- Explorer Window Component -->
         <span>Documents</span>
       </div>
       <div class="sidebar-item" data-path="Links">
-        <span class="sidebar-icon">🔗</span>
+        <span class="sidebar-icon">�-</span>
         <span>Links</span>
       </div>
     </div>
@@ -79,32 +79,32 @@ const FILE_SYSTEM = {
   '': [
     { name: 'Projects', type: 'folder', icon: '📂', path: 'Projects' },
     { name: 'Documents', type: 'folder', icon: '📁', path: 'Documents' },
-    { name: 'Links', type: 'folder', icon: '🔗', path: 'Links' },
+    { name: 'Links', type: 'folder', icon: '�-', path: 'Links' },
     {
       name: 'README.md', type: 'text', icon: '📄',
-      text: 'DevOps/Platform Engineer with 4 years\' experience owning cloud infrastructure end-to-end, from architecture design to security remediation.\n\nCurrently designing and running Azure/AWS infrastructure for SITA, supporting IT for 1,000+ airports and 400+ airlines across 200+ countries.\n\nPursuing an MSc in Software Architecture & Design; targeting remote platform and MLOps roles in regulated, high-availability environments.\n\nBrowse the Projects folder, or open the Terminal and type "help".'
+      text: 'DevOps Engineer with four years in Azure and on-prem infrastructure.\n\nAt SITA I build Terraform-managed AKS platforms with GitOps, monitoring, and cost tracking. Before that I owned on-prem servers and internal tooling at Bruss.\n\nFull right to work in the UK and EU.\n\nBrowse the Projects folder, or open the Terminal and type "help".'
     }
   ],
   'Projects': [
     {
-      name: 'ai-pr-reviewer.md', type: 'text', icon: '🤖',
-      text: 'AI-Powered PR Reviewer (SITA)\n\nDesigned and built an automated PR review pipeline integrating Azure OpenAI with Azure DevOps, architecting the summarization and comment-posting workflow; adopted across multiple engineering teams.\n\nStack: Azure OpenAI · Azure DevOps · Python'
+      name: 'messaging-aks-platform.md', type: 'text', icon: '☁️',
+      text: 'Messaging AKS Platform (SITA)\n\nBuilt the Azure platform for Messaging Integration from an empty subscription up to a working AKS cluster, including peering to the landing zone, ArgoCD, Gateway API ingress, workload identity, Cosmos DB, and Service Bus.\n\nStack: Azure · AKS · ArgoCD · Gateway API · Terraform'
     },
     {
-      name: 'azure-landing-zone.md', type: 'text', icon: '🏗️',
-      text: 'Azure Landing Zone (SITA)\n\nOwned end-to-end implementation of a new Azure landing zone for private cloud migration, covering 2 core products. Given the target architecture, independently designed the Terraform module structure and CI/CD pipelines now used by developers, QA, and DevOps engineers across both teams.\n\nStack: Terraform · Azure · CI/CD'
+      name: 'observability-and-cost.md', type: 'text', icon: '📊',
+      text: 'Observability and Cost Tracking (SITA)\n\nSet up monitoring, logging, and cost tracking using Prometheus, Dynatrace, and Kubecost, plus alerting that raises Azure DevOps items automatically so production alerts do not get lost.\n\nStack: Prometheus · Dynatrace · Kubecost · Azure DevOps'
     },
     {
-      name: 'aks-hardening.md', type: 'text', icon: '🛡️',
-      text: 'AKS Security Hardening (SITA)\n\nRemediated security gaps across Azure Kubernetes Service (AKS), including access control (IAM/RBAC), root permission restrictions, and node configuration hardening, raising Azure Defender security score from 32% to 71%.\n\nStack: AKS · IAM/RBAC · Azure Defender'
+      name: 'state-security-governance.md', type: 'text', icon: '🛡️',
+      text: 'Terraform State, Security and Governance (SITA)\n\nMoved Terraform state off a shared storage account, added backups and approvals on apply, enforced prevent_destroy on production, and rolled out private endpoints for Event Hubs, ACR, and Databricks.\n\nStack: Terraform · Azure Networking · Security Controls'
     },
     {
       name: 'factory-safety-log.md', type: 'text', icon: '🏭',
-      text: 'Factory Safety-Log Platform (Bruss GmbH)\n\nReplaced a manual paper safety log process across 300 machines with a self-built app, feeding data into a SQL database and integrating with SAP via a custom API.\n\nStack: LAMP · SQL · SAP API'
+      text: 'Factory Safety-Log Platform (Bruss)\n\nReplaced a paper-based safety log process with a web app and SAP integration, used daily on the shop floor.\n\nStack: LAMP · SQL · SAP API'
     },
     {
-      name: 'homelab.md', type: 'text', icon: '🏠',
-      text: 'Homelab\n\nSelf-hosted Proxmox server running containerized services (Docker, LXC), including VPN-routed container networking and media/automation services; hands-on Linux networking, storage, and virtualization troubleshooting.\n\nStack: Proxmox · Docker/LXC · Linux'
+      name: 'home-infrastructure-platform.md', type: 'text', icon: '🏠',
+      text: 'Home Infrastructure Platform\n\nProxmox cluster running Docker and LXC workloads, with Terraform-provisioned VMs, containerized services behind a reverse proxy, and automated backups. Used as a testbed for patterns I also use at SITA.\n\nStack: Proxmox · Terraform · Docker/LXC · Reverse Proxy'
     },
     {
       name: 'interactive-desktop.md', type: 'text', icon: '🖥️',
@@ -114,25 +114,25 @@ const FILE_SYSTEM = {
   'Documents': [
     {
       name: 'experience.txt', type: 'text', icon: '📄',
-      text: 'SITA — Software Engineer (DevOps/Platform) · Apr 2025 – Present · Letterkenny, Ireland\n\nBruss GmbH — Software Engineer (Full-Stack) · May 2022 – Apr 2025 · Sligo, Ireland\n\nBruss GmbH — Mechatronic Engineering Intern · Sep 2021 – May 2022 · Sligo, Ireland\n\nOpen the Terminal and type "experience" for the full history.'
+      text: 'SITA — Software Engineer (DevOps) · 2025 – Present · Letterkenny, Ireland\n\nBruss — Software Engineer · 2022 – 2025 · Sligo, Ireland\n\nOpen the Terminal and type "experience" for the full history.'
     },
     {
       name: 'education.txt', type: 'text', icon: '🎓',
-      text: 'MSc Software Architecture & Design (in progress)\nMunster Technological University · 2025 – 2027\n\nBE Mechatronic Systems\nAtlantic Technological University · 2021 – 2024'
+      text: 'M.Sc. Software Architecture and Design (Part-Time)\nMunster Technological University · 2025 – 2027\n\nB.E. Mechatronic Systems (alongside full-time work)\nAtlantic Technological University · 2021 – 2024'
     },
     {
       name: 'skills.txt', type: 'text', icon: '📄',
-      text: 'Cloud & Virtualization: Azure, AWS, vSphere\nContainers & Orchestration: Kubernetes (AKS, EKS), Docker\nIaC & Automation: Terraform, Ansible, Bash\nCI/CD: Azure DevOps, GitHub Actions\nSecurity: IAM/RBAC, AKS hardening, Azure Defender\nLanguages & Data: Python, C#/.NET, SQL, MySQL\nAI Integration: Azure OpenAI'
+      text: 'Languages: Python, Bash, HCL, YAML\nCloud: Azure (AKS, Landing Zones, Event Hubs, Service Bus, Cosmos DB, ACR, Private Endpoints), AWS (EKS, EC2, S3, IAM)\nKubernetes: AKS, EKS, ArgoCD, Helm, Gateway API, Cert Manager, External DNS\nIaC and CI/CD: Terraform, Ansible, Azure DevOps YAML, self-hosted agents, GitHub Actions\nObservability and Cost: Prometheus, Grafana, Dynatrace, Kubecost\nData and Messaging: PostgreSQL, MongoDB, Elasticsearch, Kafka\nSecurity: Entra ID, workload identity, private networking, Defender for Endpoint, CrowdStrike Falcon\nOther: Linux, Docker, vSphere, Proxmox, Git'
     },
     {
       name: 'contact.txt', type: 'text', icon: '✉️',
-      text: 'Email: jakub.adamczyk.software@gmail.com\nGitHub: github.com/MoMoiin\nLinkedIn: linkedin.com/in/jakub-adamczyk-software\n\nStrabane, Northern Ireland, UK (GMT/BST) · Remote-ready\nFull right to work in UK and Ireland/EU'
+      text: 'Email: jakub.adamczyk.software@gmail.com\nPhone: +353 85 860 6319\nGitHub: github.com/MoMoiin\nLinkedIn: linkedin.com/in/jakub-software\nLocation: Letterkenny, Ireland\n\nFull right to work in UK and EU'
     }
   ],
   'Links': [
     { name: 'Portfolio site', type: 'link', icon: '🌐', url: '../../index.html' },
     { name: 'GitHub profile', type: 'link', icon: '💻', url: 'https://github.com/MoMoiin' },
-    { name: 'LinkedIn', type: 'link', icon: '💼', url: 'https://www.linkedin.com/in/jakub-adamczyk-software/' },
+    { name: 'LinkedIn', type: 'link', icon: '💼', url: 'https://www.linkedin.com/in/jakub-software/' },
     { name: 'Site source code', type: 'link', icon: '📦', url: 'https://github.com/MoMoiin/MoMoiin.github.io' }
   ]
 };

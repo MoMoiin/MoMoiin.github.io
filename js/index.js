@@ -67,23 +67,24 @@ document.addEventListener('DOMContentLoaded', () => {
         id: '/subscriptions/portfolio/resourceGroups/aviation-platform-rg/providers/Engineers/jakub-adamczyk',
         name: 'jakub-adamczyk',
         type: 'Engineers/devops-platform',
-        location: 'Strabane, Northern Ireland, UK (GMT/BST)',
+        location: 'Letterkenny, Ireland',
         properties: {
-          role: 'Software Engineer (DevOps/Platform)',
+          role: 'Software Engineer (DevOps)',
           employer: 'SITA',
-          status: 'Running — remote-ready',
+          status: 'Running',
           experienceYears: 4,
-          education: 'MSc Software Architecture & Design (in progress)',
-          rightToWork: 'Full right to work in UK and Ireland/EU',
+          education: 'M.Sc. Software Architecture & Design (part-time)',
+          rightToWork: 'Full right to work in UK and EU',
           email: 'jakub.adamczyk.software@gmail.com',
           github: 'https://github.com/MoMoiin',
-          linkedin: 'https://www.linkedin.com/in/jakub-adamczyk-software/'
+          linkedin: 'https://www.linkedin.com/in/jakub-software/'
         },
         tags: {
           cloud: 'azure, aws',
-          containers: 'kubernetes (aks, eks), docker',
-          iac: 'terraform, ansible, bash',
-          cicd: 'azure devops, github actions'
+          containers: 'kubernetes (aks, eks), argocd',
+          iac: 'terraform, ansible',
+          cicd: 'azure devops, github actions',
+          observability: 'prometheus, dynatrace, kubecost'
         }
       };
       const blob = new Blob([JSON.stringify(resource, null, 2)], { type: 'application/json' });

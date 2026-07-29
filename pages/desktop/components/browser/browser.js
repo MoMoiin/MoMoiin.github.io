@@ -9,7 +9,7 @@ export const htmlTemplate = `<!-- Browser Window Component -->
       <div class="tab-content">
         <span class="tab-icon">${BROWSER_ICON}</span>
         <span class="tab-title">Jakub Adamczyk</span>
-        <button class="tab-close" title="Close tab">×</button>
+        <button class="tab-close" title="Close tab">�-</button>
       </div>
     </div>
     <button class="new-tab-button" title="New tab">+</button>
@@ -17,7 +17,7 @@ export const htmlTemplate = `<!-- Browser Window Component -->
   <div class="window-controls">
     <button class="control-btn minimize-btn" title="Minimize">−</button>
     <button class="control-btn maximize-btn" title="Maximize">□</button>
-    <button class="control-btn close-btn" title="Close">×</button>
+    <button class="control-btn close-btn" title="Close">�-</button>
   </div>
 </div>
 

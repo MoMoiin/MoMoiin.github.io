@@ -13,7 +13,7 @@ export const htmlTemplate = `<!-- CMD Window Component -->
       <div class="tab-content">
         <span class="tab-icon">${CMD_ICON}</span>
         <span class="tab-title">MoMo Terminal</span>
-        <button class="tab-close" title="Close tab">×</button>
+        <button class="tab-close" title="Close tab">�-</button>
       </div>
     </div>
     <button class="new-tab-button" title="New tab">+</button>
@@ -21,7 +21,7 @@ export const htmlTemplate = `<!-- CMD Window Component -->
   <div class="window-controls">
     <button class="control-btn minimize-btn" title="Minimize">−</button>
     <button class="control-btn maximize-btn" title="Maximize">□</button>
-    <button class="control-btn close-btn" title="Close">×</button>
+    <button class="control-btn close-btn" title="Close">�-</button>
   </div>
 </div>
 
@@ -84,70 +84,72 @@ export function init(windowElement) {
       'Tip: try the tools you would expect a DevOps engineer to have installed.',
       'Use ↑/↓ for history and Tab to complete.'
     ],
-    whoami: ['jakub-adamczyk — DevOps/Platform Engineer'],
+    whoami: ['jakub-adamczyk — DevOps Engineer'],
     ls: ['Documents/', 'Projects/', 'README.md'],
     pwd: ['/home/jakub'],
     version: ['MoMo-OS v1.0.0 - Dream Edition'],
     about: [
-      'DevOps/Platform Engineer with 4 years\' experience owning cloud infrastructure',
-      'end-to-end, from architecture design to security remediation.',
+      'DevOps Engineer with four years in Azure and on-prem infrastructure.',
       '',
-      'Currently designing and running Azure/AWS infrastructure for SITA, supporting',
-      'IT for 1,000+ airports and 400+ airlines across 200+ countries.',
+      'At SITA I build Terraform-managed AKS platforms with GitOps, monitoring,',
+      'and cost tracking for 1,000+ airports and 400+ airlines across 200+ countries.',
       '',
-      'Pursuing an MSc in Software Architecture & Design; targeting remote platform',
-      'and MLOps roles in regulated, high-availability environments.'
+      'Before that I owned on-prem servers and internal tooling at Bruss.',
+      '',
+      'Full right to work in the UK and EU.'
     ],
     experience: [
-      'SITA — Software Engineer (DevOps/Platform)              Apr 2025 – Present',
+      'SITA — Software Engineer (DevOps)                        2025 – Present',
       '  Letterkenny, Ireland',
-      '  * Automated PR review pipeline integrating Azure OpenAI with Azure DevOps;',
-      '    adopted across multiple engineering teams.',
-      '  * Owned end-to-end implementation of a new Azure landing zone for private',
-      '    cloud migration — Terraform module structure and CI/CD pipelines.',
-      '  * Remediated AKS security gaps (IAM/RBAC, root permission restrictions,',
-      '    node hardening), raising Azure Defender security score from 32% to 71%.',
-      '  * Automated VM and AKS scheduling, cutting idle time by 91.7% (~669 hours).',
-      '  * Extended Terraform IaC practices to AWS, incl. managed EKS upgrades.',
-      '  * Mentored three engineers through the private cloud to Azure migration.',
+      '  * Built Azure platform from empty subscription to working AKS cluster',
+      '    with peering, ArgoCD, Gateway API ingress, workload identity, Cosmos DB,',
+      '    and Service Bus.',
+      '  * Set up monitoring, logging, and cost tracking with Prometheus, Dynatrace,',
+      '    and Kubecost, plus ADO alert-to-work-item automation.',
+      '  * Moved Terraform state off shared storage, added backups and apply approvals,',
+      '    prevent_destroy on production, and private endpoints across key services.',
+      '  * Cut non-production Azure spend by scaling node pools to zero out of hours',
+      '    and removing unused VMs and pools.',
+      '  * Ran Kubernetes upgrades on production clusters across AKS and EKS.',
       '',
-      'Bruss GmbH — Software Engineer (Full-Stack)              May 2022 – Apr 2025',
+      'Bruss — Software Engineer                                2022 – 2025',
       '  Sligo, Ireland',
-      '  * Sole software engineer: LAMP stack, Arduino machine inputs, vSphere.',
-      '  * Replaced paper safety logs across 300 machines with a self-built app,',
-      '    feeding SQL and integrating with SAP via a custom API.',
-      '  * Built a dev environment with CI/CD via GitHub Actions.',
-      '',
-      'Bruss GmbH — Mechatronic Engineering Intern              Sep 2021 – May 2022',
-      '  * QA on inspection machines; custom components for recurring faults.'
+      '  * Built the CI/CD setup with GitHub Actions, moving the team off editing',
+      '    production directly.',
+      '  * Replaced a paper-based safety log process with a web app and SAP',
+      '    integration, used daily on the shop floor.',
+      '  * Sole software engineer for the site, owning the LAMP stack, Arduino-based',
+      '    machine sensors, and on-site vSphere server.'
     ],
     projects: [
-      'ai-pr-reviewer/        Azure OpenAI + Azure DevOps automated PR review',
-      'azure-landing-zone/    Terraform modules + CI/CD for cloud migration',
-      'aks-hardening/         IAM/RBAC + node hardening, Defender 32% -> 71%',
-      'factory-safety-log/    Web app replacing paper logs on 300 machines (SAP API)',
-      'homelab/               Proxmox, Docker/LXC, VPN-routed networking',
+      'messaging-aks-platform/ Azure AKS platform with ArgoCD, Gateway API, Cosmos DB',
+      'observability-cost/     Prometheus, Dynatrace, Kubecost, auto-raised ADO alerts',
+      'state-security-gov/     Terraform governance + private endpoints + backups',
+      'factory-safety-log/     Web app replacing paper logs with SAP integration',
+      'home-infra-platform/    Proxmox + Terraform VMs + Docker/LXC + reverse proxy',
       'interactive-desktop/   You are looking at it right now',
       '',
       'Run "portfolio" to see them in detail.'
     ],
     skills: [
-      'Cloud & Virtualization ... Azure, AWS, vSphere',
-      'Containers ............... Kubernetes (AKS, EKS), Docker',
-      'IaC & Automation ......... Terraform, Ansible, Bash',
-      'CI/CD .................... Azure DevOps, GitHub Actions',
-      'Security ................. IAM/RBAC, AKS hardening, Azure Defender',
-      'Languages & Data ......... Python, C#/.NET, SQL, MySQL',
-      'AI Integration ........... Azure OpenAI'
+      'Languages ................. Python, Bash, HCL, YAML',
+      'Cloud ..................... Azure, AWS',
+      'Kubernetes ................ AKS, EKS, ArgoCD, Helm, Gateway API',
+      'IaC & CI/CD ............... Terraform, Ansible, Azure DevOps YAML, GitHub Actions',
+      'Observability & Cost ...... Prometheus, Grafana, Dynatrace, Kubecost',
+      'Data & Messaging .......... PostgreSQL, MongoDB, Elasticsearch, Kafka',
+      'Security .................. Entra ID, workload identity, private networking',
+      'Other ..................... Linux, Docker, vSphere, Proxmox, Git'
     ],
     education: [
-      'MSc Software Architecture & Design (in progress)   MTU      2025 – 2027',
-      'BE Mechatronic Systems                             ATU      2021 – 2024'
+      'M.Sc. Software Architecture and Design (Part-Time) MTU      2025 – 2027',
+      'B.E. Mechatronic Systems (with full-time work)     ATU      2021 – 2024'
     ],
     contact: [
       'email     jakub.adamczyk.software@gmail.com',
+      'phone     +353 85 860 6319',
       'github    https://github.com/MoMoiin',
-      'linkedin  https://linkedin.com/in/jakub-adamczyk-software',
+      'linkedin  https://linkedin.com/in/jakub-software',
       '',
       'Run "mail" to open the mail app.'
     ],
@@ -413,8 +415,8 @@ export function init(windowElement) {
 
     // Welcome message
     appendLine('');
-    appendLine('Jakub Adamczyk — DevOps/Platform Engineer');
-    appendLine('Azure · AWS · Kubernetes · Terraform · CI/CD');
+    appendLine('Jakub Adamczyk — DevOps Engineer');
+    appendLine('Azure · AWS · Kubernetes · Terraform · GitOps · CI/CD');
     appendLine('');
     appendLine('Type "help" to see what this terminal can do.');
     appendLine('Start with "about", or try "kubectl get pods" if you feel at home.');

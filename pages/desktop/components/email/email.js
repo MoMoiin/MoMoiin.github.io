@@ -9,7 +9,7 @@ export const htmlTemplate = `<!-- Email Window Component (Outlook Style) -->
       <div class="tab-content">
         <span class="tab-icon">${EMAIL_ICON}</span>
         <span class="tab-title">MoMo Mail</span>
-        <button class="tab-close" title="Close tab">×</button>
+        <button class="tab-close" title="Close tab">�-</button>
       </div>
     </div>
     <button class="new-tab-button" title="New tab">+</button>
@@ -17,7 +17,7 @@ export const htmlTemplate = `<!-- Email Window Component (Outlook Style) -->
   <div class="window-controls">
     <button class="control-btn minimize-btn" title="Minimize">−</button>
     <button class="control-btn maximize-btn" title="Maximize">□</button>
-    <button class="control-btn close-btn" title="Close">×</button>
+    <button class="control-btn close-btn" title="Close">�-</button>
   </div>
 </div>
 
@@ -92,7 +92,7 @@ export const htmlTemplate = `<!-- Email Window Component (Outlook Style) -->
       <div class="contact-info">
         <h3>Connect With Me</h3>
         <div class="contact-links">
-          <a href="https://linkedin.com/in/jakub-adamczyk-software" target="_blank" class="contact-link">
+          <a href="https://linkedin.com/in/jakub-software" target="_blank" class="contact-link">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
               <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
             </svg>
