@@ -1,26 +1,26 @@
 /* CMD Component Styles */
 
 .cmd-content {
-  background: #0c0c0c !important;
-  color: #00b050;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  background: var(--term-bg) !important;
+  color: var(--term-green);
+  font-family: var(--mono);
   font-size: 13px;
   padding: 12px !important;
 }
 
 .cmd-header {
   margin: 0;
-  color: #00b050;
+  color: var(--term-green);
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
 .cmd-banner {
-  color: #00b050;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  color: var(--term-green);
+  font-family: var(--mono);
   font-size: 11px;
   white-space: pre;
-  overflow-x: false;
+  overflow-x: auto;
   margin: 8px 0;
   padding: 0;
   line-height: 1;
@@ -29,7 +29,7 @@
 
 .cmd-line {
   margin: 4px 0;
-  color: #00b050;
+  color: var(--term-green);
 }
 
 .cmd-prompt-line {
@@ -40,19 +40,19 @@
 }
 
 .cmd-prompt {
-  color: #00b050;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  color: var(--term-green);
+  font-family: var(--mono);
 }
 
 .cmd-input {
   outline: none;
-  color: #00b050;
+  color: var(--term-green);
   min-height: 20px;
   background: transparent;
   border: none;
   padding: 0;
   margin: 0;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-family: var(--mono);
   font-size: 13px;
   display: inline-block;
   vertical-align: bottom;
@@ -85,7 +85,7 @@
   top: 2px;
   width: 1px;
   height: 1em;
-  background: #00b050;
+  background: var(--term-green);
   opacity: 0;
   transition: opacity 0.05s linear;
 }
@@ -107,6 +107,6 @@
 
 .cmd-output p {
   margin: 4px 0;
-  color: #00b050;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  color: var(--term-green);
+  font-family: var(--mono);
 }

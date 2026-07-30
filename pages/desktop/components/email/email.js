@@ -2,26 +2,7 @@
 
 const EMAIL_ICON = '<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="8" width="40" height="32" rx="3" fill="#0078D4"/><path d="M4 12 L24 26 L44 12" stroke="#ffffff" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"/><path d="M4 12 L24 26 L44 12" fill="none" stroke="#003d7a" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.3"/></svg>';
 
-export const htmlTemplate = `<!-- Email Window Component (Outlook Style) -->
-<div class="chrome-tabs">
-  <div class="tab-container">
-    <div class="tab active">
-      <div class="tab-content">
-        <span class="tab-icon">${EMAIL_ICON}</span>
-        <span class="tab-title">MoMo Mail</span>
-        <button class="tab-close" title="Close tab">�-</button>
-      </div>
-    </div>
-    <button class="new-tab-button" title="New tab">+</button>
-  </div>
-  <div class="window-controls">
-    <button class="control-btn minimize-btn" title="Minimize">−</button>
-    <button class="control-btn maximize-btn" title="Maximize">□</button>
-    <button class="control-btn close-btn" title="Close">�-</button>
-  </div>
-</div>
-
-<!-- Window Content -->
+const template = `<!-- Window Content -->
 <div class="window-content email-outlook">
   <div class="email-header">
     <div class="email-header-content">
@@ -114,19 +95,10 @@ export const htmlTemplate = `<!-- Email Window Component (Outlook Style) -->
       </div>
     </div>
   </div>
-</div>
+</div>`;
 
-<!-- Resize Handles -->
-<div class="resize-handle resize-top"></div>
-<div class="resize-handle resize-right"></div>
-<div class="resize-handle resize-bottom"></div>
-<div class="resize-handle resize-left"></div>
-<div class="resize-handle resize-corner-tl"></div>
-<div class="resize-handle resize-corner-tr"></div>
-<div class="resize-handle resize-corner-bl"></div>
-<div class="resize-handle resize-corner-br"></div>`;
-
-export function init(windowElement) {
+function init(ctx) {
+  const windowElement = ctx.root;
   // Email form initialization
   const sendBtn = windowElement.querySelector('.outlook-send-btn');
   const nameInput = windowElement.querySelector('#visitor-name');
@@ -135,26 +107,46 @@ export function init(windowElement) {
   const messageInput = windowElement.querySelector('#visitor-message');
 
   // Send email
+  /** Inline validation message, inserted just above the send button. */
+  const showFormError = (text) => {
+    let banner = windowElement.querySelector('.email-form-error');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.className = 'email-form-error';
+      banner.setAttribute('role', 'alert');
+      sendBtn.parentElement?.insertBefore(banner, sendBtn);
+    }
+    banner.textContent = text;
+  };
+
+  const clearFormError = () => {
+    windowElement.querySelector('.email-form-error')?.remove();
+  };
+
   if (sendBtn) {
     sendBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      
+
       const name = nameInput.value.trim();
       const email = emailInput.value.trim();
       const subject = subjectInput.value.trim();
       const message = messageInput.value.trim();
       
+      // Inline validation, matching the in-form success feedback below rather
+      // than interrupting with a browser alert.
       if (!name || !email || !message) {
-        alert('Please fill in all required fields (Name, Email, Message)');
+        showFormError('Please fill in Name, Email and Message.');
         return;
       }
 
       // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address');
+        showFormError('That email address does not look right.');
         return;
       }
+
+      clearFormError();
 
       // Create mailto link
       const mailtoLink = `mailto:jakub.adamczyk.software@gmail.com?subject=${encodeURIComponent(subject || 'Contact Form Submission')}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
@@ -187,4 +179,9 @@ export function init(windowElement) {
 }
 
 
-export default { htmlTemplate, init };
+export default {
+  title: 'Mail',
+  icon: EMAIL_ICON,
+  template,
+  init
+};

@@ -1,27 +1,8 @@
 // File Explorer Component JavaScript
 
-const FOLDER_ICON = '<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="folderGradSmall" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#FFD54F;stop-opacity:1" /><stop offset="100%" style="stop-color:#FFC107;stop-opacity:1" /></linearGradient></defs><path d="M8 8C5.8 8 4 9.8 4 12v24c0 2.2 1.8 4 4 4h32c2.2 0 4-1.8 4-4V16c0-2.2-1.8-4-4-4H23l-3-4H8z" fill="url(#folderGradSmall)"/><path d="M8 16h32v20H8z" fill="#FFE082" opacity="0.5"/></svg>';
+const FOLDER_ICON = '<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="mo-tabfold-back" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd977"/><stop offset="1" stop-color="#f0ab27"/></linearGradient><linearGradient id="mo-tabfold-front" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffcf5c"/><stop offset=".55" stop-color="#fcbb35"/><stop offset="1" stop-color="#e3941a"/></linearGradient><linearGradient id="mo-tabfold-sheet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#dfe7f0"/></linearGradient></defs><path d="M6 10.5h12.4l3.4 4.4H42a2.8 2.8 0 0 1 2.8 2.8v3.1H3.2v-7.5A2.8 2.8 0 0 1 6 10.5z" fill="url(#mo-tabfold-back)"/><rect x="12" y="16.4" width="24" height="7.5" rx="1.4" fill="url(#mo-tabfold-sheet)"/><path d="M3.2 20.2h41.6v14.6a2.9 2.9 0 0 1-2.9 2.9H6.1a2.9 2.9 0 0 1-2.9-2.9z" fill="url(#mo-tabfold-front)"/><path d="M3.2 20.2h41.6v2.2H3.2z" fill="#fff" fill-opacity=".35"/></svg>';
 
-export const htmlTemplate = `<!-- Explorer Window Component -->
-<div class="chrome-tabs">
-  <div class="tab-container">
-    <div class="tab active">
-      <div class="tab-content">
-        <span class="tab-icon">${FOLDER_ICON}</span>
-        <span class="tab-title">This PC</span>
-        <button class="tab-close" title="Close tab">�-</button>
-      </div>
-    </div>
-    <button class="new-tab-button" title="New tab">+</button>
-  </div>
-  <div class="window-controls">
-    <button class="control-btn minimize-btn" title="Minimize">−</button>
-    <button class="control-btn maximize-btn" title="Maximize">□</button>
-    <button class="control-btn close-btn" title="Close">�-</button>
-  </div>
-</div>
-
-<!-- Explorer Address Bar -->
+const template = `<!-- Explorer Address Bar -->
 <div class="address-bar">
   <div class="nav-buttons">
     <button class="nav-btn explorer-up" title="Up">↑</button>
@@ -51,7 +32,7 @@ export const htmlTemplate = `<!-- Explorer Window Component -->
         <span>Documents</span>
       </div>
       <div class="sidebar-item" data-path="Links">
-        <span class="sidebar-icon">�-</span>
+        <span class="sidebar-icon">🔗</span>
         <span>Links</span>
       </div>
     </div>
@@ -62,24 +43,14 @@ export const htmlTemplate = `<!-- Explorer Window Component -->
       <!-- Items will be added here -->
     </div>
   </div>
-</div>
-
-<!-- Resize Handles -->
-<div class="resize-handle resize-top"></div>
-<div class="resize-handle resize-right"></div>
-<div class="resize-handle resize-bottom"></div>
-<div class="resize-handle resize-left"></div>
-<div class="resize-handle resize-corner-tl"></div>
-<div class="resize-handle resize-corner-tr"></div>
-<div class="resize-handle resize-corner-bl"></div>
-<div class="resize-handle resize-corner-br"></div>`;
+</div>`;
 
 // Virtual file system with real portfolio content
 const FILE_SYSTEM = {
   '': [
     { name: 'Projects', type: 'folder', icon: '📂', path: 'Projects' },
     { name: 'Documents', type: 'folder', icon: '📁', path: 'Documents' },
-    { name: 'Links', type: 'folder', icon: '�-', path: 'Links' },
+    { name: 'Links', type: 'folder', icon: '🔗', path: 'Links' },
     {
       name: 'README.md', type: 'text', icon: '📄',
       text: 'DevOps Engineer with four years in Azure and on-prem infrastructure.\n\nAt SITA I build Terraform-managed AKS platforms with GitOps, monitoring, and cost tracking. Before that I owned on-prem servers and internal tooling at Bruss.\n\nFull right to work in the UK and EU.\n\nBrowse the Projects folder, or open the Terminal and type "help".'
@@ -137,8 +108,8 @@ const FILE_SYSTEM = {
   ]
 };
 
-class ExplorerComponent {
-  static init(windowEl) {
+function init(ctx) {
+  const windowEl = ctx.root;
     const itemsContainer = windowEl.querySelector('#explorerItems');
     const urlSpan = windowEl.querySelector('.url');
     const upBtn = windowEl.querySelector('.explorer-up');
@@ -157,20 +128,19 @@ class ExplorerComponent {
       itemsContainer.innerHTML = '';
       const viewer = document.createElement('div');
       viewer.className = 'explorer-text-viewer';
-      viewer.style.cssText = 'grid-column:1/-1;width:100%;padding:8px 12px;';
 
       const backBtn = document.createElement('button');
       backBtn.textContent = '← Back';
-      backBtn.style.cssText = 'margin-bottom:12px;padding:5px 14px;cursor:pointer;border:1px solid #ccc;border-radius:4px;background:#fff;font-size:13px;';
+      backBtn.className = 'explorer-text-back';
       backBtn.addEventListener('click', () => render(currentPath));
 
       const title = document.createElement('h3');
       title.textContent = item.name;
-      title.style.cssText = 'margin:0 0 10px;font-size:15px;';
+      title.className = 'explorer-text-title';
 
       const body = document.createElement('pre');
       body.textContent = item.text;
-      body.style.cssText = 'white-space:pre-wrap;font-family:inherit;font-size:13.5px;line-height:1.6;margin:0;';
+      body.className = 'explorer-text-body';
 
       viewer.appendChild(backBtn);
       viewer.appendChild(title);
@@ -192,6 +162,7 @@ class ExplorerComponent {
 
     const render = (path) => {
       currentPath = path;
+      ctx.storage?.set({ lastPath: path });
       itemsContainer.innerHTML = '';
       const items = FILE_SYSTEM[path] || [];
 
@@ -221,8 +192,14 @@ class ExplorerComponent {
       });
     });
 
-    render('');
+    // Reopen where the user left off, if that folder still exists.
+    const savedPath = ctx.storage?.get()?.lastPath;
+    render(savedPath && FILE_SYSTEM[savedPath] ? savedPath : '');
   }
-}
 
-export default ExplorerComponent;
+export default {
+  title: 'Explorer',
+  icon: FOLDER_ICON,
+  template,
+  init
+};

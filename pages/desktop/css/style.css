@@ -1,3 +1,72 @@
+/* ============================================================================
+   DESIGN TOKENS
+   Mirrors the vocabulary of the root portfolio's :root block (css/style.css),
+   with dark-surface values. --taskbar-h is the single source of truth for the
+   taskbar height: it is consumed by .taskbar, #desktopRoot, and by JS via
+   getTaskbarHeight().
+   ============================================================================ */
+
+:root {
+  /* geometry */
+  --taskbar-h: 50px;
+  --window-radius: 12px;
+  --titlebar-h: 40px;
+
+  /* surfaces */
+  --surface: rgba(24, 24, 27, 0.75);
+  --surface-solid: #18181b;
+  --surface-2: rgba(32, 33, 36, 0.95);
+  --surface-3: rgba(60, 64, 67, 0.6);
+  --surface-hover: rgba(70, 74, 77, 0.7);
+  --taskbar-bg: rgba(100, 100, 100, 0.25);
+  --overlay-hover: rgba(255, 255, 255, 0.1);
+  --scroll-track: #27272a;
+  --scroll-thumb: #52525b;
+  --scroll-thumb-hover: #71717a;
+
+  /* text */
+  --text: #f4f4f5;
+  --text-2: #e4e4e7;
+  --text-3: #a1a1aa;
+  --text-4: #9ca3af;
+  --text-disabled: #52525b;
+
+  /* borders + elevation */
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --shadow-window: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-menu: 0 4px 16px rgba(0, 0, 0, 0.5);
+
+  /* accent */
+  --accent: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --accent-active: #6d28d9;
+  --accent-soft: rgba(139, 92, 246, 0.2);
+  --accent-line: rgba(139, 92, 246, 0.8);
+  --accent-selected: rgba(139, 92, 246, 0.15);
+  --accent-selected-border: rgba(139, 92, 246, 0.35);
+  --accent-avatar: rgba(139, 92, 246, 0.3);
+  --accent-menu-hover: rgba(139, 92, 246, 0.4);
+  --danger: #e81123;
+
+  /* type */
+  --font: 'Segoe UI', Arial, sans-serif;
+  --mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+  --term-green: #00b050;
+  --term-bg: #0c0c0c;
+
+  /* motion */
+  --dur-fast: 0.15s;
+  --dur-base: 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0s;
+    --dur-base: 0s;
+  }
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -19,9 +88,9 @@ svg {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.large.row.centered {
+#desktopRoot {
   width: 100vw;
-  height: calc(100vh - 48px);
+  height: calc(100vh - var(--taskbar-h));
   position: relative;
   overflow: hidden;
   /* Performance optimization */
@@ -35,8 +104,6 @@ svg {
   width: 100%;
   height: 100%;
   z-index: 0;
-  /* Performance optimization */
-  will-change: contents;
 }
 
 .windows-container {
@@ -52,27 +119,66 @@ svg {
   min-height: 300px;
   max-width: 98vw;
   max-height: 98vh;
-  background-color: rgba(24, 24, 27, 0.75);
+  background-color: var(--surface);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--window-radius);
+  box-shadow: var(--shadow-window);
+  border: 1px solid var(--border);
+  /* border-box so JS-assigned width/height are the real occupied size; the 1px
+     border would otherwise push a maximized window under the taskbar. */
+  box-sizing: border-box;
   position: absolute;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   z-index: 10;
-  /* Performance optimizations */
-  will-change: transform, width, height, opacity;
   transform: translate3d(0, 0, 0);
   contain: layout style paint;
+}
+
+/* Promote to a GPU layer only while actually being dragged or resized. */
+.window.is-interacting {
+  will-change: transform, width, height, opacity;
+}
+
+/* The focused window gets a brighter edge and a deeper shadow. */
+.window.focused {
+  border-color: var(--border-strong);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Live backdrop blur is the single most expensive thing a window does, and an
+   unfocused one gains nothing from it — swap in an opaque surface. With several
+   windows open this is the biggest compositing saving available, and the focused
+   window (the one being looked at) keeps the effect. */
+.window:not(.focused) {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background-color: var(--surface-solid);
+}
+
+/* Snap preview overlay (styles previously assigned inline from JS). */
+.snap-preview {
+  position: fixed;
+  border: 2px solid var(--accent-line);
+  background: var(--accent-soft);
+  border-radius: var(--window-radius);
+  pointer-events: none;
+  display: none;
+  /* Above windows, below the taskbar (1000) — it previews the work area only. */
+  z-index: 900;
+  transition: all var(--dur-fast) ease;
+}
+
+.snap-preview.visible {
+  display: block;
 }
 
 /* Chrome-style Tab Bar */
 .chrome-tabs {
   height: 40px;
-  background: rgba(32, 33, 36, 0.95);
+  background: var(--surface-2);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   display: flex;
@@ -97,18 +203,18 @@ svg {
   height: 36px;
   min-width: 120px;
   max-width: 240px;
-  background: rgba(60, 64, 67, 0.6);
+  background: var(--surface-3);
   border-radius: 8px 8px 0 0;
   display: flex;
   align-items: center;
   padding: 0 12px;
   cursor: pointer;
   position: relative;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
 }
 
 .tab:hover {
-  background: rgba(70, 74, 77, 0.7);
+  background: var(--surface-hover);
 }
 
 .tab.active {
@@ -140,8 +246,8 @@ svg {
 
 .tab-title {
   font-size: 12px;
-  color: #e4e4e7;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  color: var(--text-2);
+  font-family: var(--font);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -154,19 +260,19 @@ svg {
   border-radius: 50%;
   background: transparent;
   border: none;
-  color: #9ca3af;
+  color: var(--text-4);
   font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
 }
 
 .tab-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #e4e4e7;
+  background: var(--overlay-hover);
+  color: var(--text-2);
 }
 
 .new-tab-button {
@@ -174,17 +280,17 @@ svg {
   height: 32px;
   background: transparent;
   border: none;
-  color: #9ca3af;
+  color: var(--text-4);
   font-size: 18px;
   cursor: pointer;
   border-radius: 50%;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
   margin: 0 4px 4px;
 }
 
 .new-tab-button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #e4e4e7;
+  background: var(--overlay-hover);
+  color: var(--text-2);
 }
 
 .window-controls {
@@ -199,22 +305,22 @@ svg {
   height: 40px;
   background: transparent;
   border: none;
-  color: #e4e4e7;
+  color: var(--text-2);
   font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
   font-family: Arial, sans-serif;
 }
 
 .control-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-hover);
 }
 
 .close-btn:hover {
-  background: #e81123 !important;
+  background: var(--danger) !important;
   color: white;
 }
 
@@ -243,21 +349,21 @@ svg {
   border-radius: 50%;
   background: transparent;
   border: none;
-  color: #e4e4e7;
+  color: var(--text-2);
   font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
 }
 
 .nav-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-hover);
 }
 
 .nav-btn:disabled {
-  color: #52525b;
+  color: var(--text-disabled);
   cursor: not-allowed;
 }
 
@@ -271,7 +377,7 @@ svg {
   align-items: center;
   padding: 0 12px;
   gap: 8px;
-  transition: background 0.15s, border 0.15s;
+  transition: background var(--dur-fast), border var(--dur-fast);
   cursor: text;
 }
 
@@ -281,7 +387,7 @@ svg {
 }
 
 .address-input:focus-within {
-  background: rgba(32, 33, 36, 0.95);
+  background: var(--surface-2);
   border-color: rgba(138, 180, 248, 0.8);
 }
 
@@ -293,8 +399,8 @@ svg {
 .url {
   flex: 1;
   font-size: 13px;
-  color: #e4e4e7;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  color: var(--text-2);
+  font-family: var(--font);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -302,10 +408,10 @@ svg {
 
 .star-icon {
   font-size: 16px;
-  color: #9ca3af;
+  color: var(--text-4);
   flex-shrink: 0;
   cursor: pointer;
-  transition: color 0.15s;
+  transition: color var(--dur-fast);
 }
 
 .star-icon:hover {
@@ -318,19 +424,19 @@ svg {
   border-radius: 50%;
   background: transparent;
   border: none;
-  color: #e4e4e7;
+  color: var(--text-2);
   font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
   font-weight: bold;
   line-height: 1;
 }
 
 .menu-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-hover);
 }
 
 /* Window Content */
@@ -341,7 +447,6 @@ svg {
   background: rgba(24, 24, 27, 0.5);
   /* Performance optimization for smooth scrolling */
   -webkit-overflow-scrolling: touch;
-  will-change: scroll-position;
   contain: layout style paint;
 }
 
@@ -351,37 +456,37 @@ svg {
 }
 
 .window-content::-webkit-scrollbar-track {
-  background: #27272a;
+  background: var(--scroll-track);
 }
 
 .window-content::-webkit-scrollbar-thumb {
-  background: #52525b;
+  background: var(--scroll-thumb);
   border-radius: 6px;
-  border: 2px solid #27272a;
+  border: 2px solid var(--scroll-track);
 }
 
 .window-content::-webkit-scrollbar-thumb:hover {
-  background: #71717a;
+  background: var(--scroll-thumb-hover);
 }
 
 .window-content h1 {
   margin: 0 0 16px 0;
   font-size: 32px;
-  color: #f4f4f5;
+  color: var(--text);
   font-weight: 600;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
 }
 
 .window-content p {
   margin: 0 0 20px 0;
   font-size: 15px;
-  color: #a1a1aa;
+  color: var(--text-3);
   line-height: 1.6;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
 }
 
 .cta-button {
-  background: #8b5cf6;
+  background: var(--accent);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -389,16 +494,16 @@ svg {
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
   transition: background 0.1s;
 }
 
 .cta-button:hover {
-  background: #7c3aed;
+  background: var(--accent-hover);
 }
 
 .cta-button:active {
-  background: #6d28d9;
+  background: var(--accent-active);
 }
 
 .feature-grid {
@@ -409,33 +514,56 @@ svg {
 }
 
 .feature-card {
-  background: #27272a;
+  background: var(--scroll-track);
   border: 1px solid #3f3f46;
   border-radius: 6px;
   padding: 20px;
-  transition: all 0.2s;
+  transition: all var(--dur-base);
 }
 
 .feature-card:hover {
   background: #3f3f46;
-  border-color: #8b5cf6;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px var(--accent-soft);
 }
 
 .feature-card h3 {
   margin: 0 0 8px 0;
   font-size: 16px;
-  color: #f4f4f5;
+  color: var(--text);
   font-weight: 600;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
 }
 
 .feature-card p {
   margin: 0;
   font-size: 13px;
-  color: #a1a1aa;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  color: var(--text-3);
+  font-family: var(--font);
   line-height: 1.5;
+}
+
+/* Window body slot: components fill this entirely. Components that render an
+   .address-bar above their .window-content stack correctly because this is a
+   flex column. min-height:0 lets .window-content actually scroll. */
+.window-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The handles wrapper must not participate in layout — the handles inside are
+   positioned absolutely against .window. */
+.resize-handles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.resize-handles > .resize-handle {
+  pointer-events: auto;
 }
 
 /* Resize Handles */
@@ -517,8 +645,11 @@ svg {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 50px;
-  background: rgba(100, 100, 100, 0.25);
+  height: var(--taskbar-h);
+  /* border-box so --taskbar-h is the true occupied height: the 1px border-top
+     would otherwise make the bar 51px while JS still computed 50. */
+  box-sizing: border-box;
+  background: var(--taskbar-bg);
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
   display: flex;
@@ -526,9 +657,7 @@ svg {
   justify-content: center;
   padding: 0 8px;
   z-index: 1000;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  /* Performance optimization */
-  will-change: auto;
+  border-top: 1px solid var(--border-strong);
   contain: layout style;
 }
 
@@ -544,12 +673,12 @@ svg {
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  transition: background 0.2s;
+  transition: background var(--dur-base);
   padding: 0;
 }
 
 .start-button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-hover);
 }
 
 .start-button svg {
@@ -569,7 +698,7 @@ svg {
 
 .search-box {
   height: 32px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-hover);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 4px;
   display: flex;
@@ -588,7 +717,7 @@ svg {
 .search-text {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.6);
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
 }
 
 /* Taskbar Center */
@@ -612,7 +741,7 @@ svg {
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  transition: background 0.2s;
+  transition: background var(--dur-base);
   position: relative;
 }
 
@@ -634,7 +763,7 @@ svg {
 }
 
 .taskbar-app:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-hover);
 }
 
 .taskbar-app.active::after {
@@ -645,7 +774,7 @@ svg {
   transform: translateX(-50%);
   width: 20px;
   height: 3px;
-  background: #8b5cf6;
+  background: var(--accent);
   border-radius: 2px;
 }
 
@@ -662,13 +791,13 @@ svg {
   padding: 6px 12px;
   border-radius: 4px;
   font-size: 12px;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s;
+  transition: opacity var(--dur-base);
   z-index: 10000;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--overlay-hover);
 }
 
 .taskbar-app:hover[data-tooltip]::before,
@@ -693,11 +822,11 @@ svg {
   height: 48px;
   cursor: pointer;
   border-radius: 4px;
-  transition: background 0.2s;
+  transition: background var(--dur-base);
 }
 
 .system-tray:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-hover);
 }
 
 .tray-icon {
@@ -708,11 +837,35 @@ svg {
   justify-content: center;
   line-height: 1;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: opacity var(--dur-base);
 }
 
 .tray-icon:hover {
   opacity: 1;
+}
+
+/* Tray icon sizing/colour (previously inline style attributes). */
+.tray-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  color: white;
+}
+
+/* The Portfolio Home glyph is stroked, not filled. */
+.tray-icon-stroke {
+  fill: none;
+  stroke: currentColor;
+}
+
+/* Battery: outline stroked, inner level filled. */
+.tray-icon-battery rect[fill='none'] {
+  stroke: currentColor;
+}
+
+.tray-link {
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .datetime {
@@ -727,14 +880,14 @@ svg {
 .time {
   font-size: 12px;
   color: white;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
   font-weight: 500;
 }
 
 .date {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.8);
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
 }
 /* ============================================================================
    DESKTOP ICONS
@@ -770,7 +923,7 @@ svg {
   user-select: none;
   pointer-events: auto;
   position: relative;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
 }
 
 .desktop-icon:hover {
@@ -778,8 +931,8 @@ svg {
 }
 
 .desktop-icon.selected {
-  background: rgba(139, 92, 246, 0.15);
-  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: var(--accent-selected);
+  border: 1px solid var(--accent-selected-border);
 }
 
 .desktop-icon-image {
@@ -819,18 +972,18 @@ svg {
   left: 8px;
   width: 600px;
   height: 650px;
-  background: rgba(32, 33, 36, 0.95);
+  background: var(--surface-2);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-window);
+  border: 1px solid var(--overlay-hover);
   display: none;
   flex-direction: column;
   z-index: 9999;
   overflow: hidden;
   transform-origin: bottom left;
-  animation: startMenuOpen 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: startMenuOpen var(--dur-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .start-menu.open {
@@ -850,7 +1003,7 @@ svg {
 
 .start-menu-header {
   padding: 24px 24px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--overlay-hover);
 }
 
 .user-profile {
@@ -863,7 +1016,7 @@ svg {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(139, 92, 246, 0.3);
+  background: var(--accent-avatar);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -874,7 +1027,7 @@ svg {
   font-size: 14px;
   color: white;
   font-weight: 600;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
 }
 
 .start-menu-content {
@@ -888,7 +1041,7 @@ svg {
   color: rgba(255, 255, 255, 0.7);
   font-weight: 600;
   margin-bottom: 16px;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -909,9 +1062,9 @@ svg {
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
   color: white;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
 }
 
 .start-menu-app:hover {
@@ -941,9 +1094,28 @@ svg {
 
 .start-menu-footer {
   padding: 16px 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--overlay-hover);
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  /* Shortcuts on the left, power on the right. */
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.shortcuts-button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+}
+
+.shortcuts-button:hover {
+  background: var(--surface-hover);
 }
 
 .power-button {
@@ -955,7 +1127,7 @@ svg {
   color: white;
   font-size: 18px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -971,12 +1143,12 @@ svg {
 
 .context-menu {
   position: fixed;
-  background: rgba(32, 33, 36, 0.95);
+  background: var(--surface-2);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-menu);
+  border: 1px solid var(--overlay-hover);
   padding: 4px;
   display: none;
   flex-direction: column;
@@ -992,10 +1164,10 @@ svg {
   padding: 8px 12px;
   font-size: 13px;
   color: white;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font);
   cursor: pointer;
   border-radius: 4px;
-  transition: background 0.15s;
+  transition: background var(--dur-fast);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1006,7 +1178,7 @@ svg {
 }
 
 .context-menu-item:hover {
-  background: rgba(139, 92, 246, 0.4);
+  background: var(--accent-menu-hover);
 }
 
 .context-menu-item.disabled {
@@ -1020,7 +1192,7 @@ svg {
 
 .context-menu-separator {
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-hover);
   margin: 4px 0;
 }
 
@@ -1032,3 +1204,465 @@ svg {
   justify-content: center;
   font-size: 14px;
 }
+/* ============================================================================
+   DIALOGS & TOASTS
+   Rendered into layers that are siblings of #desktopRoot, since that element
+   sets `contain: strict` and would clip anything overlaying the taskbar.
+   ============================================================================ */
+
+.dialog-layer,
+.toast-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dialog-layer { z-index: 1300; }
+.toast-layer  { z-index: 1400; }
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity var(--dur-fast) ease;
+  pointer-events: auto;
+}
+
+.dialog-backdrop.visible { opacity: 1; }
+
+.dialog {
+  min-width: 320px;
+  max-width: 440px;
+  padding: 20px 24px 16px;
+  background: var(--surface-2);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-window);
+  font-family: var(--font);
+  transform: scale(0.96);
+  transition: transform var(--dur-fast) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dialog-backdrop.visible .dialog { transform: scale(1); }
+
+.dialog-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.dialog-message {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-3);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.dialog-btn {
+  min-width: 88px;
+  padding: 7px 16px;
+  font-family: var(--font);
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-3);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background var(--dur-fast);
+}
+
+.dialog-btn:hover { background: var(--surface-hover); }
+
+.dialog-confirm {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.dialog-confirm:hover { background: var(--accent-hover); }
+
+.dialog-danger .dialog-confirm {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Toasts stack from the bottom, above the taskbar. */
+.toast-layer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-bottom: calc(var(--taskbar-h) + 16px);
+}
+
+.toast {
+  max-width: 460px;
+  padding: 10px 18px;
+  background: var(--surface-2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-menu);
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 13px;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--dur-base) ease, transform var(--dur-base) ease;
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-error { border-left: 3px solid var(--danger); }
+.toast-success { border-left: 3px solid var(--term-green); }
+
+/* ============================================================================
+   TABS
+   ============================================================================ */
+
+/* Panes stay mounted when inactive — unmounting would reload the browser
+   component's iframe and wipe the terminal's scrollback. */
+.tab-pane {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tab-pane.active {
+  display: flex;
+}
+
+.tab.dragging {
+  opacity: 0.75;
+  cursor: grabbing;
+}
+
+/* A single tab has nothing to switch to, so its close button is redundant with
+   the window's own close control. */
+.tab-container.single-tab .tab-close {
+  display: none;
+}
+
+/* ============================================================================
+   APP PICKER (the window's + button)
+   ============================================================================ */
+
+.app-picker-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1250;
+}
+
+.app-picker {
+  position: fixed;
+  min-width: 260px;
+  padding: 12px;
+  background: var(--surface-2);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-menu);
+  font-family: var(--font);
+}
+
+.app-picker-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-4);
+  margin-bottom: 10px;
+}
+
+.app-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.app-picker-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-2);
+  font-family: var(--font);
+  transition: background var(--dur-fast);
+}
+
+.app-picker-item:hover,
+.app-picker-item:focus-visible {
+  background: var(--overlay-hover);
+  outline: none;
+}
+
+.app-picker-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.app-picker-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.app-picker-name {
+  font-size: 11px;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* ============================================================================
+   WINDOW SWITCHER (Alt+`)
+   ============================================================================ */
+
+.switcher {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.97);
+  display: none;
+  gap: 6px;
+  padding: 14px;
+  background: var(--surface-2);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-window);
+  z-index: 1350;
+  pointer-events: none;
+  font-family: var(--font);
+}
+
+.switcher.visible {
+  display: flex;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.switcher-item {
+  width: 116px;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+}
+
+.switcher-item.selected {
+  background: var(--accent-selected);
+  border-color: var(--accent-selected-border);
+}
+
+.switcher-icon {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+
+.switcher-icon svg { width: 34px; height: 34px; }
+
+.switcher-title {
+  font-size: 11px;
+  color: var(--text-2);
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   SHORTCUTS SHEET
+   ============================================================================ */
+
+.shortcuts-sheet {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity var(--dur-fast) ease;
+  z-index: 1320;
+}
+
+.shortcuts-sheet.visible { opacity: 1; }
+
+.shortcuts-panel {
+  width: min(520px, calc(100vw - 48px));
+  max-height: min(70vh, 620px);
+  overflow-y: auto;
+  padding: 20px 24px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-window);
+  font-family: var(--font);
+}
+
+.shortcuts-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.shortcuts-close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-4);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+}
+
+.shortcuts-close:hover { background: var(--overlay-hover); color: var(--text-2); }
+
+.shortcuts-list { margin: 0; }
+
+.shortcuts-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.shortcuts-row:last-child { border-bottom: none; }
+
+.shortcuts-row dt {
+  flex: 0 0 150px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.shortcuts-row dd {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.shortcuts-row kbd {
+  padding: 2px 7px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.kbd-plus { color: var(--text-4); font-size: 10px; }
+
+.shortcuts-note {
+  margin: 16px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-4);
+}
+
+/* ============================================================================
+   SHUTDOWN SCREEN
+   ============================================================================ */
+
+.shutdown-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  z-index: 2000;
+}
+
+.shutdown-screen.visible { opacity: 1; }
+
+.shutdown-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--font);
+}
+
+.shutdown-message {
+  font-size: 15px;
+  color: var(--text-3);
+}
+
+.shutdown-restart {
+  padding: 9px 26px;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+}
+
+.shutdown-restart:hover { background: var(--accent-hover); }
+
+.shutdown-link {
+  font-size: 12px;
+  color: var(--text-4);
+  text-decoration: none;
+}
+
+.shutdown-link:hover { color: var(--text-2); text-decoration: underline; }

@@ -6,26 +6,7 @@ const EMAIL_ICON = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;"><re
 
 const PROMPT = 'jakub@momo-os:~$';
 
-export const htmlTemplate = `<!-- CMD Window Component -->
-<div class="chrome-tabs">
-  <div class="tab-container">
-    <div class="tab active">
-      <div class="tab-content">
-        <span class="tab-icon">${CMD_ICON}</span>
-        <span class="tab-title">MoMo Terminal</span>
-        <button class="tab-close" title="Close tab">�-</button>
-      </div>
-    </div>
-    <button class="new-tab-button" title="New tab">+</button>
-  </div>
-  <div class="window-controls">
-    <button class="control-btn minimize-btn" title="Minimize">−</button>
-    <button class="control-btn maximize-btn" title="Maximize">□</button>
-    <button class="control-btn close-btn" title="Close">�-</button>
-  </div>
-</div>
-
-<!-- Window Content -->
+const template = `<!-- Window Content -->
 <div class="window-content cmd-content">
   <div class="cmd-header">MoMo-OS [Version 1.0.0 - Dream Edition]</div>
   <div class="cmd-header">(c) MoMoiin Studios. All creations unlocked.</div>
@@ -47,19 +28,11 @@ export const htmlTemplate = `<!-- CMD Window Component -->
     <span class="cmd-prompt">${PROMPT}</span>
     <span class="cmd-display"></span>
   </div>
-</div>
+</div>`;
 
-<!-- Resize Handles -->
-<div class="resize-handle resize-top"></div>
-<div class="resize-handle resize-right"></div>
-<div class="resize-handle resize-bottom"></div>
-<div class="resize-handle resize-left"></div>
-<div class="resize-handle resize-corner-tl"></div>
-<div class="resize-handle resize-corner-tr"></div>
-<div class="resize-handle resize-corner-bl"></div>
-<div class="resize-handle resize-corner-br"></div>`;
-
-export function init(windowElement) {
+function init(ctx) {
+  const windowElement = ctx.root;
+  const { wm, launcher, windowId } = ctx;
   // Simple terminal using invisible input proxy to capture all keystrokes
   const proxy = windowElement.querySelector('.cmd-input-proxy');
   const output = windowElement.querySelector('.cmd-output');
@@ -79,6 +52,7 @@ export function init(windowElement) {
       '',
       'System commands:',
       '  ls, cat <file>, pwd, whoami, date, time, echo <text>, clear, version',
+      '  history [-c]  Show or clear saved command history',
       '  open <browser|cmd|email|explorer>, mail, exit',
       '',
       'Tip: try the tools you would expect a DevOps engineer to have installed.',
@@ -253,11 +227,16 @@ export function init(windowElement) {
   const COMPLETIONS = [
     ...Object.keys(COMMANDS),
     ...Object.keys(EASTER_EGGS),
-    'clear', 'echo', 'date', 'time', 'cat', 'open', 'mail', 'exit', 'portfolio', 'cv'
+    'clear', 'echo', 'date', 'time', 'cat', 'open', 'mail', 'exit', 'portfolio', 'cv', 'history'
   ];
 
-  const history = [];
-  let historyIndex = -1;
+  // Seeded from the persisted session; capped so the blob stays small.
+  const HISTORY_LIMIT = 100;
+  const history = [...(ctx.storage?.get()?.history ?? [])];
+  let historyIndex = history.length;
+  const persistHistory = () => {
+    ctx.storage?.set({ history: history.slice(-HISTORY_LIMIT) });
+  };
 
   function appendLine(text, cls = 'cmd-line') {
     const el = document.createElement('div');
@@ -277,6 +256,21 @@ export function init(windowElement) {
 
     if (name === 'clear') {
       output.innerHTML = '';
+      return;
+    }
+    if (name === 'history') {
+      if (!history.length) {
+        appendLine('(no history yet)');
+        return;
+      }
+      if (args[0] === '-c' || args[0] === '--clear') {
+        history.length = 0;
+        historyIndex = 0;
+        persistHistory();
+        appendLine('History cleared.');
+        return;
+      }
+      history.forEach((entry, i) => appendLine(`${String(i + 1).padStart(4)}  ${entry}`));
       return;
     }
     if (name === 'echo') {
@@ -306,35 +300,22 @@ export function init(windowElement) {
       return;
     }
     if (name === 'open') {
-      if (args[0] && window.windowManager) {
-        const type = args[0].toLowerCase();
-        const existing = Array.from(window.windowManager.windows.entries()).find(([, v]) => v.type === type);
-        if (existing) {
-          window.windowManager.handleRestore(existing[0]);
-        } else {
-          const iconMap = { browser: BROWSER_ICON, cmd: CMD_ICON, email: EMAIL_ICON, explorer: BROWSER_ICON };
-          if (['browser', 'cmd', 'email', 'explorer'].includes(type)) {
-            window.windowManager.createWindow(type, type.charAt(0).toUpperCase() + type.slice(1), iconMap[type]);
-          } else {
-            appendLine('Usage: open <browser|cmd|email|explorer>');
-          }
-        }
-      } else {
+      const type = (args[0] || '').toLowerCase();
+      if (!launcher?.isImplemented(type)) {
         appendLine('Usage: open <browser|cmd|email|explorer>');
+        return;
       }
+      launcher.launch(type);
       return;
     }
     if (name === 'mail') {
-      if (window.windowManager) {
-        const existing = Array.from(window.windowManager.windows.entries()).find(([, v]) => v.type === 'email');
-        if (existing) window.windowManager.handleRestore(existing[0]);
-        else window.windowManager.createWindow('email', 'Mail', EMAIL_ICON);
-      }
+      launcher?.launch('email');
       return;
     }
     if (name === 'exit') {
-      const closeBtn = windowElement.querySelector('.close-btn');
-      if (closeBtn) closeBtn.click();
+      // The close button belongs to the manager-generated frame now, so ask the
+      // manager directly rather than synthesising a click.
+      wm.close(windowId);
       return;
     }
     if (EASTER_EGGS[name]) {
@@ -348,14 +329,15 @@ export function init(windowElement) {
     appendLine(`${name}: command not found — type "help"`);
   }
 
-  // Focus the proxy when window is clicked (use capture phase for reliability)
-  windowElement.addEventListener('mousedown', (e) => {
-    const control = e.target.closest('.control-btn, .tab-close, .new-tab-button');
-    if (control) return;
-    // Always focus proxy on any click in the window
+  // Focus the proxy when window is clicked (use capture phase for reliability).
+  // Registered with onDestroy so closing the terminal detaches it.
+  const focusProxy = (e) => {
+    if (e.target.closest('.control-btn, .tab-close, .new-tab-button')) return;
     e.preventDefault();
     proxy.focus();
-  }, true);
+  };
+  windowElement.addEventListener('mousedown', focusProxy, true);
+  ctx.onDestroy(() => windowElement.removeEventListener('mousedown', focusProxy, true));
 
   if (proxy) {
     // Sync proxy input to display
@@ -372,6 +354,7 @@ export function init(windowElement) {
         appendLine(`${PROMPT} ${text}`);
         if (text.trim()) {
           history.push(text);
+          persistHistory();
         }
         historyIndex = history.length;
         runCommand(text);
@@ -424,4 +407,9 @@ export function init(windowElement) {
   }
 }
 
-export default { htmlTemplate, init };
+export default {
+  title: 'MoMo Terminal',
+  icon: CMD_ICON,
+  template,
+  init
+};
