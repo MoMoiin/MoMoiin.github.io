@@ -1,0 +1,1668 @@
+/* ============================================================================
+   DESIGN TOKENS
+   Mirrors the vocabulary of the root portfolio's :root block (css/style.css),
+   with dark-surface values. --taskbar-h is the single source of truth for the
+   taskbar height: it is consumed by .taskbar, #desktopRoot, and by JS via
+   getTaskbarHeight().
+   ============================================================================ */
+
+:root {
+  /* geometry */
+  --taskbar-h: 50px;
+  --window-radius: 12px;
+  --titlebar-h: 40px;
+
+  /* surfaces */
+  --surface: rgba(24, 24, 27, 0.75);
+  --surface-solid: #18181b;
+  --surface-2: rgba(32, 33, 36, 0.95);
+  --surface-3: rgba(60, 64, 67, 0.6);
+  --surface-hover: rgba(70, 74, 77, 0.7);
+  --taskbar-bg: rgba(100, 100, 100, 0.25);
+  --overlay-hover: rgba(255, 255, 255, 0.1);
+  --scroll-track: #27272a;
+  --scroll-thumb: #52525b;
+  --scroll-thumb-hover: #71717a;
+
+  /* text */
+  --text: #f4f4f5;
+  --text-2: #e4e4e7;
+  --text-3: #a1a1aa;
+  --text-4: #9ca3af;
+  --text-disabled: #52525b;
+
+  /* borders + elevation */
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --shadow-window: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-menu: 0 4px 16px rgba(0, 0, 0, 0.5);
+
+  /* accent */
+  --accent: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --accent-active: #6d28d9;
+  --accent-soft: rgba(139, 92, 246, 0.2);
+  --accent-line: rgba(139, 92, 246, 0.8);
+  --accent-selected: rgba(139, 92, 246, 0.15);
+  --accent-selected-border: rgba(139, 92, 246, 0.35);
+  --accent-avatar: rgba(139, 92, 246, 0.3);
+  --accent-menu-hover: rgba(139, 92, 246, 0.4);
+  --danger: #e81123;
+
+  /* type */
+  --font: 'Segoe UI', Arial, sans-serif;
+  --mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+  --term-green: #00b050;
+  --term-bg: #0c0c0c;
+
+  /* motion */
+  --dur-fast: 0.15s;
+  --dur-base: 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0s;
+    --dur-base: 0s;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background: #0f0f11;
+  /* Performance optimizations */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+/* High quality rendering for all SVGs */
+svg {
+  shape-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#desktopRoot {
+  width: 100vw;
+  height: calc(100vh - var(--taskbar-h));
+  position: relative;
+  overflow: hidden;
+  /* Performance optimization */
+  contain: strict;
+}
+
+#bgCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.windows-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.window {
+  width: 60vw;
+  height: 60vh;
+  min-width: 400px;
+  min-height: 300px;
+  max-width: 98vw;
+  max-height: 98vh;
+  background-color: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--window-radius);
+  box-shadow: var(--shadow-window);
+  border: 1px solid var(--border);
+  /* border-box so JS-assigned width/height are the real occupied size; the 1px
+     border would otherwise push a maximized window under the taskbar. */
+  box-sizing: border-box;
+  position: absolute;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  transform: translate3d(0, 0, 0);
+  contain: layout style paint;
+}
+
+/* Promote to a GPU layer only while actually being dragged or resized. */
+.window.is-interacting {
+  will-change: transform, width, height, opacity;
+}
+
+/* The focused window gets a brighter edge and a deeper shadow. */
+.window.focused {
+  border-color: var(--border-strong);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Live backdrop blur is the single most expensive thing a window does, and an
+   unfocused one gains nothing from it — swap in an opaque surface. With several
+   windows open this is the biggest compositing saving available, and the focused
+   window (the one being looked at) keeps the effect. */
+.window:not(.focused) {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background-color: var(--surface-solid);
+}
+
+/* Snap preview overlay (styles previously assigned inline from JS). */
+.snap-preview {
+  position: fixed;
+  border: 2px solid var(--accent-line);
+  background: var(--accent-soft);
+  border-radius: var(--window-radius);
+  pointer-events: none;
+  display: none;
+  /* Above windows, below the taskbar (1000) — it previews the work area only. */
+  z-index: 900;
+  transition: all var(--dur-fast) ease;
+}
+
+.snap-preview.visible {
+  display: block;
+}
+
+/* Chrome-style Tab Bar */
+.chrome-tabs {
+  height: 40px;
+  background: var(--surface-2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0;
+  cursor: move;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.tab-container {
+  display: flex;
+  align-items: flex-end;
+  flex: 1;
+  height: 100%;
+  padding-left: 8px;
+  gap: 2px;
+}
+
+.tab {
+  height: 36px;
+  min-width: 120px;
+  max-width: 240px;
+  background: var(--surface-3);
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: pointer;
+  position: relative;
+  transition: background var(--dur-fast);
+}
+
+.tab:hover {
+  background: var(--surface-hover);
+}
+
+.tab.active {
+  background: rgba(24, 24, 27, 0.9);
+  height: 40px;
+}
+
+.tab-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.tab-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tab-title {
+  font-size: 12px;
+  color: var(--text-2);
+  font-family: var(--font);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.tab-close {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-4);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--dur-fast);
+}
+
+.tab-close:hover {
+  background: var(--overlay-hover);
+  color: var(--text-2);
+}
+
+.new-tab-button {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--text-4);
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background var(--dur-fast);
+  margin: 0 4px 4px;
+}
+
+.new-tab-button:hover {
+  background: var(--overlay-hover);
+  color: var(--text-2);
+}
+
+.window-controls {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  gap: 1px;
+}
+
+.control-btn {
+  width: 46px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--dur-fast);
+  font-family: Arial, sans-serif;
+}
+
+.control-btn:hover {
+  background: var(--overlay-hover);
+}
+
+.close-btn:hover {
+  background: var(--danger) !important;
+  color: white;
+}
+
+/* Address Bar */
+.address-bar {
+  height: 48px;
+  background: rgba(24, 24, 27, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--dur-fast);
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: var(--overlay-hover);
+}
+
+.nav-btn:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.address-input {
+  flex: 1;
+  height: 34px;
+  background: rgba(60, 64, 67, 0.7);
+  border: 1px solid rgba(95, 99, 104, 0.4);
+  border-radius: 17px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  transition: background var(--dur-fast), border var(--dur-fast);
+  cursor: text;
+}
+
+.address-input:hover {
+  background: rgba(70, 74, 77, 0.8);
+  border-color: rgba(95, 99, 104, 0.6);
+}
+
+.address-input:focus-within {
+  background: var(--surface-2);
+  border-color: rgba(138, 180, 248, 0.8);
+}
+
+.lock-icon {
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.url {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-2);
+  font-family: var(--font);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.star-icon {
+  font-size: 16px;
+  color: var(--text-4);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: color var(--dur-fast);
+}
+
+.star-icon:hover {
+  color: #fbbf24;
+}
+
+.menu-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--dur-fast);
+  font-weight: bold;
+  line-height: 1;
+}
+
+.menu-btn:hover {
+  background: var(--overlay-hover);
+}
+
+/* Window Content */
+.window-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px;
+  background: rgba(24, 24, 27, 0.5);
+  /* Performance optimization for smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+  contain: layout style paint;
+}
+
+/* Windows-style scrollbar */
+.window-content::-webkit-scrollbar {
+  width: 12px;
+}
+
+.window-content::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+}
+
+.window-content::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 6px;
+  border: 2px solid var(--scroll-track);
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
+}
+
+.window-content h1 {
+  margin: 0 0 16px 0;
+  font-size: 32px;
+  color: var(--text);
+  font-weight: 600;
+  font-family: var(--font);
+}
+
+.window-content p {
+  margin: 0 0 20px 0;
+  font-size: 15px;
+  color: var(--text-3);
+  line-height: 1.6;
+  font-family: var(--font);
+}
+
+.cta-button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-family: var(--font);
+  transition: background 0.1s;
+}
+
+.cta-button:hover {
+  background: var(--accent-hover);
+}
+
+.cta-button:active {
+  background: var(--accent-active);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.feature-card {
+  background: var(--scroll-track);
+  border: 1px solid #3f3f46;
+  border-radius: 6px;
+  padding: 20px;
+  transition: all var(--dur-base);
+}
+
+.feature-card:hover {
+  background: #3f3f46;
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px var(--accent-soft);
+}
+
+.feature-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: var(--text);
+  font-weight: 600;
+  font-family: var(--font);
+}
+
+.feature-card p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-3);
+  font-family: var(--font);
+  line-height: 1.5;
+}
+
+/* Window body slot: components fill this entirely. Components that render an
+   .address-bar above their .window-content stack correctly because this is a
+   flex column. min-height:0 lets .window-content actually scroll. */
+.window-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The handles wrapper must not participate in layout — the handles inside are
+   positioned absolutely against .window. */
+.resize-handles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.resize-handles > .resize-handle {
+  pointer-events: auto;
+}
+
+/* Resize Handles */
+.resize-handle {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+/* Edge Handles */
+.resize-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.resize-right {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.resize-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.resize-left {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+/* Corner Handles */
+.resize-corner-tl {
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+}
+
+.resize-corner-tr {
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nesw-resize;
+}
+
+.resize-corner-bl {
+  bottom: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nesw-resize;
+}
+
+.resize-corner-br {
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+}
+
+/* Windows-style Taskbar */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--taskbar-h);
+  /* border-box so --taskbar-h is the true occupied height: the 1px border-top
+     would otherwise make the bar 51px while JS still computed 50. */
+  box-sizing: border-box;
+  background: var(--taskbar-bg);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  z-index: 1000;
+  border-top: 1px solid var(--border-strong);
+  contain: layout style;
+}
+
+/* Start Button */
+.start-button {
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background var(--dur-base);
+  padding: 0;
+}
+
+.start-button:hover {
+  background: var(--overlay-hover);
+}
+
+.start-button svg {
+  opacity: 0.9;
+  width: 20px;
+  height: 20px;
+}
+
+/* Taskbar Left */
+.taskbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  left: 8px;
+}
+
+.search-box {
+  height: 32px;
+  background: var(--overlay-hover);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  min-width: 200px;
+  cursor: text;
+}
+
+.search-icon {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.search-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font);
+}
+
+/* Taskbar Center */
+.taskbar-center {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.taskbar-app {
+  width: 50px;
+  height: 50px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: background var(--dur-base);
+  position: relative;
+}
+
+.taskbar-app span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.taskbar-app span svg {
+  width: 24px;
+  height: 24px;
+}
+
+.taskbar-app svg {
+  width: 24px;
+  height: 24px;
+}
+
+.taskbar-app:hover {
+  background: var(--overlay-hover);
+}
+
+.taskbar-app.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* Taskbar Tooltips */
+.taskbar-app[data-tooltip]::before,
+.start-button[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 55px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(45, 45, 45, 0.95);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: var(--font);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base);
+  z-index: 10000;
+  border: 1px solid var(--overlay-hover);
+}
+
+.taskbar-app:hover[data-tooltip]::before,
+.start-button:hover[data-tooltip]::before {
+  opacity: 1;
+  transition-delay: 0.5s;
+}
+
+/* Taskbar Right */
+.taskbar-right {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 8px;
+}
+
+.system-tray {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+  height: 48px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background var(--dur-base);
+}
+
+.system-tray:hover {
+  background: var(--overlay-hover);
+}
+
+.tray-icon {
+  font-size: 14px;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity var(--dur-base);
+}
+
+.tray-icon:hover {
+  opacity: 1;
+}
+
+/* Tray icon sizing/colour (previously inline style attributes). */
+.tray-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  color: white;
+}
+
+/* The Portfolio Home glyph is stroked, not filled. */
+.tray-icon-stroke {
+  fill: none;
+  stroke: currentColor;
+}
+
+/* Battery: outline stroked, inner level filled. */
+.tray-icon-battery rect[fill='none'] {
+  stroke: currentColor;
+}
+
+.tray-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.datetime {
+  font-size: 12px;
+  color: white;
+  text-align: center;
+  line-height: 1.2;
+  margin-right: 12px;
+  position: relative;
+}
+
+.time {
+  font-size: 12px;
+  color: white;
+  font-family: var(--font);
+  font-weight: 500;
+}
+
+.date {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font);
+}
+/* ============================================================================
+   DESKTOP ICONS
+   ============================================================================ */
+
+.desktop-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 90px);
+  grid-auto-rows: 90px;
+  gap: 10px;
+  align-content: start;
+  pointer-events: none;
+}
+
+.desktop-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+  position: relative;
+  transition: background var(--dur-fast);
+}
+
+.desktop-icon:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.desktop-icon.selected {
+  background: var(--accent-selected);
+  border: 1px solid var(--accent-selected-border);
+}
+
+.desktop-icon-image {
+  font-size: 48px;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.desktop-icon-image svg {
+  width: 48px;
+  height: 48px;
+  shape-rendering: geometricPrecision;
+}
+
+.desktop-icon-label {
+  font-size: 11px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  word-break: break-word;
+  max-width: 70px;
+  line-height: 1.2;
+}
+
+/* ============================================================================
+   START MENU
+   ============================================================================ */
+
+.start-menu {
+  position: fixed;
+  bottom: 60px;
+  left: 8px;
+  width: 600px;
+  height: 650px;
+  background: var(--surface-2);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-radius: 12px;
+  box-shadow: var(--shadow-window);
+  border: 1px solid var(--overlay-hover);
+  display: none;
+  flex-direction: column;
+  z-index: 9999;
+  overflow: hidden;
+  transform-origin: bottom left;
+  animation: startMenuOpen var(--dur-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.start-menu.open {
+  display: flex;
+}
+
+@keyframes startMenuOpen {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.start-menu-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid var(--overlay-hover);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-avatar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.user-name {
+  font-size: 14px;
+  color: white;
+  font-weight: 600;
+  font-family: var(--font);
+}
+
+.start-menu-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.section-title {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-family: var(--font);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.start-menu-app {
+  background: rgba(60, 64, 67, 0.4);
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+  color: white;
+  font-family: var(--font);
+}
+
+.start-menu-app:hover {
+  background: rgba(70, 74, 77, 0.6);
+}
+
+.start-menu-app-icon {
+  font-size: 32px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-menu-app-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.start-menu-app-name {
+  font-size: 11px;
+  color: white;
+  text-align: center;
+  word-break: break-word;
+}
+
+.start-menu-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--overlay-hover);
+  display: flex;
+  align-items: center;
+  /* Shortcuts on the left, power on the right. */
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.shortcuts-button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+}
+
+.shortcuts-button:hover {
+  background: var(--surface-hover);
+}
+
+.power-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(60, 64, 67, 0.4);
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.power-button:hover {
+  background: rgba(220, 38, 38, 0.6);
+}
+
+/* ============================================================================
+   CONTEXT MENU
+   ============================================================================ */
+
+.context-menu {
+  position: fixed;
+  background: var(--surface-2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 8px;
+  box-shadow: var(--shadow-menu);
+  border: 1px solid var(--overlay-hover);
+  padding: 4px;
+  display: none;
+  flex-direction: column;
+  z-index: 10000;
+  min-width: 200px;
+}
+
+.context-menu.open {
+  display: flex;
+}
+
+.context-menu-item {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: white;
+  font-family: var(--font);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background var(--dur-fast);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+}
+
+.context-menu-item:hover {
+  background: var(--accent-menu-hover);
+}
+
+.context-menu-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.context-menu-item.disabled:hover {
+  background: none;
+}
+
+.context-menu-separator {
+  height: 1px;
+  background: var(--overlay-hover);
+  margin: 4px 0;
+}
+
+.context-menu-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+/* ============================================================================
+   DIALOGS & TOASTS
+   Rendered into layers that are siblings of #desktopRoot, since that element
+   sets `contain: strict` and would clip anything overlaying the taskbar.
+   ============================================================================ */
+
+.dialog-layer,
+.toast-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dialog-layer { z-index: 1300; }
+.toast-layer  { z-index: 1400; }
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity var(--dur-fast) ease;
+  pointer-events: auto;
+}
+
+.dialog-backdrop.visible { opacity: 1; }
+
+.dialog {
+  min-width: 320px;
+  max-width: 440px;
+  padding: 20px 24px 16px;
+  background: var(--surface-2);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-window);
+  font-family: var(--font);
+  transform: scale(0.96);
+  transition: transform var(--dur-fast) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dialog-backdrop.visible .dialog { transform: scale(1); }
+
+.dialog-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.dialog-message {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-3);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.dialog-btn {
+  min-width: 88px;
+  padding: 7px 16px;
+  font-family: var(--font);
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-3);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background var(--dur-fast);
+}
+
+.dialog-btn:hover { background: var(--surface-hover); }
+
+.dialog-confirm {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.dialog-confirm:hover { background: var(--accent-hover); }
+
+.dialog-danger .dialog-confirm {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Toasts stack from the bottom, above the taskbar. */
+.toast-layer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-bottom: calc(var(--taskbar-h) + 16px);
+}
+
+.toast {
+  max-width: 460px;
+  padding: 10px 18px;
+  background: var(--surface-2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-menu);
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 13px;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--dur-base) ease, transform var(--dur-base) ease;
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-error { border-left: 3px solid var(--danger); }
+.toast-success { border-left: 3px solid var(--term-green); }
+
+/* ============================================================================
+   TABS
+   ============================================================================ */
+
+/* Panes stay mounted when inactive — unmounting would reload the browser
+   component's iframe and wipe the terminal's scrollback. */
+.tab-pane {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tab-pane.active {
+  display: flex;
+}
+
+.tab.dragging {
+  opacity: 0.75;
+  cursor: grabbing;
+}
+
+/* A single tab has nothing to switch to, so its close button is redundant with
+   the window's own close control. */
+.tab-container.single-tab .tab-close {
+  display: none;
+}
+
+/* ============================================================================
+   APP PICKER (the window's + button)
+   ============================================================================ */
+
+.app-picker-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1250;
+}
+
+.app-picker {
+  position: fixed;
+  min-width: 260px;
+  padding: 12px;
+  background: var(--surface-2);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-menu);
+  font-family: var(--font);
+}
+
+.app-picker-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-4);
+  margin-bottom: 10px;
+}
+
+.app-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.app-picker-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-2);
+  font-family: var(--font);
+  transition: background var(--dur-fast);
+}
+
+.app-picker-item:hover,
+.app-picker-item:focus-visible {
+  background: var(--overlay-hover);
+  outline: none;
+}
+
+.app-picker-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.app-picker-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.app-picker-name {
+  font-size: 11px;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* ============================================================================
+   WINDOW SWITCHER (Alt+`)
+   ============================================================================ */
+
+.switcher {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.97);
+  display: none;
+  gap: 6px;
+  padding: 14px;
+  background: var(--surface-2);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-window);
+  z-index: 1350;
+  pointer-events: none;
+  font-family: var(--font);
+}
+
+.switcher.visible {
+  display: flex;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.switcher-item {
+  width: 116px;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+}
+
+.switcher-item.selected {
+  background: var(--accent-selected);
+  border-color: var(--accent-selected-border);
+}
+
+.switcher-icon {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+
+.switcher-icon svg { width: 34px; height: 34px; }
+
+.switcher-title {
+  font-size: 11px;
+  color: var(--text-2);
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   SHORTCUTS SHEET
+   ============================================================================ */
+
+.shortcuts-sheet {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity var(--dur-fast) ease;
+  z-index: 1320;
+}
+
+.shortcuts-sheet.visible { opacity: 1; }
+
+.shortcuts-panel {
+  width: min(520px, calc(100vw - 48px));
+  max-height: min(70vh, 620px);
+  overflow-y: auto;
+  padding: 20px 24px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-window);
+  font-family: var(--font);
+}
+
+.shortcuts-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.shortcuts-close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-4);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+}
+
+.shortcuts-close:hover { background: var(--overlay-hover); color: var(--text-2); }
+
+.shortcuts-list { margin: 0; }
+
+.shortcuts-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.shortcuts-row:last-child { border-bottom: none; }
+
+.shortcuts-row dt {
+  flex: 0 0 150px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.shortcuts-row dd {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.shortcuts-row kbd {
+  padding: 2px 7px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.kbd-plus { color: var(--text-4); font-size: 10px; }
+
+.shortcuts-note {
+  margin: 16px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-4);
+}
+
+/* ============================================================================
+   SHUTDOWN SCREEN
+   ============================================================================ */
+
+.shutdown-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  z-index: 2000;
+}
+
+.shutdown-screen.visible { opacity: 1; }
+
+.shutdown-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--font);
+}
+
+.shutdown-message {
+  font-size: 15px;
+  color: var(--text-3);
+}
+
+.shutdown-restart {
+  padding: 9px 26px;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+}
+
+.shutdown-restart:hover { background: var(--accent-hover); }
+
+.shutdown-link {
+  font-size: 12px;
+  color: var(--text-4);
+  text-decoration: none;
+}
+
+.shutdown-link:hover { color: var(--text-2); text-decoration: underline; }

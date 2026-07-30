@@ -1,277 +1,439 @@
-
- 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8" />
-      <title>MoMoin</title>
-      <meta name="viewport" content="width=device-width">
-      <meta name="description" content="Full-Stack Engineer, Jakub Adamczyk personal portfolio website, with projects and information. ">
-      <link
-         rel="stylesheet"
-         href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
-         />
-      <link rel="stylesheet" href="public/style.css" />
-      <link rel="icon" type="image/x-icon" href="public/img/terminal .svg" />
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
-   </head>
-   <body>
-      <div class="sidebarNav">
-         <a class="scrollLink" href="#section2"
-            >
-            <div class="sidebarNavItem"><img class= "introduction" src="public/img/briefcase.svg" alt="introduction"></div>
-         </a
-            >
-         <a class="scrollLink" href="#section3"
-            >
-            <div class="sidebarNavItem"><img class= "project3" src="public/img/info.svg" alt="project!"></div>
-         </a
-            >
-         <a class="scrollLink" href="#section4"
-            >
-            <div class="sidebarNavItem"><img class= "contact" src="public/img/layers.svg" alt="contact"></div>
-         </a
-            >
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jakub Adamczyk — DevOps Engineer</title>
+  <meta name="description"
+    content="DevOps Engineer at SITA working with Azure, Kubernetes, Terraform, GitOps, monitoring, and cost optimization across aviation infrastructure. Portfolio styled as the Azure portal, plus an interactive desktop built in vanilla JS." />
+  <link rel="canonical" href="https://momoiin.github.io/" />
+  <meta name="theme-color" content="#0078d4" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jakub Adamczyk — DevOps Engineer" />
+  <meta property="og:description"
+    content="Cloud infrastructure for aviation: Azure, Kubernetes, Terraform, GitOps, observability, and cost tracking. Portfolio styled as the Azure portal." />
+  <meta property="og:url" content="https://momoiin.github.io/" />
+
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2350e6ff'/%3E%3Cstop offset='1' stop-color='%230078d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M18 4 L30 4 L17 44 L5 44 Z'/%3E%3Cpath fill='%230078d4' d='M31 12 L43 44 L19 44 Z'/%3E%3C/svg%3E" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <!-- ===== Portal top bar ===== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="menuToggle" aria-label="Show portal menu" aria-expanded="false">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+      <a class="topbar-brand" href="#overview">Microsoft Azure <span class="brand-note">(portfolio)</span></a>
+    </div>
+    <div class="topbar-search">
+      <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true">
+        <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <input type="search" id="portalSearch" placeholder="Search experience, projects, and skills (G+/)" aria-label="Search this page" />
+    </div>
+    <div class="topbar-right">
+      <a class="topbar-icon" href="pages/desktop/index.html" target="_top" data-tip="Cloud Shell — launch desktop experience" aria-label="Launch desktop experience">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <rect x="1" y="3" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" />
+          <path d="M5 8l3 2.5L5 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M10 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </a>
+      <span class="topbar-icon" data-tip="No new notifications" tabindex="0">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <path d="M10 2.5a5 5 0 0 0-5 5V11l-1.6 2.6c-.3.5 0 1.1.6 1.1h12c.6 0 .9-.6.6-1.1L15 11V7.5a5 5 0 0 0-5-5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+          <path d="M8 17a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span class="topbar-icon" data-tip="Settings — this portal ships as-is" tabindex="0">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6" />
+          <path d="M10 2.8v2.1M10 15.1v2.1M2.8 10h2.1M15.1 10h2.1M4.9 4.9l1.5 1.5M13.6 13.6l1.5 1.5M15.1 4.9l-1.5 1.5M6.4 13.6l-1.5 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </span>
+      <a class="topbar-icon" href="https://github.com/MoMoiin" target="_blank" rel="noopener noreferrer" data-tip="Help? See my GitHub" aria-label="GitHub">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+          <path d="M8 7.8c.2-1 1-1.6 2-1.6 1.1 0 2 .8 2 1.8 0 1.5-2 1.6-2 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          <circle cx="10" cy="13.8" r="0.9" fill="currentColor" />
+        </svg>
+      </a>
+      <a class="account" href="mailto:jakub.adamczyk.software@gmail.com" data-tip="jakub.adamczyk.software@gmail.com" aria-label="Email Jakub">
+        <span class="account-info">
+          <span class="account-mail">jakub.adamczyk.software@gmail.com</span>
+          <span class="account-dir">JAKUB ADAMCZYK — PORTFOLIO</span>
+        </span>
+        <span class="avatar">JA</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ===== Global portal menu (hamburger flyout) ===== -->
+  <nav class="global-menu" id="globalMenu" aria-label="Portal menu">
+    <ul>
+      <li><a href="#contact" class="global-link">
+          <span class="global-icon create-icon" aria-hidden="true">＋</span>Create a resource</a></li>
+      <li><a href="#overview" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M3 10.5 10 4l7 6.5M5 9.5V17h4v-4h2v4h4V9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Home</a></li>
+      <li><a href="#overview" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="2.5" y="2.5" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /><rect x="11" y="2.5" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /><rect x="2.5" y="11" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /><rect x="11" y="11" width="6.5" height="6.5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg></span>Dashboard</a></li>
+      <li><a href="#projects" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M4 5h12M4 10h12M4 15h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg></span>All services</a></li>
+      <li><a href="#projects" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 2 3 6v8l7 4 7-4V6l-7-4Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" /><path d="M3 6l7 4 7-4M10 10v8" fill="none" stroke="currentColor" stroke-width="1.5" /></svg></span>All resources</a></li>
+      <li><a href="#experience" class="global-link">
+          <span class="global-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="1" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M3 8h14M8 8v9" stroke="currentColor" stroke-width="1.5" /></svg></span>Resource groups</a></li>
+    </ul>
+    <p class="global-caption">Portfolio</p>
+    <ul>
+      <li><a href="#overview" class="global-link">Overview</a></li>
+      <li><a href="#experience" class="global-link">Experience</a></li>
+      <li><a href="#projects" class="global-link">Projects</a></li>
+      <li><a href="#skills" class="global-link">Skills</a></li>
+      <li><a href="#education" class="global-link">Education</a></li>
+      <li><a href="#contact" class="global-link">Contact</a></li>
+      <li><a href="pages/desktop/index.html" target="_top" class="global-link">Interactive desktop</a></li>
+    </ul>
+  </nav>
+  <div class="global-overlay" id="globalOverlay"></div>
+
+  <div class="portal-body">
+
+    <!-- ===== Resource menu (sidebar) ===== -->
+    <nav class="sidebar" id="sidebar" aria-label="Resource menu">
+      <div class="sidebar-search">
+        <svg viewBox="0 0 20 20" width="12" height="12" aria-hidden="true">
+          <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2" />
+          <path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <input type="search" id="menuFilter" placeholder="Search (Ctrl+/)" aria-label="Filter menu items" />
       </div>
-      <section class="top">
-         <a class="navJump" style="height: 100px"></a>
+      <ul class="resource-menu">
+        <li><a href="#overview" class="active">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10.5 10 4l7 6.5M5 9.5V17h4v-4h2v4h4V9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Overview</a></li>
+        <li><a href="#experience">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.2" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M10 5.8V10l3 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Activity log (Experience)</a></li>
+      </ul>
+      <p class="menu-group">Settings</p>
+      <ul class="resource-menu">
+        <li><a href="#projects">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="2.5" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /><rect x="11.5" y="2.5" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /><rect x="2.5" y="11.5" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /><rect x="11.5" y="11.5" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+            Deployments (Projects)</a></li>
+        <li><a href="#skills">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h12M4 10h12M4 14h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /><circle cx="8" cy="6" r="1.7" fill="currentColor" /><circle cx="13" cy="10" r="1.7" fill="currentColor" /><circle cx="6.5" cy="14" r="1.7" fill="currentColor" /></svg>
+            Configuration (Skills)</a></li>
+        <li><a href="#education">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4 2 8l8 4 8-4-8-4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /><path d="M5.5 10v4c0 1.2 2 2.4 4.5 2.4s4.5-1.2 4.5-2.4v-4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+            Properties (Education)</a></li>
+      </ul>
+      <p class="menu-group">Support + troubleshooting</p>
+      <ul class="resource-menu">
+        <li><a href="#contact">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8a7 7 0 0 1 14 0v5a2 2 0 0 1-2 2h-2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /><rect x="2" y="9" width="4" height="6" rx="1.4" fill="currentColor" /><rect x="14" y="9" width="4" height="6" rx="1.4" fill="currentColor" /></svg>
+            New Support Request (Contact)</a></li>
+      </ul>
+      <p class="menu-group">Experiences</p>
+      <ul class="resource-menu">
+        <li><a href="pages/desktop/index.html" target="_top">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="3.5" width="16" height="10.5" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M7.5 17h5M10 14.5V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            Interactive desktop</a></li>
+        <li><a href="https://github.com/MoMoiin/MoMoiin.github.io" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5 3 10l4 5M13 5l4 5-4 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Source code</a></li>
+      </ul>
+    </nav>
+
+    <!-- ===== Blade content ===== -->
+    <main class="blade">
+
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="#overview">Home</a>
+        <span class="crumb-sep">›</span>
+        <span aria-current="page">jakub-adamczyk</span>
+      </nav>
+
+      <!-- Resource header -->
+      <section id="overview" class="resource-header">
+        <div class="resource-title">
+          <span class="resource-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48">
+              <defs>
+                <linearGradient id="azA" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#50e6ff" />
+                  <stop offset="1" stop-color="#0078d4" />
+                </linearGradient>
+              </defs>
+              <path fill="url(#azA)" d="M18 4 L30 4 L17 44 L5 44 Z" />
+              <path fill="#0078d4" d="M31 12 L43 44 L19 44 Z" />
+            </svg>
+          </span>
+          <div>
+            <h1>jakub-adamczyk <span class="resource-kind">| DevOps Engineer</span></h1>
+            <p class="resource-type">Engineer · Aviation cloud infrastructure</p>
+          </div>
+        </div>
+
+        <!-- Command toolbar -->
+        <div class="toolbar" role="toolbar" aria-label="Commands">
+          <a class="toolbar-btn" href="pages/desktop/index.html" target="_top">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="3.5" width="16" height="10.5" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M7.5 17h5M10 14.5V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            Launch desktop
+          </a>
+          <a class="toolbar-btn" href="mailto:jakub.adamczyk.software@gmail.com">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="m3 6 7 5 7-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>
+            Connect
+          </a>
+          <a class="toolbar-btn" href="https://github.com/MoMoiin" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5 3 10l4 5M13 5l4 5-4 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            GitHub
+          </a>
+          <span class="toolbar-sep" aria-hidden="true"></span>
+          <button class="toolbar-btn" id="refreshBtn" type="button">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 8A7 7 0 1 0 17 11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /><path d="M17 4v4h-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            Refresh
+          </button>
+        </div>
+
+        <!-- Essentials -->
+        <div class="essentials">
+          <div class="essentials-bar">
+            <button class="essentials-toggle" id="essentialsToggle" type="button" aria-expanded="true">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              Essentials
+            </button>
+            <button class="json-view" id="jsonView" type="button">JSON View</button>
+          </div>
+          <div class="essentials-grid" id="essentialsGrid">
+            <div class="essentials-col">
+              <div class="kv"><span class="k">Resource group</span><a class="v link" href="#experience">Portfolio-platform-rg</a></div>
+              <div class="kv"><span class="k">Status</span><span class="v"><span class="status-dot" aria-hidden="true"></span>Working</span></div>
+              <div class="kv"><span class="k">Current employer</span><a class="v link" href="#experience">SITA</a></div>
+              <div class="kv"><span class="k">Role</span><span class="v">Software Engineer (DevOps)</span></div>
+            </div>
+            <div class="essentials-col">
+              <div class="kv"><span class="k">Experience</span><span class="v">4 years DevOps / Infrastructure</span></div>
+              <div class="kv"><span class="k">Education</span><span class="v">M.Sc. Software Architecture &amp; Design (part-time)</span></div>
+              <div class="kv"><span class="k">Right to work</span><span class="v">Full right to work in UK and EU</span></div>
+              <div class="kv"><span class="k">GitHub</span><a class="v link" href="https://github.com/MoMoiin" target="_blank" rel="noopener noreferrer">github.com/MoMoiin</a></div>
+              <div class="kv"><span class="k">Email</span><a class="v link" href="mailto:jakub.adamczyk.software@gmail.com">jakub.adamczyk.software@gmail.com</a></div>
+            </div>
+            <div class="kv kv-tags">
+              <span class="k">Tags <a class="link" href="#skills">(edit)</a></span>
+              <span class="v tags">
+                <span>azure</span><span>aws</span><span>kubernetes</span><span>terraform</span><span>gitops</span><span>observability</span><span>python</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blade tabs -->
+        <div class="blade-tabs" role="navigation" aria-label="Overview sections">
+          <a href="#overview" class="tab-link active">Get started</a>
+          <a href="#experience" class="tab-link">Activity log</a>
+          <a href="#projects" class="tab-link">Deployments</a>
+          <a href="#skills" class="tab-link">Configuration</a>
+          <a href="#contact" class="tab-link">Support</a>
+        </div>
+
+        <!-- About -->
+        <div class="about-block">
+          <h2 class="block-title">About this engineer</h2>
+          <p>
+            DevOps Engineer with 4 years in Azure and on-prem infrastructure. At SITA I build Terraform-managed AKS
+            platforms with GitOps, monitoring, and cost tracking for aviation systems used by 1,000+ airports and
+            400+ airlines across 200+ countries. Before that, I owned on-prem servers and internal tooling at Bruss.
+            Full right to work in the UK and EU.
+          </p>
+        </div>
       </section>
-      <section class="section">
-         <a
-            class="navJump"
-            style="height: 100px"
-            name="section1"
-            id="section1"
-            ></a>
-         <a class="navJump" style="height: 100px"></a>
-         <div class="shadow-title parallax-top-shadow">MoMoin</div>
-         <div
-            class="section-parallax parallax-00"
-            style="background-image: url('public/img/Animated Shape (4).svg')"
-            ></div>
-         <div
-            class="section-parallax parallax-01"
-            style="background-image: url('public/img/Animated Shape (5).svg')"
-            ></div>
-         <div class="section full-height">
-            <div class="section-title-wrap">
-               <div class="container">
-                  <div class="row">
-                     <div class="col-12 text-center parallax-fade-top">
-                        <p>Software Developer</p>
-                        <h1>MoMoin</h1>
-                        <p2>Jakub Adamczyk</p2>
-                        <svg class="arrows">
-                           <path class="a1" d="M0 0 L30 32 L60 0"></path>
-                           <path class="a2" d="M0 20 L30 52 L60 20"></path>
-                           <path class="a3" d="M0 40 L30 72 L60 40"></path>
-                        </svg>
-                     </div>
-                  </div>
-               </div>
+
+      <!-- Experience -->
+      <section id="experience" class="section">
+        <h2 class="section-title">Activity log — Experience</h2>
+
+        <article class="job">
+          <header class="job-head">
+            <div>
+              <h3 class="job-role">Software Engineer (DevOps) · <span class="job-org">SITA</span></h3>
+              <p class="job-period">2025 – Present · Letterkenny, Ireland</p>
             </div>
-         </div>
+            <span class="pill pill-green">Active</span>
+          </header>
+          <p class="job-note">Messaging DevOps team. SITA provides IT infrastructure and software to 1,000+ airports
+            and 400+ airlines across 200+ countries.</p>
+          <ul class="job-list">
+            <li>Built the Azure platform for Messaging Integration from an empty subscription up to a working AKS
+              cluster, with peering to the landing zone, ArgoCD, Gateway API ingress, workload identity, Cosmos DB,
+              and Service Bus.</li>
+            <li>Set up monitoring, logging, and cost tracking using Prometheus, Dynatrace, and Kubecost, plus
+              alerting that raises Azure DevOps items automatically so production alerts do not get lost.</li>
+            <li>Moved Terraform state off the shared storage account, added backups and approvals on apply,
+              prevent_destroy on production, and private endpoints on Event Hubs, ACR, and Databricks.</li>
+            <li>Cut non-production Azure spend by scaling node pools to zero out of hours and clearing out unused VMs
+              and pools.</li>
+            <li>Ran Kubernetes version upgrades across production clusters on both AKS and EKS.</li>
+          </ul>
+        </article>
+
+        <article class="job">
+          <header class="job-head">
+            <div>
+              <h3 class="job-role">Software Engineer · <span class="job-org">Bruss</span></h3>
+              <p class="job-period">2022 – 2025 · Sligo, Ireland</p>
+            </div>
+            <span class="pill">Completed</span>
+          </header>
+          <p class="job-note">IT Team.</p>
+          <ul class="job-list">
+            <li>Built the CI/CD setup with GitHub Actions, moving the team off editing production directly.</li>
+            <li>Replaced a paper-based safety log process with a web app and SAP integration, used daily on the shop
+              floor.</li>
+            <li>Sole software engineer for the site, owning the LAMP stack, Arduino-based machine sensors, and the
+              on-site vSphere server.</li>
+          </ul>
+        </article>
       </section>
-      <section class="section" >
-         <a
-            class="navJump"
-            style="height: 100px"
-            name="section2"
-            id="section2"
-            ></a>
-         <div class="section padding_bottom over-hide background-dark z-bigger-2">
-            <div class="project-link-wrap">
-               <h1>Introduction</h1>
-            </div>
-            <div class="container">
-               <div class="intro-link-wrap"> 
-                <p>Hello! I'm an enthusiastic mechatronic engineer graduate currently persuing masters in software architecture who likes resolving problems through programming.
-                     When it comes to creating products, I'm flexible across the board. I primarily work with devops work and server stuff.</br></br>
-                     I am proficient in PHP, Python, Java, and SQL. Front-end skills include javascript, CSS/Scss, HTML, Node.js, and React. As a hobby, I also experiment in other computer languages.
-                     </br></br>
-                     Always looking for methods to grow! I've always been a multipotentialite, with a never-ending list of tasks and interests!
-                     </br></br>
-                     Sita presently employs me as a Software Engineer.
-                  </p>
-                  
-               </div>
-            </div>
-         </div>
+
+      <!-- Projects -->
+      <section id="projects" class="section">
+        <h2 class="section-title">Deployments — Projects &amp; case studies</h2>
+        <div class="projects-grid">
+
+          <article class="project-card">
+            <header class="project-head">
+              <span class="project-glyph" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><rect x="3" y="5" width="26" height="17" rx="2" fill="#0078d4" /><rect x="6" y="8" width="20" height="11" fill="#50e6ff" /><rect x="11" y="25" width="10" height="2.5" rx="1.2" fill="#0078d4" /></svg>
+              </span>
+              <span class="pill pill-blue">This site</span>
+            </header>
+            <h3 class="project-title">Interactive Desktop Experience</h3>
+            <p class="project-desc">A Windows-style desktop environment built in vanilla JS — draggable/resizable
+              windows, a working terminal with a command system, email client and file explorer. No framework,
+              deployed by GitHub Actions.</p>
+            <div class="tags"><span>vanilla-js</span><span>github-actions</span><span>anime.js</span></div>
+            <a class="card-link" href="pages/desktop/index.html" target="_top">Launch it →</a>
+          </article>
+
+
+          <article class="project-card">
+            <header class="project-head">
+              <span class="project-glyph" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M16 4 4 14h3v12h18V14h3L16 4Z" fill="#0078d4" /><rect x="12" y="18" width="8" height="8" fill="#50e6ff" /><path d="M13.5 21.5h5M13.5 23.5h5" stroke="#0078d4" stroke-width="1.2" /></svg>
+              </span>
+              <span class="pill">Personal</span>
+            </header>
+            <h3 class="project-title">Home Infrastructure Platform</h3>
+            <p class="project-desc">Proxmox cluster running Docker and LXC workloads, with Terraform-provisioned VMs,
+              containerized services behind a reverse proxy, and automated backups. Used as a testbed for the same
+              platform patterns I use at SITA.</p>
+            <div class="tags"><span>proxmox</span><span>terraform</span><span>docker-lxc</span><span>reverse-proxy</span></div>
+          </article>
+        </div>
       </section>
-      <section class="section">
-         <a
-            class="navJump"
-            style="height: 100px"
-            name="section3"
-            id="section3"
-            ></a>
-         <div class="section over-hide background-dark z-bigger-2">
-            <div class="project-link-wrap">
-               <h1>Skills </h1>
-            </div>
-            <div class="container">
-               <div class="programs-link-wrap">
-                  <div class="container">
-                     <div class="parent">
-                        <div class="div2">
-                           <i class="devicon-php-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           PHP
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-python-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Python</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-javascript-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Javascript</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-java-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Java</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-mysql-plain-wordmark" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >MySQL</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-css3-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >CSS/SCSS</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-html5-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >HTML</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-react-original" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >React.js</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-nodejs-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Node.js</p>
-                        </div>
-                        <div class="div2">
-                           <i class="devicon-apache-plain" style="font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Apache2</p>
-                        </div>
-                        <div class="div2" >
-                           <i class="devicon-git-plain" style=" font-size: 60px;"></i>
-                           </br>
-                           <div class="BackTop-link-wrap"></div>
-                           <p >Git</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         </div>
+
+      <!-- Skills -->
+      <section id="skills" class="section">
+        <h2 class="section-title">Configuration — Skills</h2>
+        <dl class="skills-table">
+          <div class="skills-row">
+            <dt>Languages</dt>
+            <dd><span>Python</span><span>Bash</span><span>HCL</span><span>YAML</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>Cloud</dt>
+            <dd><span>Azure (AKS, Landing Zones, Event Hubs, Service Bus, Cosmos DB, ACR)</span><span>AWS (EKS, EC2, S3, IAM)</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>Kubernetes</dt>
+            <dd><span>AKS</span><span>EKS</span><span>ArgoCD</span><span>Helm</span><span>Gateway API</span><span>Cert Manager</span><span>External DNS</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>IaC &amp; Automation</dt>
+            <dd><span>Terraform (remote state, module design)</span><span>Ansible</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>CI/CD</dt>
+            <dd><span>Azure DevOps YAML</span><span>Self-hosted agents</span><span>GitHub Actions</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>Observability &amp; Cost</dt>
+            <dd><span>Prometheus</span><span>Grafana</span><span>Dynatrace</span><span>Kubecost</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>Data &amp; Messaging</dt>
+            <dd><span>PostgreSQL</span><span>MongoDB</span><span>Elasticsearch</span><span>Kafka</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>Security</dt>
+            <dd><span>Entra ID</span><span>Workload identity</span><span>Private networking</span><span>Defender for Endpoint</span><span>CrowdStrike Falcon</span></dd>
+          </div>
+          <div class="skills-row">
+            <dt>Other</dt>
+            <dd><span>Linux</span><span>Docker</span><span>vSphere</span><span>Proxmox</span><span>Git</span></dd>
+          </div>
+        </dl>
       </section>
-      <section class="section" >
-         <a
-            class="navJump"
-            style="height: 100px"
-            name="section4"
-            id="section4"
-            ></a>
-         <div class="section  over-hide background-dark z-bigger-2">
-            <div class="projects-link-wrap">
-               <h1>Projects</h1>
+
+      <!-- Education -->
+      <section id="education" class="section">
+        <h2 class="section-title">Properties — Education</h2>
+        <ul class="education-list">
+          <li>
+            <div>
+              <p class="edu-degree">M.Sc. Software Architecture &amp; Design <span class="pill pill-blue">part-time</span></p>
+              <p class="edu-school">Munster Technological University</p>
             </div>
-            <div class="container">
-               <div class="parent">
-                  <div >
-                     <svg xmlns="http://www.w3.org/2000/svg"  width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" ></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                     </svg>
-                     </br>
-                     <div class="BackTop-link-wrap"></div>
-                     <a href="https://github.com/MoMoiin/MoMoiin.github.io" target="_blank">Personal Website</a>
-                     </br>
-                     <p>My Personal Github website with info.</p>
-                  </div>
-                  <div >
-                     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                        <rect x="6" y="14" width="12" height="8"></rect>
-                     </svg>
-                     </br>
-                     <div class="BackTop-link-wrap"></div>
-                     <a href="https://github.com/MoMoiin/Ender-3-SKR-mini-E3-v3-Marlin-Config-2.1.1" target="_blank">3D Printer config</a>
-                     </br>
-                     <p>A version of Marlin config for my personal 3D printer. </p>
-                  </div>
-                  <div >
-                     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path>
-                        <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
-                     </svg>
-                     </br><a href="https://github.com/MoMoiin/Java-practice-programs" target="_blank">Java applications</a>
-                     </br>
-                     <p>Small Projects using java.</p>
-                  </div>
-               </div>
+            <span class="edu-dates">2025 – 2027</span>
+          </li>
+          <li>
+            <div>
+              <p class="edu-degree">B.E. Mechatronic Systems</p>
+              <p class="edu-school">Atlantic Technological University</p>
             </div>
-         </div>
-         </div>
+            <span class="edu-dates">2021 – 2024 (alongside full-time work)</span>
+          </li>
+        </ul>
       </section>
-      <!--
-         <section class="section" style="background: #c475e8">
-           <a
-             class="navJump"
-             style="height: 100px"
-             name="section4"
-             id="section4"
-           ></a>
-         
-           <h1>Section 4</h1>
-         </section>
-         
-         <section class="section" style="background: #8abbff">
-           <a
-             class="navJump"
-             style="height: 100px"
-             name="section5"
-             id="section5"
-           ></a>
-         
-           <h1>Section 5</h1>
-         </section>
-         <-- Link to page
-         ================================================== -->
-      <a
-         href="https://github.com/MoMoiin"
-         class="link-to-portfolio hover-target"
-         target="”_blank”"
-         ></a>
-      <a
-         href="https://www.linkedin.com/in/jakub-adamczyk-ab4b42231/"
-         class="link-to-Linkedin hover-target"
-         target="”_blank”"
-         ></a>
-      <!-- partial -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-      <script src="public/script.js"></script>
-   </body>
+
+      <!-- Contact -->
+      <section id="contact" class="section">
+        <h2 class="section-title">Support + troubleshooting — Get in touch</h2>
+        <p class="contact-lead">Open to discussing DevOps and platform engineering work across cloud and infrastructure.</p>
+        <div class="contact-actions">
+          <a class="btn-azure" href="mailto:jakub.adamczyk.software@gmail.com">＋ New support request (email me)</a>
+          <a class="btn-azure-ghost" href="https://www.linkedin.com/in/jakub-software/" target="_blank"
+            rel="noopener noreferrer">LinkedIn</a>
+          <a class="btn-azure-ghost" href="https://github.com/MoMoiin" target="_blank"
+            rel="noopener noreferrer">GitHub</a>
+        </div>
+      </section>
+
+      <footer class="blade-footer">
+        <p>&copy; <span id="year">2026</span> Jakub Adamczyk · Unofficial Azure-portal-inspired design, not affiliated
+          with Microsoft · Hand-built, no framework, deployed by
+          <a target="_blank" rel="noopener noreferrer"
+            href="https://github.com/MoMoiin/MoMoiin.github.io/blob/main/.github/workflows/deploy.yml">GitHub Actions</a> ·
+          <a target="_blank" rel="noopener noreferrer" href="https://github.com/MoMoiin/MoMoiin.github.io">Source</a>
+        </p>
+      </footer>
+
+    </main>
+  </div>
+
+  <script type="module" src="js/index.js"></script>
+</body>
+
 </html>

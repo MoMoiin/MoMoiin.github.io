@@ -1,0 +1,193 @@
+/* File Explorer Component Styles */
+
+.explorer-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.explorer-sidebar {
+  width: 200px;
+  background: rgba(32, 33, 36, 0.6);
+  border-right: 1px solid var(--overlay-hover);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.sidebar-section {
+  padding: 8px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 13px;
+  color: var(--text-2);
+  font-family: var(--font);
+}
+
+.sidebar-item:hover {
+  background: var(--overlay-hover);
+}
+
+.sidebar-item.active {
+  background: var(--accent-avatar);
+  border: 1px solid var(--accent-line);
+}
+
+.sidebar-icon {
+  font-size: 16px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.explorer-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(24, 24, 27, 0.4);
+}
+
+.explorer-toolbar {
+  height: 40px;
+  background: rgba(32, 33, 36, 0.6);
+  border-bottom: 1px solid var(--overlay-hover);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+}
+
+.toolbar-btn {
+  height: 28px;
+  padding: 0 12px;
+  background: rgba(60, 64, 67, 0.6);
+  border: none;
+  border-radius: 4px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.toolbar-btn:hover {
+  background: rgba(70, 74, 77, 0.8);
+}
+
+.explorer-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-auto-rows: 100px;
+  gap: 16px;
+  align-content: start;
+}
+
+.explorer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  user-select: none;
+}
+
+.explorer-item:hover {
+  background: var(--overlay-hover);
+}
+
+.explorer-item-icon {
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.explorer-item-name {
+  font-size: 11px;
+  color: var(--text-2);
+  text-align: center;
+  word-break: break-word;
+  max-width: 80px;
+  line-height: 1.3;
+  font-family: var(--font);
+}
+
+/* Text file viewer (styles previously assigned via inline cssText). */
+.explorer-text-viewer {
+  grid-column: 1 / -1;
+  width: 100%;
+  padding: 8px 12px;
+}
+
+.explorer-text-back {
+  margin-bottom: 12px;
+  padding: 5px 14px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface-3);
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 13px;
+  transition: background var(--dur-fast);
+}
+
+.explorer-text-back:hover {
+  background: var(--surface-hover);
+}
+
+.explorer-text-title {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.explorer-text-body {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--text-2);
+}
+
+/* Scrollbar styling for explorer */
+.explorer-sidebar::-webkit-scrollbar,
+.explorer-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.explorer-sidebar::-webkit-scrollbar-track,
+.explorer-items::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.explorer-sidebar::-webkit-scrollbar-thumb,
+.explorer-items::-webkit-scrollbar-thumb {
+  background: var(--accent-line);
+  border-radius: 4px;
+}
+
+.explorer-sidebar::-webkit-scrollbar-thumb:hover,
+.explorer-items::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-line);
+}

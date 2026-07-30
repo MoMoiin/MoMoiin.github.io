@@ -1,0 +1,1125 @@
+/* ============================================================================
+   JAKUB ADAMCZYK — PORTFOLIO
+   Azure-portal-inspired UI (unofficial). Faithful portal chrome: blue top bar
+   with white global search, hamburger flyout menu, resource menu with filter
+   and group headers, breadcrumb, command toolbar, Essentials + JSON View,
+   blade tabs — all flat white, small dense Segoe UI type.
+   ============================================================================ */
+
+:root {
+  --azure: #0078d4;
+  --azure-dark: #106ebe;
+  --azure-darker: #005a9e;
+  --azure-light: #eff6fc;
+  --azure-light-border: #c7e0f4;
+  --surface: #ffffff;
+  --sidebar-bg: #ffffff;
+  --border: #e1dfdd;
+  --border-light: #edebe9;
+  --border-strong: #c8c6c4;
+  --text: #323130;
+  --text-2: #605e5c;
+  --text-3: #8a8886;
+  --green: #107c10;
+  --green-light: #dff6dd;
+  --status-green: #57a300;
+  --shadow-flyout: 0 6.4px 14.4px rgba(0, 0, 0, 0.13), 0 1.2px 3.6px rgba(0, 0, 0, 0.10);
+  --shadow-card: 0 1.6px 3.6px rgba(0, 0, 0, 0.06), 0 0.3px 0.9px rgba(0, 0, 0, 0.04);
+  --font: "Segoe UI", "Segoe UI Variable Text", -apple-system, BlinkMacSystemFont, Roboto, Ubuntu, sans-serif;
+  --mono: "Cascadia Code", "Consolas", Menlo, monospace;
+  --topbar-h: 40px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  line-height: 1.5;
+  padding-top: var(--topbar-h);
+}
+
+a {
+  color: var(--azure);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--azure-darker);
+  outline-offset: 1px;
+}
+
+/* ============================================================================
+   TOP BAR
+   ============================================================================ */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: var(--topbar-h);
+  background: var(--azure);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px 0 6px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  color: #fff;
+  width: 34px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.topbar-brand {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  padding: 0 6px;
+}
+
+.brand-note {
+  font-weight: 400;
+  font-size: 11.5px;
+  opacity: 0.85;
+}
+
+/* Global search: white pill like the real portal */
+.topbar-search {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-radius: 2px;
+  padding: 0 10px;
+  height: 26px;
+  color: var(--text-2);
+}
+
+.topbar-search input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 12.5px;
+  height: 100%;
+}
+
+.topbar-search input::placeholder {
+  color: var(--text-2);
+}
+
+.topbar-search input:focus {
+  outline: none;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-left: auto;
+}
+
+.topbar-icon {
+  position: relative;
+  width: 36px;
+  height: var(--topbar-h);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.topbar-icon:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.account {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: var(--topbar-h);
+  padding: 0 8px 0 12px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.account:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.account-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.3;
+}
+
+.account-mail {
+  font-size: 11px;
+}
+
+.account-dir {
+  font-size: 9.5px;
+  opacity: 0.85;
+  letter-spacing: 0.2px;
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #8764b8;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+/* Tooltips (portal-style flyout) */
+[data-tip]:hover::after,
+[data-tip]:focus-visible::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: #fff;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-flyout);
+  border-radius: 2px;
+  z-index: 300;
+}
+
+/* ============================================================================
+   GLOBAL MENU (hamburger flyout)
+   ============================================================================ */
+
+.global-menu {
+  position: fixed;
+  top: var(--topbar-h);
+  left: 0;
+  bottom: 0;
+  z-index: 190;
+  width: 300px;
+  background: var(--surface);
+  box-shadow: var(--shadow-flyout);
+  padding: 10px 0;
+  overflow-y: auto;
+  transform: translateX(-105%);
+  transition: transform 160ms ease;
+}
+
+body.menu-open .global-menu {
+  transform: translateX(0);
+}
+
+.global-overlay {
+  display: none;
+}
+
+body.menu-open .global-overlay {
+  display: block;
+  position: fixed;
+  inset: var(--topbar-h) 0 0 0;
+  background: rgba(0, 0, 0, 0.28);
+  z-index: 180;
+}
+
+.global-menu ul {
+  list-style: none;
+}
+
+.global-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.global-link:hover {
+  background: #f3f2f1;
+}
+
+.global-icon {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.global-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.create-icon {
+  color: var(--azure);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.global-caption {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  padding: 12px 18px 6px;
+  border-top: 1px solid var(--border-light);
+  margin-top: 8px;
+}
+
+/* ============================================================================
+   LAYOUT: SIDEBAR + BLADE
+   ============================================================================ */
+
+.portal-body {
+  display: flex;
+  min-height: calc(100vh - var(--topbar-h));
+}
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  padding: 10px 0 24px;
+  position: sticky;
+  top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto;
+}
+
+/* Resource menu filter, like the portal's "Search (Ctrl+/)" */
+.sidebar-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 10px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  padding: 0 8px;
+  height: 26px;
+  color: var(--text-3);
+}
+
+.sidebar-search:focus-within {
+  border-color: var(--azure);
+}
+
+.sidebar-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 12px;
+  color: var(--text);
+  height: 100%;
+}
+
+.sidebar-search input:focus {
+  outline: none;
+}
+
+.resource-menu {
+  list-style: none;
+}
+
+.resource-menu a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 14px 6px 11px;
+  border-left: 3px solid transparent;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.resource-menu a svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--text-2);
+}
+
+.resource-menu a:hover {
+  background: #f3f2f1;
+}
+
+.resource-menu a.active {
+  background: var(--azure-light);
+  border-left-color: var(--azure);
+  font-weight: 600;
+}
+
+.resource-menu a.active svg {
+  color: var(--azure);
+}
+
+.menu-group {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  padding: 12px 14px 5px;
+  margin-top: 4px;
+  border-top: 1px solid var(--border-light);
+}
+
+/* Blade (main content) — flat white like a real portal blade */
+.blade {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 24px 36px;
+  max-width: 1240px;
+}
+
+/* ============================================================================
+   BREADCRUMB + RESOURCE HEADER
+   ============================================================================ */
+
+.breadcrumb {
+  font-size: 12.5px;
+  color: var(--text-2);
+  margin-bottom: 10px;
+}
+
+.breadcrumb a {
+  color: var(--azure);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.crumb-sep {
+  margin: 0 6px;
+  color: var(--text-3);
+}
+
+.resource-header {
+  scroll-margin-top: calc(var(--topbar-h) + 8px);
+}
+
+.resource-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.resource-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.resource-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.resource-title h1 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  line-height: 1.25;
+}
+
+.resource-kind {
+  font-weight: 400;
+  color: var(--text-2);
+  font-size: 15px;
+}
+
+.resource-type {
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+/* Command toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  font-family: var(--font);
+  font-size: 12.5px;
+  color: var(--text);
+  background: none;
+  border: none;
+  border-radius: 2px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.toolbar-btn svg {
+  width: 14px;
+  height: 14px;
+  color: var(--azure);
+}
+
+.toolbar-btn:hover {
+  background: #f3f2f1;
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border-strong);
+  margin: 0 5px;
+}
+
+/* ============================================================================
+   ESSENTIALS
+   ============================================================================ */
+
+.essentials {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.essentials-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.essentials-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  padding: 3px 4px 8px 0;
+}
+
+.essentials-toggle svg {
+  width: 13px;
+  height: 13px;
+  color: var(--text-2);
+  transition: transform 160ms ease;
+}
+
+.essentials.collapsed .essentials-toggle svg {
+  transform: rotate(-90deg);
+}
+
+.essentials.collapsed .essentials-grid {
+  display: none;
+}
+
+.json-view {
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 12.5px;
+  color: var(--azure);
+  cursor: pointer;
+  padding: 3px 4px 8px;
+}
+
+.json-view:hover {
+  text-decoration: underline;
+}
+
+.essentials-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 40px;
+}
+
+.kv {
+  display: flex;
+  gap: 8px;
+  font-size: 12.5px;
+  padding: 2px 0;
+}
+
+.kv .k {
+  width: 130px;
+  flex-shrink: 0;
+  color: var(--text-2);
+}
+
+.kv .v {
+  color: var(--text);
+  min-width: 0;
+}
+
+.kv a.v,
+.kv .link {
+  color: var(--azure);
+  text-decoration: none;
+}
+
+.kv a.v:hover,
+.kv .link:hover {
+  text-decoration: underline;
+}
+
+.kv-tags {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-green);
+  margin-right: 6px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tags span {
+  font-size: 11.5px;
+  color: var(--azure-darker);
+  background: var(--azure-light);
+  border: 1px solid var(--azure-light-border);
+  border-radius: 2px;
+  padding: 0 8px;
+  line-height: 1.7;
+}
+
+/* ============================================================================
+   BLADE TABS (Get started | Activity log | ...)
+   ============================================================================ */
+
+.blade-tabs {
+  display: flex;
+  gap: 22px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.blade-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-link {
+  padding: 9px 2px 7px;
+  font-size: 13px;
+  color: var(--text-2);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.tab-link:hover {
+  color: var(--text);
+}
+
+.tab-link.active {
+  color: var(--text);
+  font-weight: 600;
+  border-bottom-color: var(--azure);
+}
+
+/* ============================================================================
+   CONTENT SECTIONS — flat, dense
+   ============================================================================ */
+
+.about-block {
+  max-width: 860px;
+}
+
+.block-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.about-block p {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.section {
+  margin-top: 26px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light);
+  scroll-margin-top: calc(var(--topbar-h) + 8px);
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Pills (status chips) */
+.pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 9px;
+  border-radius: 9px;
+  background: #f3f2f1;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.pill-green {
+  background: var(--green-light);
+  color: var(--green);
+}
+
+.pill-blue {
+  background: var(--azure-light);
+  color: var(--azure-darker);
+}
+
+/* ============================================================================
+   EXPERIENCE (activity log) — flat entries with hairlines
+   ============================================================================ */
+
+.job {
+  padding: 12px 0 14px;
+}
+
+.job + .job {
+  border-top: 1px solid var(--border-light);
+}
+
+.job-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.job-role {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.job-org {
+  color: var(--azure);
+}
+
+.job-period {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-top: 1px;
+}
+
+.job-note {
+  font-size: 12px;
+  color: var(--text-2);
+  font-style: italic;
+  margin-bottom: 8px;
+  max-width: 780px;
+}
+
+.job-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 820px;
+}
+
+.job-list li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 13px;
+}
+
+.job-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--azure);
+}
+
+/* ============================================================================
+   PROJECTS — portal "Navigate" style cards
+   ============================================================================ */
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 12px;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  box-shadow: var(--shadow-card);
+  padding: 16px 18px;
+  transition: box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.project-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-flyout);
+}
+
+.project-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 9px;
+}
+
+.project-glyph {
+  width: 30px;
+  height: 30px;
+}
+
+.project-glyph svg {
+  width: 100%;
+  height: 100%;
+}
+
+.project-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.project-desc {
+  font-size: 12.5px;
+  color: var(--text-2);
+  flex-grow: 1;
+  margin-bottom: 10px;
+}
+
+.tags span {
+  font-size: 11px;
+}
+
+.card-link {
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 8px;
+}
+
+.card-link:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================================
+   SKILLS — flat properties table
+   ============================================================================ */
+
+.skills-table {
+  display: flex;
+  flex-direction: column;
+  max-width: 860px;
+}
+
+.skills-row {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.skills-row + .skills-row {
+  border-top: 1px solid var(--border-light);
+}
+
+.skills-row dt {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.skills-row dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.skills-row dd span {
+  font-size: 12px;
+  color: var(--azure-darker);
+  background: var(--azure-light);
+  border: 1px solid var(--azure-light-border);
+  border-radius: 2px;
+  padding: 1px 9px;
+}
+
+/* ============================================================================
+   EDUCATION — flat list
+   ============================================================================ */
+
+.education-list {
+  list-style: none;
+  max-width: 860px;
+}
+
+.education-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 9px 0;
+}
+
+.education-list li + li {
+  border-top: 1px solid var(--border-light);
+}
+
+.edu-degree {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.edu-degree .pill {
+  margin-left: 8px;
+}
+
+.edu-school {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.edu-dates {
+  font-size: 12px;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   CONTACT
+   ============================================================================ */
+
+.contact-lead {
+  font-size: 13px;
+  max-width: 720px;
+  margin-bottom: 12px;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-azure {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: var(--azure);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 2px;
+  border: 1px solid var(--azure);
+}
+
+.btn-azure:hover {
+  background: var(--azure-dark);
+  border-color: var(--azure-dark);
+}
+
+.btn-azure-ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 2px;
+  border: 1px solid var(--text-3);
+}
+
+.btn-azure-ghost:hover {
+  background: #f3f2f1;
+}
+
+/* ============================================================================
+   FOOTER
+   ============================================================================ */
+
+.blade-footer {
+  margin-top: 32px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.blade-footer p {
+  font-size: 11.5px;
+  color: var(--text-2);
+}
+
+.blade-footer a {
+  color: var(--azure);
+  text-decoration: none;
+}
+
+.blade-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 1100px) {
+  .account-info {
+    display: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .sidebar {
+    display: none;
+  }
+
+  .blade {
+    padding: 10px 16px 32px;
+  }
+
+  .essentials-grid {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar-search {
+    display: none;
+  }
+
+  .brand-note {
+    display: none;
+  }
+
+  .skills-row {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    align-items: start;
+  }
+
+  .job-head {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .kv {
+    flex-direction: column;
+    gap: 0;
+    padding: 4px 0;
+  }
+
+  .kv .k {
+    width: auto;
+    font-size: 11.5px;
+  }
+
+  .contact-actions .btn-azure,
+  .contact-actions .btn-azure-ghost {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .global-menu {
+    width: 82vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .global-menu {
+    transition: none;
+  }
+}
