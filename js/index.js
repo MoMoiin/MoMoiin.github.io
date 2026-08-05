@@ -66,13 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const resource = {
         id: '/subscriptions/portfolio/resourceGroups/aviation-platform-rg/providers/Engineers/jakub-adamczyk',
         name: 'jakub-adamczyk',
-        type: 'Engineers/devops-platform',
+        type: 'Engineers/cloud-infrastructure',
         location: 'Letterkenny, Ireland',
         properties: {
-          role: 'Software Engineer (DevOps)',
+          role: 'Software Engineer — infrastructure technical lead',
           employer: 'SITA',
           status: 'Running',
-          experienceYears: 4,
+          teamSize: 9,
+          platformProjects: 8,
+          subscriptions: 32,
+          regions: ['Ireland', 'Germany', 'Sweden', 'US'],
           education: 'M.Sc. Software Architecture & Design (part-time)',
           rightToWork: 'Full right to work in UK and EU',
           email: 'jakub.adamczyk.software@gmail.com',
@@ -84,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
           containers: 'kubernetes (aks, eks), argocd',
           iac: 'terraform, ansible',
           cicd: 'azure devops, github actions',
+          languages: 'python, bash, hcl, go',
           observability: 'prometheus, dynatrace, kubecost'
         }
       };

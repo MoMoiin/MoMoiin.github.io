@@ -4,17 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jakub Adamczyk — DevOps Engineer</title>
+  <title>Jakub Adamczyk — Cloud Infrastructure Engineer</title>
   <meta name="description"
-    content="DevOps Engineer at SITA working with Azure, Kubernetes, Terraform, GitOps, monitoring, and cost optimization across aviation infrastructure. Portfolio styled as the Azure portal, plus an interactive desktop built in vanilla JS." />
+    content="Cloud infrastructure engineer at SITA building production platforms on Azure and AWS. Technical lead for infrastructure across a team of 9, running 8 platform projects over 32 subscriptions in four regions. Portfolio styled as the Azure portal, plus an interactive desktop built in vanilla JS." />
   <link rel="canonical" href="https://momoiin.github.io/" />
   <meta name="theme-color" content="#0078d4" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Jakub Adamczyk — DevOps Engineer" />
+  <meta property="og:title" content="Jakub Adamczyk — Cloud Infrastructure Engineer" />
   <meta property="og:description"
-    content="Cloud infrastructure for aviation: Azure, Kubernetes, Terraform, GitOps, observability, and cost tracking. Portfolio styled as the Azure portal." />
+    content="Cloud infrastructure for aviation: Azure, AWS, Kubernetes, Terraform, GitOps, and cross-cloud module design. Portfolio styled as the Azure portal." />
   <meta property="og:url" content="https://momoiin.github.io/" />
 
   <link rel="icon"
@@ -181,7 +181,7 @@
             </svg>
           </span>
           <div>
-            <h1>jakub-adamczyk <span class="resource-kind">| DevOps Engineer</span></h1>
+            <h1>jakub-adamczyk <span class="resource-kind">| Cloud Infrastructure Engineer</span></h1>
             <p class="resource-type">Engineer · Aviation cloud infrastructure</p>
           </div>
         </div>
@@ -221,10 +221,10 @@
               <div class="kv"><span class="k">Resource group</span><a class="v link" href="#experience">Portfolio-platform-rg</a></div>
               <div class="kv"><span class="k">Status</span><span class="v"><span class="status-dot" aria-hidden="true"></span>Working</span></div>
               <div class="kv"><span class="k">Current employer</span><a class="v link" href="#experience">SITA</a></div>
-              <div class="kv"><span class="k">Role</span><span class="v">Software Engineer (DevOps)</span></div>
+              <div class="kv"><span class="k">Role</span><span class="v">Software Engineer · Infrastructure technical lead</span></div>
             </div>
             <div class="essentials-col">
-              <div class="kv"><span class="k">Experience</span><span class="v">4 years DevOps / Infrastructure</span></div>
+              <div class="kv"><span class="k">Experience</span><span class="v">Technical lead for a team of 9 · 8 platform projects, 32 subscriptions, 4 regions</span></div>
               <div class="kv"><span class="k">Education</span><span class="v">M.Sc. Software Architecture &amp; Design (part-time)</span></div>
               <div class="kv"><span class="k">Right to work</span><span class="v">Full right to work in UK and EU</span></div>
               <div class="kv"><span class="k">GitHub</span><a class="v link" href="https://github.com/MoMoiin" target="_blank" rel="noopener noreferrer">github.com/MoMoiin</a></div>
@@ -233,7 +233,7 @@
             <div class="kv kv-tags">
               <span class="k">Tags <a class="link" href="#skills">(edit)</a></span>
               <span class="v tags">
-                <span>azure</span><span>aws</span><span>kubernetes</span><span>terraform</span><span>gitops</span><span>observability</span><span>python</span>
+                <span>azure</span><span>aws</span><span>kubernetes</span><span>terraform</span><span>gitops</span><span>observability</span><span>python</span><span>go</span>
               </span>
             </div>
           </div>
@@ -252,10 +252,12 @@
         <div class="about-block">
           <h2 class="block-title">About this engineer</h2>
           <p>
-            DevOps Engineer with 4 years in Azure and on-prem infrastructure. At SITA I build Terraform-managed AKS
-            platforms with GitOps, monitoring, and cost tracking for aviation systems used by 1,000+ airports and
-            400+ airlines across 200+ countries. Before that, I owned on-prem servers and internal tooling at Bruss.
-            Full right to work in the UK and EU.
+            Cloud infrastructure engineer building production platforms on Azure and AWS. I'm the technical lead for
+            infrastructure across a team of 9 at SITA, running 8 platform projects over 32 subscriptions in four
+            regions. I built the platform behind SITA's airline messaging services from an empty subscription through
+            to a live cutover off decades-old private cloud infrastructure, and wrote the cross-cloud Terraform modules
+            now used by 25+ engineers. Before that I owned the production reporting and traceability system at Bruss,
+            and moved from the shop floor into software engineering. Full right to work in the UK and EU.
           </p>
         </div>
       </section>
@@ -267,24 +269,36 @@
         <article class="job">
           <header class="job-head">
             <div>
-              <h3 class="job-role">Software Engineer (DevOps) · <span class="job-org">SITA</span></h3>
-              <p class="job-period">2025 – Present · Letterkenny, Ireland</p>
+              <h3 class="job-role">Software Engineer · <span class="job-org">SITA</span></h3>
+              <p class="job-period">April 2025 – Present · Letterkenny, Ireland</p>
             </div>
             <span class="pill pill-green">Active</span>
           </header>
-          <p class="job-note">Messaging DevOps team. SITA provides IT infrastructure and software to 1,000+ airports
-            and 400+ airlines across 200+ countries.</p>
+          <p class="job-note">SITA provides IT infrastructure and software to 1,000+ airports and 400+ airlines across
+            200+ countries. Its messaging services carry 35M+ messages daily for 35,000+ users across 1,300
+            organisations worldwide.</p>
           <ul class="job-list">
-            <li>Built the Azure platform for Messaging Integration from an empty subscription up to a working AKS
-              cluster, with peering to the landing zone, ArgoCD, Gateway API ingress, workload identity, Cosmos DB,
-              and Service Bus.</li>
-            <li>Set up monitoring, logging, and cost tracking using Prometheus, Dynatrace, and Kubecost, plus
-              alerting that raises Azure DevOps items automatically so production alerts do not get lost.</li>
-            <li>Moved Terraform state off the shared storage account, added backups and approvals on apply,
-              prevent_destroy on production, and private endpoints on Event Hubs, ACR, and Databricks.</li>
-            <li>Cut non-production Azure spend by scaling node pools to zero out of hours and clearing out unused VMs
-              and pools.</li>
-            <li>Ran Kubernetes version upgrades across production clusters on both AKS and EKS.</li>
+            <li>Technical lead for infrastructure across a team of 9. Set the patterns, workload design and delivery
+              priorities, and act as the point of reference for infrastructure code standards, Azure security
+              baselines and cross-service connectivity.</li>
+            <li>Built the Azure platform for Messaging Integration from an empty subscription to production, covering
+              AKS, landing zone peering, ArgoCD GitOps delivery, Gateway API ingress, workload identity, Cosmos DB,
+              Service Bus and IBM MQ. The platform underpins SITA's operational messaging and data APIs, the layer
+              most SITA products depend on.</li>
+            <li>Delivered the Azure infrastructure for migrating two legacy airline messaging products off private
+              cloud (SITATEX Online and Messaging Integration Mercury). Ran phased and in parallel with a customer
+              pilot group before cutover, with no customer-facing message loss.</li>
+            <li>Operate 8 platform projects across 32 subscriptions and four regions (Ireland, Germany, Sweden, US),
+              each with non-prod, QA, UAT and production environments.</li>
+            <li>Authored the Terraform module set for AWS and Azure, built to drop into any subscription. Now used by
+              25+ engineers across 3+ teams, so engineers write once and target either cloud.</li>
+            <li>Automated Terraform, Ansible, Docker image builds and application releases through CI/CD tooling
+              written in Go, Python and Bash, removing manual deployment steps.</li>
+            <li>Founded and led the Tech Curiosity Group, a forum spanning several SITA engineering teams for sharing
+              knowledge and testing ideas to improve products and processes.</li>
+            <li>Tech ambassador for a 15+ person team, leading the AI initiative. Designed and deployed an Azure
+              OpenAI service that generates pull request summaries for code review, including the deployment
+              architecture.</li>
           </ul>
         </article>
 
@@ -292,17 +306,47 @@
           <header class="job-head">
             <div>
               <h3 class="job-role">Software Engineer · <span class="job-org">Bruss</span></h3>
-              <p class="job-period">2022 – 2025 · Sligo, Ireland</p>
+              <p class="job-period">May 2022 – April 2025 · Sligo, Ireland</p>
             </div>
             <span class="pill">Completed</span>
           </header>
-          <p class="job-note">IT Team.</p>
+          <p class="job-note">Bruss manufactures sealing systems and rubber components for Daimler, BMW, VW, Porsche,
+            Audi, Ford and Land Rover. The Sligo plant runs 24/6 and produces over 150,000 parts a day, with annual
+            output of around €10M. Moved from the shop floor into the plant's small software team, then became its
+            technical lead.</p>
           <ul class="job-list">
-            <li>Built the CI/CD setup with GitHub Actions, moving the team off editing production directly.</li>
-            <li>Replaced a paper-based safety log process with a web app and SAP integration, used daily on the shop
-              floor.</li>
-            <li>Sole software engineer for the site, owning the LAMP stack, Arduino-based machine sensors, and the
-              on-site vSphere server.</li>
+            <li>Built and owned the plant's production reporting and traceability system end to end. PHP and Python
+              backend services, REST APIs and a React frontend, used daily by 200+ operators, supervisors and quality
+              staff across 14 lines, replacing a mix of spreadsheets and paper records.</li>
+            <li>Scrap rate fell from 15% to 10% over the period the system was in use, and the plant passed its IATF
+              16949 audit with the system providing lot-level traceability.</li>
+            <li>Administered 30+ enterprise Linux machines end to end, from provisioning through to troubleshooting.
+              Moved builds from hand-configured to Ansible-provisioned, which is the work that pushed me from
+              application development toward platform engineering.</li>
+            <li>Brought the team from FTP-to-production onto Git, peer review, PHPUnit and its first GitLab CI
+              pipeline. Containerised the stack with Docker, which became the foundation of the plant's later cloud
+              migration.</li>
+            <li>Interviewed graduate candidates, ran onboarding, and wrote the plant's engineering onboarding and code
+              review standards.</li>
+          </ul>
+        </article>
+
+        <article class="job">
+          <header class="job-head">
+            <div>
+              <h3 class="job-role">Mechatronic Engineer · <span class="job-org">Bruss</span></h3>
+              <p class="job-period">May 2021 – May 2022 · Sligo, Ireland</p>
+            </div>
+            <span class="pill">Completed</span>
+          </header>
+          <ul class="job-list">
+            <li>Maintained and programmed PLC-controlled assembly and injection-moulding cells, commissioned two robot
+              handling cells and a vision inspection station.</li>
+            <li>Deployed a machine-vision inspection station on a safety-critical bracket, eliminating a ~1%
+              escaped-defect rate that was costing approximately €24,000 per month, zero escapes in the following
+              twelve months.</li>
+            <li>Built a Python line-monitoring and alerting tool in spare capacity that spread from one cell to the
+              whole plant, the project that prompted my move into software engineering.</li>
           </ul>
         </article>
       </section>
@@ -336,10 +380,25 @@
               <span class="pill">Personal</span>
             </header>
             <h3 class="project-title">Home Infrastructure Platform</h3>
-            <p class="project-desc">Proxmox cluster running Docker and LXC workloads, with Terraform-provisioned VMs,
-              containerized services behind a reverse proxy, and automated backups. Used as a testbed for the same
-              platform patterns I use at SITA.</p>
-            <div class="tags"><span>proxmox</span><span>terraform</span><span>docker-lxc</span><span>reverse-proxy</span></div>
+            <p class="project-desc">Proxmox cluster running Docker and LXC workloads. Terraform-provisioned VMs,
+              containerised services behind a Cloudflare reverse proxy, and automated backups. Used as a test bed for
+              new technologies.</p>
+            <div class="tags"><span>proxmox</span><span>terraform</span><span>docker-lxc</span><span>cloudflare</span></div>
+          </article>
+
+          <article class="project-card">
+            <header class="project-head">
+              <span class="project-glyph" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><rect x="5" y="3" width="22" height="26" rx="2" fill="#0078d4" /><rect x="8" y="6" width="16" height="16" fill="#f3f2f1" /><path d="M10.5 10h11M10.5 13h11M10.5 16h7" stroke="#0078d4" stroke-width="1.3" stroke-linecap="round" /><circle cx="16" cy="25.5" r="1.8" fill="#50e6ff" /></svg>
+              </span>
+              <span class="pill">Personal</span>
+            </header>
+            <h3 class="project-title">Pocket-Scholar</h3>
+            <p class="project-desc">Portable e-ink flashcard and dictionary device built on an ESP32. Hardware and
+              firmware built from scratch in embedded C++. Used for spaced-repetition learning across languages,
+              history and computer science.</p>
+            <div class="tags"><span>esp32</span><span>embedded-c++</span><span>e-ink</span><span>hardware</span></div>
+            <a class="card-link" href="https://github.com/MoMoiin/Pocket-Scholar" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
           </article>
         </div>
       </section>
@@ -350,11 +409,11 @@
         <dl class="skills-table">
           <div class="skills-row">
             <dt>Languages</dt>
-            <dd><span>Python</span><span>Bash</span><span>HCL</span><span>YAML</span></dd>
+            <dd><span>Python</span><span>Bash</span><span>HCL</span><span>Go</span><span>Java</span><span>C++</span><span>PHP</span><span>JavaScript</span><span>YAML</span></dd>
           </div>
           <div class="skills-row">
             <dt>Cloud</dt>
-            <dd><span>Azure (AKS, Landing Zones, Event Hubs, Service Bus, Cosmos DB, ACR)</span><span>AWS (EKS, EC2, S3, IAM)</span></dd>
+            <dd><span>Azure (AKS, Landing Zones, Event Hubs, Service Bus, Cosmos DB, ACR, OpenAI)</span><span>AWS (EKS, EC2, S3, IAM)</span></dd>
           </div>
           <div class="skills-row">
             <dt>Kubernetes</dt>
@@ -374,7 +433,7 @@
           </div>
           <div class="skills-row">
             <dt>Data &amp; Messaging</dt>
-            <dd><span>PostgreSQL</span><span>MongoDB</span><span>Elasticsearch</span><span>Kafka</span></dd>
+            <dd><span>PostgreSQL</span><span>MongoDB</span><span>Elasticsearch</span><span>Kafka</span><span>IBM MQ</span><span>Service Bus</span></dd>
           </div>
           <div class="skills-row">
             <dt>Security</dt>
@@ -382,7 +441,7 @@
           </div>
           <div class="skills-row">
             <dt>Other</dt>
-            <dd><span>Linux</span><span>Docker</span><span>vSphere</span><span>Proxmox</span><span>Git</span></dd>
+            <dd><span>Linux</span><span>Docker</span><span>vSphere</span><span>Proxmox</span><span>Git</span><span>React</span></dd>
           </div>
         </dl>
       </section>
@@ -400,8 +459,9 @@
           </li>
           <li>
             <div>
-              <p class="edu-degree">B.E. Mechatronic Systems</p>
-              <p class="edu-school">Atlantic Technological University</p>
+              <p class="edu-degree">B.E. Mechatronic Systems <span class="pill">2.1 Honours</span></p>
+              <p class="edu-school">Atlantic Technological University · Final year project: virtual reality
+                force-feedback tracking gloves</p>
             </div>
             <span class="edu-dates">2021 – 2024 (alongside full-time work)</span>
           </li>
@@ -411,7 +471,8 @@
       <!-- Contact -->
       <section id="contact" class="section">
         <h2 class="section-title">Support + troubleshooting — Get in touch</h2>
-        <p class="contact-lead">Open to discussing DevOps and platform engineering work across cloud and infrastructure.</p>
+        <p class="contact-lead">Open to discussing cloud infrastructure and platform engineering work across Azure and
+          AWS. Based UK / Ireland.</p>
         <div class="contact-actions">
           <a class="btn-azure" href="mailto:jakub.adamczyk.software@gmail.com">＋ New support request (email me)</a>
           <a class="btn-azure-ghost" href="https://www.linkedin.com/in/jakub-software/" target="_blank"

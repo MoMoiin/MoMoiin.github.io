@@ -58,66 +58,91 @@ function init(ctx) {
       'Tip: try the tools you would expect a DevOps engineer to have installed.',
       'Use ↑/↓ for history and Tab to complete.'
     ],
-    whoami: ['jakub-adamczyk — DevOps Engineer'],
+    whoami: ['jakub-adamczyk — Cloud Infrastructure Engineer'],
     ls: ['Documents/', 'Projects/', 'README.md'],
     pwd: ['/home/jakub'],
     version: ['MoMo-OS v1.0.0 - Dream Edition'],
     about: [
-      'DevOps Engineer with four years in Azure and on-prem infrastructure.',
+      'Cloud infrastructure engineer building production platforms on Azure and AWS.',
       '',
-      'At SITA I build Terraform-managed AKS platforms with GitOps, monitoring,',
-      'and cost tracking for 1,000+ airports and 400+ airlines across 200+ countries.',
+      'Technical lead for infrastructure across a team of 9 at SITA, running 8 platform',
+      'projects over 32 subscriptions in four regions. I built the platform behind SITA\'s',
+      'airline messaging services from an empty subscription through to a live cutover off',
+      'decades-old private cloud infrastructure, and wrote the cross-cloud Terraform',
+      'modules now used by 25+ engineers.',
       '',
-      'Before that I owned on-prem servers and internal tooling at Bruss.',
+      'Before that I owned the production reporting and traceability system at Bruss,',
+      'and moved from the shop floor into software engineering.',
       '',
       'Full right to work in the UK and EU.'
     ],
     experience: [
-      'SITA — Software Engineer (DevOps)                        2025 – Present',
+      'SITA — Software Engineer                            Apr 2025 – Present',
       '  Letterkenny, Ireland',
-      '  * Built Azure platform from empty subscription to working AKS cluster',
-      '    with peering, ArgoCD, Gateway API ingress, workload identity, Cosmos DB,',
-      '    and Service Bus.',
-      '  * Set up monitoring, logging, and cost tracking with Prometheus, Dynatrace,',
-      '    and Kubecost, plus ADO alert-to-work-item automation.',
-      '  * Moved Terraform state off shared storage, added backups and apply approvals,',
-      '    prevent_destroy on production, and private endpoints across key services.',
-      '  * Cut non-production Azure spend by scaling node pools to zero out of hours',
-      '    and removing unused VMs and pools.',
-      '  * Ran Kubernetes upgrades on production clusters across AKS and EKS.',
+      '  * Technical lead for infrastructure across a team of 9. Set the patterns,',
+      '    workload design and delivery priorities, and act as the point of reference',
+      '    for infrastructure code standards and Azure security baselines.',
+      '  * Built the Azure platform for Messaging Integration from an empty',
+      '    subscription to production: AKS, landing zone peering, ArgoCD GitOps,',
+      '    Gateway API ingress, workload identity, Cosmos DB, Service Bus and IBM MQ.',
+      '  * Delivered the Azure infrastructure for migrating two legacy airline',
+      '    messaging products off private cloud (SITATEX Online and Messaging',
+      '    Integration Mercury), with no customer-facing message loss.',
+      '  * Operate 8 platform projects across 32 subscriptions and four regions',
+      '    (Ireland, Germany, Sweden, US), each with non-prod, QA, UAT and production.',
+      '  * Authored the Terraform module set for AWS and Azure, now used by 25+',
+      '    engineers across 3+ teams.',
+      '  * Automated Terraform, Ansible, Docker builds and releases through CI/CD',
+      '    tooling written in Go, Python and Bash.',
+      '  * Founded and led the Tech Curiosity Group, and led the AI initiative as tech',
+      '    ambassador for a 15+ person team.',
       '',
-      'Bruss — Software Engineer                                2022 – 2025',
+      'Bruss — Software Engineer                        May 2022 – Apr 2025',
       '  Sligo, Ireland',
-      '  * Built the CI/CD setup with GitHub Actions, moving the team off editing',
-      '    production directly.',
-      '  * Replaced a paper-based safety log process with a web app and SAP',
-      '    integration, used daily on the shop floor.',
-      '  * Sole software engineer for the site, owning the LAMP stack, Arduino-based',
-      '    machine sensors, and on-site vSphere server.'
+      '  * Built and owned the plant\'s production reporting and traceability system',
+      '    end to end: PHP and Python services, REST APIs and a React frontend, used',
+      '    daily by 200+ staff across 14 lines.',
+      '  * Scrap rate fell from 15% to 10%, and the plant passed its IATF 16949 audit',
+      '    with the system providing lot-level traceability.',
+      '  * Administered 30+ enterprise Linux machines, moving builds from',
+      '    hand-configured to Ansible-provisioned.',
+      '  * Brought the team from FTP-to-production onto Git, peer review, PHPUnit and',
+      '    its first GitLab CI pipeline. Containerised the stack with Docker.',
+      '',
+      'Bruss — Mechatronic Engineer                     May 2021 – May 2022',
+      '  Sligo, Ireland',
+      '  * Maintained and programmed PLC-controlled assembly and injection-moulding',
+      '    cells, commissioned two robot handling cells and a vision inspection station.',
+      '  * Deployed a machine-vision inspection station on a safety-critical bracket,',
+      '    eliminating a ~1% escaped-defect rate costing ~EUR 24,000 per month.',
+      '  * Built a Python line-monitoring and alerting tool that spread from one cell',
+      '    to the whole plant — the project that prompted my move into software.'
     ],
     projects: [
       'messaging-aks-platform/ Azure AKS platform with ArgoCD, Gateway API, Cosmos DB',
-      'observability-cost/     Prometheus, Dynatrace, Kubecost, auto-raised ADO alerts',
-      'state-security-gov/     Terraform governance + private endpoints + backups',
-      'factory-safety-log/     Web app replacing paper logs with SAP integration',
-      'home-infra-platform/    Proxmox + Terraform VMs + Docker/LXC + reverse proxy',
-      'interactive-desktop/   You are looking at it right now',
+      'cross-cloud-modules/    AWS + Azure Terraform module set used by 25+ engineers',
+      'legacy-cloud-migration/ Two airline messaging products off private cloud',
+      'production-traceability/ PHP/Python/React reporting system for 200+ plant staff',
+      'home-infra-platform/    Proxmox + Terraform VMs + Docker/LXC + Cloudflare proxy',
+      'pocket-scholar/         ESP32 e-ink flashcard device in embedded C++',
+      'interactive-desktop/    You are looking at it right now',
       '',
       'Run "portfolio" to see them in detail.'
     ],
     skills: [
-      'Languages ................. Python, Bash, HCL, YAML',
+      'Languages ................. Python, Bash, HCL, Go, Java, C++, PHP, JavaScript',
       'Cloud ..................... Azure, AWS',
       'Kubernetes ................ AKS, EKS, ArgoCD, Helm, Gateway API',
       'IaC & CI/CD ............... Terraform, Ansible, Azure DevOps YAML, GitHub Actions',
       'Observability & Cost ...... Prometheus, Grafana, Dynatrace, Kubecost',
-      'Data & Messaging .......... PostgreSQL, MongoDB, Elasticsearch, Kafka',
+      'Data & Messaging .......... PostgreSQL, MongoDB, Elasticsearch, Kafka, IBM MQ',
       'Security .................. Entra ID, workload identity, private networking',
-      'Other ..................... Linux, Docker, vSphere, Proxmox, Git'
+      'Other ..................... Linux, Docker, Git, vSphere, Proxmox, React'
     ],
     education: [
       'M.Sc. Software Architecture and Design (Part-Time) MTU      2025 – 2027',
-      'B.E. Mechatronic Systems (with full-time work)     ATU      2021 – 2024'
+      'B.E. Mechatronic Systems (2.1 Honours)             ATU      2021 – 2024',
+      '  Final year project: virtual reality force-feedback tracking gloves.'
     ],
     contact: [
       'email     jakub.adamczyk.software@gmail.com',
@@ -133,7 +158,7 @@ function init(ctx) {
       '        ▄████▀ ▀█████▄         OS:       MoMo-OS 1.0.0 Dream Edition',
       '       ████▀     ▀█████        Host:     Interactive Desktop (vanilla JS)',
       '      ████   ▄▄▄   █████       Kernel:   window-manager 2.0',
-      '     ████   █████   █████      Uptime:   4 years in production',
+      '     ████   █████   █████      Uptime:   5 years in production',
       '    ████    ▀███▀    █████     Shell:    momo-sh',
       '   ████▄▄▄▄▄▄▄▄▄▄▄▄▄▄██████    IaC:      Terraform, Ansible',
       '  ████              ███████    Clusters: AKS, EKS',
@@ -182,8 +207,8 @@ function init(ctx) {
       if (args[0] === 'ps') {
         return [
           'CONTAINER ID   IMAGE                    STATUS         NAMES',
-          'a1b2c3d4e5f6   jakub/devops:latest      Up 4 years     platform-engineering',
-          'f6e5d4c3b2a1   jakub/fullstack:stable   Up 3 years     lamp-sap-integration',
+          'a1b2c3d4e5f6   jakub/platform:latest    Up 5 years     platform-engineering',
+          'f6e5d4c3b2a1   jakub/fullstack:stable   Up 3 years     production-traceability',
           '0f1e2d3c4b5a   jakub/homelab:proxmox    Up 2 years     vpn-routed-media-stack'
         ];
       }
@@ -398,7 +423,7 @@ function init(ctx) {
 
     // Welcome message
     appendLine('');
-    appendLine('Jakub Adamczyk — DevOps Engineer');
+    appendLine('Jakub Adamczyk — Cloud Infrastructure Engineer');
     appendLine('Azure · AWS · Kubernetes · Terraform · GitOps · CI/CD');
     appendLine('');
     appendLine('Type "help" to see what this terminal can do.');

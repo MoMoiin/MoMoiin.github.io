@@ -1,6 +1,6 @@
 # jakub adamczyk — portfolio
 
-Personal portfolio of **Jakub Adamczyk**, DevOps/Platform Engineer — live at [momoiin.github.io](https://momoiin.github.io).
+Personal portfolio of **Jakub Adamczyk**, Cloud Infrastructure Engineer — live at [momoiin.github.io](https://momoiin.github.io).
 
 The site is a static, dependency-free build (no framework, no bundler) with two experiences:
 
